@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Remote Object Tester UI</title>
+
+	<!-- No need to install the CSS for bootstrap; this one replaces it -->
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+    
+    <style type="text/css">
+    </style>
+    
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    
+	<!-- Load our main app JS file. -->
+    <script type="text/javascript" src="RappMiniServerFoundationClient/RappMiniServerFoundationClient.nocache.js"></script>
+    
+    <script type="text/javascript">
+    	
+    	function clickHandler() {
+			var roi = new rapp_mini_server.JsRemoteObjectInitializer();
+			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
+				.setInstanceName("cucu")
+				.setDestination("192..."));
+			// console.log(ro);
+			ro.ceva(1, 2, function(result) {
+				$("#textArea").get(0).value = result;
+			});
+			ro.altceva(3, 4, 5);
+		}
+		</script>
+</head>
+<body>
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+        style="position: absolute; width: 0;height: 0; border: 0;"></iframe>
+
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+        <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; 
+            background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif;">
+            Your web browser must have JavaScript enabled
+            in order for this application to display correctly.
+        </div>
+    </noscript>
+    
+    <div class="container">
+		<h1>Remote Object Tester UI</h1>
+		
+		<form>
+		  <div class="form-group">
+		    <label>destination</label>
+		    <input class="form-control" id="destination">
+		  </div>
+		  <div class="form-group">
+		    <label>securityToken</label>
+		    <input class="form-control" id="securityToken">
+		  </div>
+		  <div class="form-group">
+		    <label>hubAddress</label>
+		    <input class="form-control" id="hubAddress">
+		  </div>
+		  <div class="form-group">
+		    <label>instanceName</label>
+		    <input class="form-control" id="instanceName">
+		  </div>
+		  <div class="form-group">
+		    <label>method</label>
+		    <input class="form-control" id="method">
+		  </div>
+		  <div class="form-group">
+		    <label>parameters (comma separated)</label>
+		    <input class="form-control" id="parameters">
+		  </div>		
+		  
+		  <div class="form-group">
+		    <label>result</label>
+		  	<textarea id="textArea" class="form-control" rows="3"></textarea>
+		  </div>
+		</form>
+		<button class="btn btn-default" onclick="clickHandler()">Invoke Remote Object</button>
+	</div>
+</body>
+</html>
