@@ -10,4 +10,8 @@ public class HelloService extends HelloServiceGen {
 		return super.sayHello(name, times) + "+ some custom code!";
 	}
 
+	public void turnOn() throws Exception {
+		System.out.println("TURN ON");
+	}
+	
 }

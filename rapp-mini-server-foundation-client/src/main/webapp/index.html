@@ -24,13 +24,22 @@
     	function clickHandler() {
 			var roi = new rapp_mini_server.JsRemoteObjectInitializer();
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
-				.setInstanceName("cucu")
-				.setDestination("192..."));
-			// console.log(ro);
-			ro.ceva(1, 2, function(result) {
-				$("#textArea").get(0).value = result;
+				.setRemoteAddress(document.getElementById("remoteAddress").value)
+				.setSecurityToken(document.getElementById("securityToken").value)
+				.setRappInstanceId(document.getElementById("rappInstanceId").value)
+				.setInstanceName(document.getElementById("instanceName").value)
+			);
+			var arguments = document.getElementById("arguments").value.split(",");
+			arguments.push(function(result) {
+				$("#textArea").get(0).value = result; 
 			});
-			ro.altceva(3, 4, 5);
+			var method = document.getElementById("method").value;
+			ro[method].apply(this, arguments);
+
+//			ro.ceva.apply(arguments, function(result) {
+//				$("#textArea").get(0).value = result; 
+//			});
+			//ro.altceva(3, 4, 5);
 		}
 		</script>
 </head>
@@ -52,16 +61,16 @@
 		
 		<form>
 		  <div class="form-group">
-		    <label>destination</label>
-		    <input class="form-control" id="destination">
+		    <label>remoteAddress</label>
+		    <input class="form-control" id="remoteAddress">
 		  </div>
 		  <div class="form-group">
 		    <label>securityToken</label>
 		    <input class="form-control" id="securityToken">
 		  </div>
 		  <div class="form-group">
-		    <label>hubAddress</label>
-		    <input class="form-control" id="hubAddress">
+		    <label>rappInstanceId</label>
+		    <input class="form-control" id="rappInstanceId">
 		  </div>
 		  <div class="form-group">
 		    <label>instanceName</label>
@@ -72,8 +81,8 @@
 		    <input class="form-control" id="method">
 		  </div>
 		  <div class="form-group">
-		    <label>parameters (comma separated)</label>
-		    <input class="form-control" id="parameters">
+		    <label>arguments (comma separated)</label>
+		    <input class="form-control" id="arguments">
 		  </div>		
 		  
 		  <div class="form-group">

@@ -3,6 +3,12 @@ package com.flowerplatform.rapp_mini_server.client;
 import com.flowerplatform.rapp_mini_server.shared.AbstractRemoteObjectInitializer;
 import com.flowerplatform.rapp_mini_server.shared.IRequestSender;
 import com.flowerplatform.rapp_mini_server.shared.RemoteObject;
+import com.flowerplatform.rapp_mini_server.shared.ResultCallback;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
 
 import jsinterop.annotations.JsType;
 
@@ -57,7 +63,30 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 	}-*/;
 
 	@Override
-	public native void sendRequest(String url, String payload)/*-{
-		console.log(payload);
+	public void sendRequest(String url, String payload, ResultCallback callback) {
+		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, url);
+		log(url);
+		try {
+			rb.sendRequest(payload, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if (response.getStatusCode() == Response.SC_OK) {
+						callback.run(response.getText());
+					}
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					
+				}
+			});
+		} catch (RequestException e) {
+			throw new RuntimeException(e);
+		}
+	};
+	
+	public native void log(String s)/*-{
+		console.log(s);
 	}-*/;
+
 }
