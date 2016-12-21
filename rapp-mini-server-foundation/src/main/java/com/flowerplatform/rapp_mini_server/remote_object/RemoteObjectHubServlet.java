@@ -47,11 +47,14 @@ public class RemoteObjectHubServlet extends HttpServlet {
 
 		switch (packet.getCommand()) {
 		case 'A': // register
+			if (client != null) {
+				break;
+			}
 			rappInstanceId = packet.nextField();
-			RemoteObjectHubClient newClient = new RemoteObjectHubClient(rappInstanceId);
-			registeredClientsBySecurityToken.put(packet.getSecurityToken(), newClient);
-			registeredClientsByRappInstanceId.put(rappInstanceId, newClient);
-			addDummyInvocations(newClient);
+			client = new RemoteObjectHubClient(rappInstanceId);
+			registeredClientsBySecurityToken.put(packet.getSecurityToken(), client);
+			registeredClientsByRappInstanceId.put(rappInstanceId, client);
+			addDummyInvocations(client);
 			break;
 		case 'J': // get pending invocations
 		case 'R': // result
@@ -67,12 +70,13 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		case 'I': // invoke
 			packet.nextField(); // hasNext (ignored);
 			rappInstanceId = packet.nextField(); // rappInstanceId
+			packet.nextField(); // callbackId (ignored)
 			RemoteObjectHubClient invokedClient = registeredClientsByRappInstanceId.get(rappInstanceId);
 			if (invokedClient == null) {
 				break;
 			}
 			int callbackId = lastCallbackId.incrementAndGet();
-			StringBuilder pendingInvocation = new StringBuilder(lastCallbackId + "\0");
+			StringBuilder pendingInvocation = new StringBuilder(callbackId + "\0");
 			while (packet.availableFields() > 0) {
 				pendingInvocation.append(packet.nextField()).append("\0");
 			}
@@ -85,6 +89,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'A');
 		}
 		
+		System.out.println("<- " + res.getRawData());
 		response.getWriter().print(res.getRawData());
 	}
 	

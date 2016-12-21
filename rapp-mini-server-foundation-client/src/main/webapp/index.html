@@ -29,7 +29,9 @@
 				.setRappInstanceId(document.getElementById("rappInstanceId").value)
 				.setInstanceName(document.getElementById("instanceName").value)
 			);
-			var arguments = document.getElementById("arguments").value.split(",");
+			var argumentsStr = document.getElementById("arguments").value;
+			var arguments = argumentsStr ? argumentsStr.split(",") : [];
+	
 			arguments.push(function(result) {
 				$("#textArea").get(0).value = result; 
 			});
