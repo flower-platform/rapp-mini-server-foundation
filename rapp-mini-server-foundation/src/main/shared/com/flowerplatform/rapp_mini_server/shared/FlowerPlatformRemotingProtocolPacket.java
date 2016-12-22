@@ -31,6 +31,11 @@ public class FlowerPlatformRemotingProtocolPacket {
 	}
 	
 	public FlowerPlatformRemotingProtocolPacket(String rawPacket) {
+		char t = rawPacket.charAt(rawPacket.length() - 1);
+		if (t != EOT) {
+			throw new IllegalArgumentException("Invalid packet terminator char: " + t); 
+		}
+		rawPacket = rawPacket.substring(0,  rawPacket.length() - 1);
 		packetFields = Arrays.asList(rawPacket.split("\0"));
 		if (packetFields.size() < 4) {
 			throw new RuntimeException("Invalid packet. Raw data: " + rawPacket);

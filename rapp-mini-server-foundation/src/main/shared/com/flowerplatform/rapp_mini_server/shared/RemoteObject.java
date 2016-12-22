@@ -95,7 +95,7 @@ public class RemoteObject {
 			sb.append('\0');
 		}
 		sb.append(EOT); // ASCII EOT
-		requestSender.sendRequest("http://" + remoteAddress + "/hub", sb.toString(), new ResultCallback() {
+		requestSender.sendRequest("http://" + remoteAddress + "/remoteObject", sb.toString(), new ResultCallback() {
 			@Override
 			public void run(Object result) {
 				if (callback != null) {

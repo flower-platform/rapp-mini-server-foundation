@@ -30,8 +30,9 @@ public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServle
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
 		packet.nextField(); // hasNext (ignore)
-		packet.nextField(); // rappInstance (ignore)
-		packet.nextField(); // callbackId (ignore)
+		packet.nextField(); // rappInstanceId (ignore)
+//		String callbackId = 
+				packet.nextField(); // callbackId
 		String instanceName = packet.nextField();
 		String method = packet.nextField();
 		
