@@ -13,7 +13,7 @@ public class RappMiniServerSample1MainGen extends AbstractRappMiniServerMain {
 		main.port = 9001;
 		
 		main.remoteObjectRegistry.put("main", main);
-		main.remoteObjectRegistry.put("helloService.", main.helloService);
+		main.remoteObjectRegistry.put("helloService", main.helloService);
 		
 		main.run();
 	}

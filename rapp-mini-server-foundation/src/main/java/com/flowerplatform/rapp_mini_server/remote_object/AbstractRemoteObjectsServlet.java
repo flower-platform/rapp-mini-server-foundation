@@ -43,6 +43,10 @@ public abstract class AbstractRemoteObjectsServlet extends HttpServlet {
 		jsonFactory.setCodec(new ObjectMapper());
 	}
 
+	protected void writeResponse(Object result, HttpServletResponse response) throws IOException {
+		new ObjectMapper().writeValue(response.getWriter(), result);
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Prepare the path first
@@ -68,7 +72,7 @@ public abstract class AbstractRemoteObjectsServlet extends HttpServlet {
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		// Write back response
-		new ObjectMapper().writeValue(response.getWriter(), result);
+		writeResponse(result, response);
 	}
 	
 	protected boolean validateUrl(HttpServletResponse response, String path) {

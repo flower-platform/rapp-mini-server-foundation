@@ -121,9 +121,9 @@ public class RemoteObjectHubServlet extends HttpServlet {
 	}
 	
 	private static void addDummyInvocations(RemoteObjectHubClient client) {
-		client.getPendingInvocations().add("120\0lightController1.\0sayHello\0Test\0" + "2\0");
-		client.getPendingInvocations().add("121\0lightController1.\0turnOn\0");
-		client.getPendingInvocations().add("122\0lightController1.\0turnOff\0room1\0");
+		client.getPendingInvocations().add("120\0lightController1.sayHello\0Test\0" + "2\0");
+		client.getPendingInvocations().add("121\0lightController1.turnOn\0");
+		client.getPendingInvocations().add("122\0lightController1.turnOff\0room1\0");
 	}
 	
 }

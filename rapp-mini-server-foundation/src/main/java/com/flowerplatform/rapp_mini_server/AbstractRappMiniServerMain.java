@@ -12,7 +12,7 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
-import com.flowerplatform.rapp_mini_server.remote_object.NewProtocolRemoteObjectsServlet;
+import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServlet;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubServlet;
 
 /**
@@ -53,7 +53,7 @@ public abstract class AbstractRappMiniServerMain {
 	}
 	
 	protected void addRemoteObjectsServlet(ServletHandler handler) {
-		handler.addServletWithMapping(new ServletHolder(new NewProtocolRemoteObjectsServlet(remoteObjectRegistry)), "/remoteObject/*");
+		handler.addServletWithMapping(new ServletHolder(new RemoteObjectServlet(remoteObjectRegistry, "12345678")), "/remoteObject/*");
 		handler.addServletWithMapping(new ServletHolder(new RemoteObjectHubServlet()), "/hub/*");
 	}
 

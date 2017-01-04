@@ -12,6 +12,8 @@ import jsinterop.annotations.JsType;
 public class RemoteObject {
 
 	private static final char EOT = (char) 0x04;
+
+	private static final char TERM = (char) 0x00;
 	
 	/**
 	 * @see AbstractRemoteObjectInitializer
@@ -80,29 +82,49 @@ public class RemoteObject {
 		}
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("FPRP\0"); // protocol header
-		sb.append("1\0"); // protocol version
-		sb.append(securityToken).append('\0'); // security token
-		sb.append("I\0"); // command = INVOKE
-		sb.append("0\0"); // hasNext = false
-		sb.append(rappInstanceId).append('\0'); // rappInstanceId
-		sb.append("\0"); // callbackId
-		sb.append(instanceName.replaceAll("\\.",  ".\0")); // instanceName
-		sb.append(method).append('\0'); // method
+		sb.append("FPRP").append(TERM); // protocol header
+		sb.append("1").append(TERM); // protocol version
+		sb.append(securityToken).append(TERM); // security token
+		sb.append("I").append(TERM); // command = INVOKE
+		sb.append("0").append(TERM); // hasNext = false
+		sb.append(rappInstanceId == null ? "" : rappInstanceId).append(TERM); // rappInstanceId
+		sb.append(TERM); // callbackId (null)
+		if (instanceName != null) {
+			sb.append(instanceName).append('.'); // instanceName
+		}
+		sb.append(method).append(TERM); // method
 		
 		for (Object o : arguments) {
 			sb.append(o);
-			sb.append('\0');
+			sb.append(TERM);
 		}
 		sb.append(EOT); // ASCII EOT
-		requestSender.sendRequest("http://" + remoteAddress + "/remoteObject", sb.toString(), new ResultCallback() {
-			@Override
-			public void run(Object result) {
-				if (callback != null) {
-					callback.run(result.toString());
-				}
-			}
-		});
+		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/hub"), sb.toString(), new RemoteObjectResultCallback(callback));
 	}
 	
+	final class RemoteObjectResultCallback implements ResultCallback {
+
+		public ResultCallback clientCallback;
+		
+		public RemoteObjectResultCallback(ResultCallback clientCallback) {
+			this.clientCallback = clientCallback;
+		}
+
+		@Override
+		public void run(Object result) {
+			if (clientCallback == null) {
+				return;
+			}
+			FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(result.toString());
+			
+			switch(packet.getCommand()) {
+			case 'R':
+				packet.nextField(); // hasNext (ignored)
+				packet.nextField(); // callbackId
+				clientCallback.run(packet.nextField());
+				break;
+			}
+		}
+	}
+
 }

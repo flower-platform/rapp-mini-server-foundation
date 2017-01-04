@@ -1,22 +1,28 @@
 package com.flowerplatform.rapp_mini_server.remote_object;
 
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
 
 /**
  * @author Cristian Spiescu
  */
-public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServlet {
+public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	public NewProtocolRemoteObjectsServlet(Map<String, Object> serviceRegistry) {
+	private String securityToken;
+	
+	public RemoteObjectServlet(Map<String, Object> serviceRegistry, String securityToken) {
 		super(serviceRegistry);
+		this.securityToken = securityToken;
 	}
 
 	@Override
@@ -33,8 +39,9 @@ public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServle
 		packet.nextField(); // rappInstanceId (ignore)
 //		String callbackId = 
 				packet.nextField(); // callbackId
-		String instanceName = packet.nextField();
-		String method = packet.nextField();
+		String functionCall = packet.nextField();
+		String instanceName = functionCall.substring(0, functionCall.lastIndexOf('.'));
+		String method = functionCall.substring(instanceName.length() + 1);
 		
 		RemoteObjectInfo serviceInfo = new RemoteObjectInfo();
 		findInstanceAndMethod(serviceInfo, instanceName, method);
@@ -68,7 +75,15 @@ public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServle
 		
 		return serviceInfo;
 	}
-
 	
+	@Override
+	protected void writeResponse(Object result, HttpServletResponse response) throws IOException {
+		PrintWriter out = response.getWriter();
+		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
+		res.addField("0"); // hasNext
+		res.addField(""); // callbackId
+		res.addField(result.toString());
+		out.write(res.getRawData());
+	}
 	
 }
