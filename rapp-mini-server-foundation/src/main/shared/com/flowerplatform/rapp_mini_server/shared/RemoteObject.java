@@ -1,5 +1,8 @@
 package com.flowerplatform.rapp_mini_server.shared;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jsinterop.annotations.JsType;
 
 /**
@@ -14,6 +17,8 @@ public class RemoteObject {
 	private static final char EOT = (char) 0x04;
 
 	private static final char TERM = (char) 0x00;
+	
+	private static Map<String, ResultCallback> callbacks = new HashMap<>();
 	
 	/**
 	 * @see AbstractRemoteObjectInitializer
@@ -121,10 +126,16 @@ public class RemoteObject {
 			case 'R':
 				packet.nextField(); // hasNext (ignored)
 				packet.nextField(); // callbackId
-				clientCallback.run(packet.nextField());
+				String value = packet.nextField(); // result value
+				clientCallback.run(value);
+				break;
+			case 'P':
+				String callbackId = packet.nextField(); // callbackId
+				callbacks.put(callbackId, clientCallback);
 				break;
 			}
 		}
+	
 	}
 
 }

@@ -74,7 +74,7 @@ public class FlowerPlatformRemotingProtocolPacket {
 		return packetFields.get(currentFieldIndex++);
 	}
 
-	public int availableFields() {
+	public int availableFieldCount() {
 		return packetFields.size() - currentFieldIndex; 
 	}
 

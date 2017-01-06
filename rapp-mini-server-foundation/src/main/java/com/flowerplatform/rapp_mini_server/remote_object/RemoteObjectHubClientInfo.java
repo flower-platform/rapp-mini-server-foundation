@@ -3,7 +3,7 @@ package com.flowerplatform.rapp_mini_server.remote_object;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class RemoteObjectHubClient {
+public class RemoteObjectHubClientInfo {
 
 	private String rappInstanceId;
 
@@ -13,7 +13,7 @@ public class RemoteObjectHubClient {
 
 	private Queue<String> pendingResponses = new ConcurrentLinkedQueue<>();
 	
-	public RemoteObjectHubClient(String rappInstanceId) {
+	public RemoteObjectHubClientInfo(String rappInstanceId) {
 		this.rappInstanceId = rappInstanceId;
 	}
 	

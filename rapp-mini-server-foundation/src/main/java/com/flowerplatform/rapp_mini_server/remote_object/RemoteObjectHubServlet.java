@@ -17,9 +17,9 @@ public class RemoteObjectHubServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private Map<String, RemoteObjectHubClient> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
-	private Map<String, RemoteObjectHubClient> registeredClientsByRappInstanceId= new ConcurrentHashMap<>();
-	private Map<Integer, RemoteObjectHubClient> callbackIdCallerMap = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClientInfo> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClientInfo> registeredClientsByRappInstanceId= new ConcurrentHashMap<>();
+	private Map<Integer, RemoteObjectHubClientInfo> callbackIdCallerMap = new ConcurrentHashMap<>();
 	
 	
 	private AtomicInteger lastCallbackId = new AtomicInteger(0);
@@ -38,11 +38,12 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
 		// retrieve registered client
-		RemoteObjectHubClient client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
-		if (client == null && packet.getCommand() != 'A') {
-//			return;
+		RemoteObjectHubClientInfo client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
+		if (client != null) {
+			client.setLastActivityTimestamp(System.currentTimeMillis());
+		} else if (packet.getCommand() != 'A') {
+			return;
 		}
-//		client.setLastActivityTimestamp(System.currentTimeMillis());
 		
 		String rappInstanceId;
 		FlowerPlatformRemotingProtocolPacket res = null;
@@ -53,7 +54,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 				break;
 			}
 			rappInstanceId = packet.nextField();
-			client = new RemoteObjectHubClient(rappInstanceId);
+			client = new RemoteObjectHubClientInfo(rappInstanceId);
 			registeredClientsBySecurityToken.put(packet.getSecurityToken(), client);
 			registeredClientsByRappInstanceId.put(rappInstanceId, client);
 //			addDummyInvocations(client);
@@ -62,7 +63,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			packet.nextField(); // hasNext (ignored);
 			rappInstanceId = packet.nextField(); // rappInstanceId
 			packet.nextField(); // callbackId (ignored)
-			RemoteObjectHubClient invokedClient = registeredClientsByRappInstanceId.get(rappInstanceId);
+			RemoteObjectHubClientInfo invokedClient = registeredClientsByRappInstanceId.get(rappInstanceId);
 			if (invokedClient == null) {
 				break;
 			}
@@ -72,7 +73,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			int callbackId = lastCallbackId.incrementAndGet();
 			callbackIdCallerMap.put(callbackId, client);
 			StringBuilder pendingInvocation = new StringBuilder(callbackId + "\0");
-			while (packet.availableFields() > 0) {
+			while (packet.availableFieldCount() > 0) {
 				pendingInvocation.append(packet.nextField()).append("\0");
 			}
 			invokedClient.addPendingInvocation(pendingInvocation.toString());
@@ -84,7 +85,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			if (packet.getCommand() == 'R') {
 				packet.nextField(); // hasNext (ignored)
 				callbackId = Integer.parseInt(packet.nextField()); // callbackId
-				RemoteObjectHubClient invokerClient = callbackIdCallerMap.remove(callbackId);
+				RemoteObjectHubClientInfo invokerClient = callbackIdCallerMap.remove(callbackId);
 				if (invokerClient != null) {
 					String value = packet.nextField(); // value
 					invokerClient.addPendingResponse(callbackId + "\0" + value);
@@ -120,10 +121,12 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		response.getWriter().print(res.getRawData());
 	}
 	
-	private static void addDummyInvocations(RemoteObjectHubClient client) {
+/*	
+	private static void addDummyInvocations(RemoteObjectHubClientInfo client) {
 		client.getPendingInvocations().add("120\0lightController1.sayHello\0Test\0" + "2\0");
 		client.getPendingInvocations().add("121\0lightController1.turnOn\0");
 		client.getPendingInvocations().add("122\0lightController1.turnOff\0room1\0");
 	}
+*/
 	
 }

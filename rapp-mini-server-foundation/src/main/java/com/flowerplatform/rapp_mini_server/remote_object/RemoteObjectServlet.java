@@ -4,8 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Parameter;
-import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,19 +15,21 @@ import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocol
 /**
  * @author Cristian Spiescu
  */
-public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
+public class RemoteObjectServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private String securityToken;
+	private RemoteObjectServiceInvoker serviceInvoker;
 	
-	public RemoteObjectServlet(Map<String, Object> serviceRegistry, String securityToken) {
-		super(serviceRegistry);
+	private String securityToken;
+
+	public RemoteObjectServlet(RemoteObjectServiceInvoker serviceInvoker, String securityToken) {
+		this.serviceInvoker = serviceInvoker;
 		this.securityToken = securityToken;
 	}
-
+	
 	@Override
-	protected RemoteObjectInfo createServiceInfo(HttpServletRequest request, String path) throws Exception {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		byte[] buf = new byte[request.getContentLength()];
 		DataInputStream in = new DataInputStream(request.getInputStream());
 		in.readFully(buf);
@@ -39,16 +42,18 @@ public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
 		packet.nextField(); // rappInstanceId (ignore)
 //		String callbackId = 
 				packet.nextField(); // callbackId
-		String functionCall = packet.nextField();
-		String instanceName = functionCall.substring(0, functionCall.lastIndexOf('.'));
-		String method = functionCall.substring(instanceName.length() + 1);
+		String functionPath = packet.nextField();
 		
-		RemoteObjectInfo serviceInfo = new RemoteObjectInfo();
-		findInstanceAndMethod(serviceInfo, instanceName, method);
+		RemoteObjectInfo serviceInfo;
+		try {
+			serviceInfo = serviceInvoker.findInstanceAndMethod(functionPath);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalArgumentException(e);	
+		}
 		
 		Parameter[] parameters = serviceInfo.getMethod().getParameters();
-		if (parameters.length != packet.availableFields()) {
-			throw new IllegalArgumentException("Illegal number of arguments for: " + request.getRequestURI() + "; needed: " + parameters.length + "; actual: " + packet.availableFields());			
+		if (parameters.length != packet.availableFieldCount()) {
+			throw new IllegalArgumentException("Illegal number of arguments for: " + request.getRequestURI() + "; needed: " + parameters.length + "; actual: " + packet.availableFieldCount());			
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -58,7 +63,6 @@ public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
 			if (String.class.equals(param.getType())) {
 				sb.append('"');
 			}
-			// +2 because of service/method
 			sb.append(packet.nextField());
 			if (String.class.equals(param.getType())) {
 				sb.append('"');
@@ -71,13 +75,13 @@ public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
 		}
 		sb.append(']');
 		
-		parseParameters(serviceInfo, jsonFactory.createParser(sb.toString()));
-		
-		return serviceInfo;
-	}
-	
-	@Override
-	protected void writeResponse(Object result, HttpServletResponse response) throws IOException {
+		Object result;
+		try {
+			result = serviceInvoker.invoke(serviceInfo, sb.toString());
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalArgumentException(e);
+		}
+
 		PrintWriter out = response.getWriter();
 		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
 		res.addField("0"); // hasNext
@@ -85,5 +89,6 @@ public class RemoteObjectServlet extends AbstractRemoteObjectsServlet {
 		res.addField(result.toString());
 		out.write(res.getRawData());
 	}
+
 	
 }
