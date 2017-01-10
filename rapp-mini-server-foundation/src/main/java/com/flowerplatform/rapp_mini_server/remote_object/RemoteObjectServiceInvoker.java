@@ -13,12 +13,14 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
+import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
 
 /**
  * 
  * @author Claudiu Matei
  */
-public class RemoteObjectServiceInvoker {
+public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 
 	/**
 	 * Object whose own or successors' methods are invoked. For nested calls (on successors), this is the starting point for looking up the method to be invoked. 
@@ -33,20 +35,25 @@ public class RemoteObjectServiceInvoker {
 		jsonFactory.setCodec(new ObjectMapper());
 	}
 	
-	public RemoteObjectInfo findInstanceAndMethod(String methodPath) throws ReflectiveOperationException {
-		RemoteObjectInfo res = new RemoteObjectInfo();
-		
+	private Object findInstance(String methodPath) {
 		// lookup actual instance whose method must be invoked
 		Object instance = serviceInstance;
 		int k;
 		while ((k = methodPath.indexOf('.')) > 0) {
 			String instanceStr = methodPath.substring(0,  k);
-			instance = instance.getClass().getDeclaredField(instanceStr).get(instance);
+			try {
+				instance = instance.getClass().getDeclaredField(instanceStr).get(instance);
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalArgumentException(methodPath, e);
+			}
 			methodPath = methodPath.substring(k + 1);
 		}
-		String methodName = methodPath;
-		res.setRemoteObject(instance);
-		
+		return instance;
+	}
+	
+	private Method findMethod(Object instance, String methodPath) {
+		String methodName = methodPath.substring(methodPath.lastIndexOf('.') + 1);
+
 		// lookup matching method
 		Method method = null;
 		for (Method m : instance.getClass().getMethods()) {
@@ -58,27 +65,68 @@ public class RemoteObjectServiceInvoker {
 		if (method == null) {
 			throw new IllegalArgumentException("Couldn't find matching method for " + methodPath);
 		}
-		res.setMethod(method);
+		return method;
+	}
+
+	public Object invoke(String methodPath, String argumentsAsJsonArray) {
+		Object instance = findInstance(methodPath);
+		Method method = findMethod(instance, methodPath);
+		Object result = invoke(instance, method, argumentsAsJsonArray);
+		return result;
+	}
+
+	@Override
+	public Object invoke(FlowerPlatformRemotingProtocolPacket packet) {
+		String methodPath = packet.nextField();
+		Object instance = findInstance(methodPath);
+		Method method = findMethod(instance, methodPath);
 		
-		return res;
+		// build JSON array containing arguments 
+		Parameter[] parameters = method.getParameters();
+		StringBuilder argumentsAsJsonArray = new StringBuilder();
+		argumentsAsJsonArray.append("[");
+		int i = 0;
+		for (Parameter param : parameters) {
+			if (String.class.equals(param.getType())) {
+				argumentsAsJsonArray.append('"');
+			}
+			argumentsAsJsonArray.append(packet.nextField());
+			if (String.class.equals(param.getType())) {
+				argumentsAsJsonArray.append('"');
+			}
+			if (i < parameters.length - 1) {
+				// i.e. not last one
+				argumentsAsJsonArray.append(',');
+			}
+			i++;
+		}
+		argumentsAsJsonArray.append(']');
+		
+		Object result = invoke(instance, method, argumentsAsJsonArray.toString());
+		return result;
 	}
 	
-	public Object invoke(RemoteObjectInfo remoteObjectInfo, String argumentsAsJsonArray) throws ReflectiveOperationException {
+	
+	private Object invoke(Object instance, Method method, String argumentsAsJsonArray) {
 		// get typed arguments from methodInvocation string
 		Object[] args;
 		try {
-			args = parseParameters(remoteObjectInfo.getMethod(), jsonFactory.createParser(argumentsAsJsonArray));
+			args = parseParameters(method, jsonFactory.createParser(argumentsAsJsonArray));
 		} catch (IOException e) {
 			throw new IllegalArgumentException("Invalid JSON arguments array: " + argumentsAsJsonArray, e);
 		}
 		
 		// invoke function
-		Object result = remoteObjectInfo.getMethod().invoke(remoteObjectInfo.getRemoteObject(), args);
-
+		Object result;
+		try {
+			result = method.invoke(instance, args);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalArgumentException(e);
+		}
 		return result;
 	}
-
-	protected Object[] parseParameters(Method method, JsonParser parametersJsonParser) {
+	
+	private Object[] parseParameters(Method method, JsonParser parametersJsonParser) {
 		Parameter[] parameters = method.getParameters();
 		Object[] res = new Object[parameters != null ? parameters.length : 0];
 
@@ -107,7 +155,7 @@ public class RemoteObjectServiceInvoker {
 		return res;
 	}
 
-	protected Object jsonParseSingleParam(JsonParser argParser, Parameter parameter) throws IOException {
+	private Object jsonParseSingleParam(JsonParser argParser, Parameter parameter) throws IOException {
 		final Class<?> expectedParameterType = parameter.getType();
 		
 		// force the parser to advance to the next token.
@@ -154,15 +202,21 @@ public class RemoteObjectServiceInvoker {
 
 		return argParser.readValueAs(expectedParameterType);
 	}
-	
+
+	/**
+	 * Test
+	 */
 	public static void main(String[] args) throws Exception {
 		RemoteObjectServiceInvoker invoker = new RemoteObjectServiceInvoker(new TestService());
-		invoker.invoke(invoker.findInstanceAndMethod("sayHello"), "[\"Mumu1\",2]");
-		invoker.invoke(invoker.findInstanceAndMethod("testService.sayHello"), "[\"Mumu2\",2]");
+		invoker.invoke("sayHello", "[\"Mumu1\",2]");
+		invoker.invoke("testService.sayHello", "[\"Mumu2\",2]");
 	}
 	
 }
 
+/**
+ * Used for testing
+ */
 class TestService {
 	
 	public TestService testService;

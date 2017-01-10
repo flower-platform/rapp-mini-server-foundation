@@ -1,8 +1,6 @@
 package com.flowerplatform.rapp_mini_server;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.DispatcherType;
 
@@ -12,8 +10,9 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
-import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServlet;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubServlet;
+import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
+import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServlet;
 
 /**
  * @author Cristian Spiescu
@@ -24,7 +23,7 @@ public abstract class AbstractRappMiniServerMain {
 	
 	protected boolean threadJoin = false;
 	
-	protected Map<String, Object> remoteObjectRegistry = new HashMap<>();
+	protected RemoteObjectServiceInvoker serviceInvoker;
 	
 	protected void run() throws Exception {
         Server server = new Server(port);
@@ -53,7 +52,7 @@ public abstract class AbstractRappMiniServerMain {
 	}
 	
 	protected void addRemoteObjectsServlet(ServletHandler handler) {
-		handler.addServletWithMapping(new ServletHolder(new RemoteObjectServlet(remoteObjectRegistry, "12345678")), "/remoteObject/*");
+		handler.addServletWithMapping(new ServletHolder(new RemoteObjectServlet(serviceInvoker, "12345678")), "/remoteObject/*");
 		handler.addServletWithMapping(new ServletHolder(new RemoteObjectHubServlet()), "/hub/*");
 	}
 

@@ -52,7 +52,11 @@ public class RemoteObject {
 	protected String rappInstanceId;
 	
 	protected String instanceName;
-	
+
+	public static Map<String, ResultCallback> getCallbacks() {
+		return callbacks;
+	}
+
 	public void setRequestSender(IRequestSender requestSender) {
 		this.requestSender = requestSender;
 	}
@@ -104,24 +108,23 @@ public class RemoteObject {
 			sb.append(TERM);
 		}
 		sb.append(EOT); // ASCII EOT
-		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/hub"), sb.toString(), new RemoteObjectResultCallback(callback));
+		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/hub"), sb.toString(), new RemoteObjectResponseCallback(callback));
 	}
-	
-	final class RemoteObjectResultCallback implements ResultCallback {
+
+	final class RemoteObjectResponseCallback implements ResponseCallback {
 
 		public ResultCallback clientCallback;
 		
-		public RemoteObjectResultCallback(ResultCallback clientCallback) {
+		public RemoteObjectResponseCallback(ResultCallback clientCallback) {
 			this.clientCallback = clientCallback;
 		}
 
 		@Override
-		public void run(Object result) {
+		public void onSuccess(Object result) {
 			if (clientCallback == null) {
 				return;
 			}
 			FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(result.toString());
-			
 			switch(packet.getCommand()) {
 			case 'R':
 				packet.nextField(); // hasNext (ignored)
@@ -136,6 +139,10 @@ public class RemoteObject {
 			}
 		}
 	
+		public void onError() {
+			
+		}
+		
 	}
 
 }

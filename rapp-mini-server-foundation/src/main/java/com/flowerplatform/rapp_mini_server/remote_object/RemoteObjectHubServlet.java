@@ -50,13 +50,13 @@ public class RemoteObjectHubServlet extends HttpServlet {
 
 		switch (packet.getCommand()) {
 		case 'A': // register
-			if (client != null) {
-				break;
+			if (client == null) {
+				rappInstanceId = packet.nextField();
+				client = new RemoteObjectHubClientInfo(rappInstanceId);
+				registeredClientsBySecurityToken.put(packet.getSecurityToken(), client);
+				registeredClientsByRappInstanceId.put(rappInstanceId, client);
 			}
-			rappInstanceId = packet.nextField();
-			client = new RemoteObjectHubClientInfo(rappInstanceId);
-			registeredClientsBySecurityToken.put(packet.getSecurityToken(), client);
-			registeredClientsByRappInstanceId.put(rappInstanceId, client);
+			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'A');
 //			addDummyInvocations(client);
 			break;
 		case 'I': // invoke
@@ -80,8 +80,8 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'P');
 			res.addField("" + callbackId);
 			break;
-		case 'J': // get pending invocations
-		case 'R': // result
+		case 'J': // "get pending invocations" command received
+		case 'R': // result received
 			if (packet.getCommand() == 'R') {
 				packet.nextField(); // hasNext (ignored)
 				callbackId = Integer.parseInt(packet.nextField()); // callbackId
@@ -93,6 +93,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			}
 
 			if (client.getPendingInvocations().size() == 0) {
+				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'J');
 				break;
 			}
 			String invocation = client.getPendingInvocations().remove();
@@ -105,16 +106,20 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			if (client.getPendingResponses().size() == 0) {
 				break;
 			}
-			String pendingResponse = client.getPendingResponses().remove();
-			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'R');
-			res.addField(client.getPendingResponses().size() > 0 ? "1" : "0"); // hasNext
-			res.addField(pendingResponse); // includes callbackId
-			break;
+			StringBuilder sbRes = new StringBuilder();
+			while (client.getPendingResponses().size() > 0) {
+				String pendingResponse = client.getPendingResponses().remove();
+				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'R');
+				res.addField(client.getPendingResponses().size() > 0 ? "1" : "0"); // hasNext
+				res.addField(pendingResponse); // includes callbackId
+				sbRes.append(res.getRawData());
+			}
+			response.getWriter().print(sbRes.toString());
+			return;
 		}	
-
 		
 		if (res == null) {
-			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'A');
+			res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'X');
 		}
 		
 		System.out.println("<- " + res.getRawData());

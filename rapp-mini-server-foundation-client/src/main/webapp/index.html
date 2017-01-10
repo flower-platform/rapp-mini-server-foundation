@@ -20,9 +20,24 @@
     <script type="text/javascript" src="RappMiniServerFoundationClient/RappMiniServerFoundationClient.nocache.js"></script>
     
     <script type="text/javascript">
+
+    	var roi, rohc;
+		
+    	function startHubClient() {
+        	roi = new rapp_mini_server.JsRemoteObjectInitializer();
+        	rohc = new rapp_mini_server.RemoteObjectHubClient()
+					.setRemoteAddress(document.getElementById("remoteAddress").value)
+					.setSecurityToken(document.getElementById("securityToken").value)
+        			.setLocalRappInstanceId("UITest")
+        			.setScheduler(roi)
+        			.setRequestSender(roi);
+        	rohc.start();
+        	
+    	}
     	
     	function clickHandler() {
-			var roi = new rapp_mini_server.JsRemoteObjectInitializer();
+			$("#textArea").get(0).value = ""; 
+        	var roi = new rapp_mini_server.JsRemoteObjectInitializer();
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
 				.setRemoteAddress(document.getElementById("remoteAddress").value)
 				.setSecurityToken(document.getElementById("securityToken").value)
@@ -43,6 +58,9 @@
 //			});
 			//ro.altceva(3, 4, 5);
 		}
+    	
+		    	
+    	
 		</script>
 </head>
 <body>
@@ -64,27 +82,27 @@
 		<form>
 		  <div class="form-group">
 		    <label>remoteAddress</label>
-		    <input class="form-control" id="remoteAddress">
+		    <input class="form-control" id="remoteAddress" value="localhost:9001">
 		  </div>
 		  <div class="form-group">
 		    <label>securityToken</label>
-		    <input class="form-control" id="securityToken">
+		    <input class="form-control" id="securityToken" value="44444444">
 		  </div>
 		  <div class="form-group">
 		    <label>rappInstanceId</label>
-		    <input class="form-control" id="rappInstanceId">
+		    <input class="form-control" id="rappInstanceId" value="baieRapp">
 		  </div>
 		  <div class="form-group">
 		    <label>instanceName</label>
-		    <input class="form-control" id="instanceName">
+		    <input class="form-control" id="instanceName" value="lightController1">
 		  </div>
 		  <div class="form-group">
 		    <label>method</label>
-		    <input class="form-control" id="method">
+		    <input class="form-control" id="method" value="sayHello">
 		  </div>
 		  <div class="form-group">
 		    <label>arguments (comma separated)</label>
-		    <input class="form-control" id="arguments">
+		    <input class="form-control" id="arguments" value="World,3">
 		  </div>		
 		  
 		  <div class="form-group">
@@ -93,6 +111,7 @@
 		  </div>
 		</form>
 		<button class="btn btn-default" onclick="clickHandler()">Invoke Remote Object</button>
+		<button class="btn btn-default" onclick="startHubClient()">Start hub client</button>
 	</div>
 </body>
 </html>

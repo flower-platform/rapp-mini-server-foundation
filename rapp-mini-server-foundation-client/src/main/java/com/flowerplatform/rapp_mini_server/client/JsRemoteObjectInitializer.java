@@ -2,13 +2,15 @@ package com.flowerplatform.rapp_mini_server.client;
 
 import com.flowerplatform.rapp_mini_server.shared.AbstractRemoteObjectInitializer;
 import com.flowerplatform.rapp_mini_server.shared.IRequestSender;
+import com.flowerplatform.rapp_mini_server.shared.IScheduler;
 import com.flowerplatform.rapp_mini_server.shared.RemoteObject;
-import com.flowerplatform.rapp_mini_server.shared.ResultCallback;
+import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.user.client.Timer;
 
 import jsinterop.annotations.JsType;
 
@@ -19,7 +21,7 @@ import jsinterop.annotations.JsType;
  * @author Cristian Spiescu
  */
 @JsType(namespace="rapp_mini_server")
-public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer implements IRequestSender {
+public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer implements IRequestSender, IScheduler {
 
 	protected Object proxyHandler;
 	
@@ -63,7 +65,7 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 	}-*/;
 
 	@Override
-	public void sendRequest(String url, String payload, ResultCallback callback) {
+	public void sendRequest(String url, String payload, ResponseCallback callback) {
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, url);
 		log(url);
 		try {
@@ -71,13 +73,15 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					if (response.getStatusCode() == Response.SC_OK) {
-						callback.run(response.getText());
+						callback.onSuccess(response.getText());
+					} else {
+						callback.onError();
 					}
 				}
 				
 				@Override
 				public void onError(Request request, Throwable exception) {
-					
+					callback.onError();
 				}
 			});
 		} catch (RequestException e) {
@@ -85,8 +89,19 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 		}
 	};
 	
-	public native void log(String s)/*-{
+	public static native void log(String s)/*-{
 		console.log(s);
 	}-*/;
 
+	@Override
+	public void schedule(Runnable task, int millis) {
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				task.run();
+			}
+		};
+		timer.schedule(millis);
+	}
+	
 }

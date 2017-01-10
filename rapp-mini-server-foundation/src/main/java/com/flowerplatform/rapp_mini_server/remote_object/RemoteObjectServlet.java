@@ -3,7 +3,6 @@ package com.flowerplatform.rapp_mini_server.remote_object;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Parameter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,54 +37,20 @@ public class RemoteObjectServlet extends HttpServlet {
 		System.out.println("-> " + rawPacket);
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
+		if (packet.getCommand() != 'I') {
+			return;
+		}
+		
 		packet.nextField(); // hasNext (ignore)
 		packet.nextField(); // rappInstanceId (ignore)
-//		String callbackId = 
-				packet.nextField(); // callbackId
-		String functionPath = packet.nextField();
+		String callbackId =	packet.nextField(); // callbackId
 		
-		RemoteObjectInfo serviceInfo;
-		try {
-			serviceInfo = serviceInvoker.findInstanceAndMethod(functionPath);
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalArgumentException(e);	
-		}
-		
-		Parameter[] parameters = serviceInfo.getMethod().getParameters();
-		if (parameters.length != packet.availableFieldCount()) {
-			throw new IllegalArgumentException("Illegal number of arguments for: " + request.getRequestURI() + "; needed: " + parameters.length + "; actual: " + packet.availableFieldCount());			
-		}
-		
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		int i = 0;
-		for (Parameter param : parameters) {
-			if (String.class.equals(param.getType())) {
-				sb.append('"');
-			}
-			sb.append(packet.nextField());
-			if (String.class.equals(param.getType())) {
-				sb.append('"');
-			}
-			if (i < parameters.length - 1) {
-				// i.e. not last one
-				sb.append(',');
-			}
-			i++;
-		}
-		sb.append(']');
-		
-		Object result;
-		try {
-			result = serviceInvoker.invoke(serviceInfo, sb.toString());
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalArgumentException(e);
-		}
+		Object result = serviceInvoker.invoke(packet);
 
 		PrintWriter out = response.getWriter();
 		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
 		res.addField("0"); // hasNext
-		res.addField(""); // callbackId
+		res.addField(callbackId); // callbackId
 		res.addField(result.toString());
 		out.write(res.getRawData());
 	}

@@ -100,4 +100,17 @@ public class FlowerPlatformRemotingProtocolPacket {
 		return sb.toString();
 	}
 	
+	public static FlowerPlatformRemotingProtocolPacket[] getPackets(String rawData) {
+		char t = rawData.charAt(rawData.length() - 1);
+		if (t != EOT) {
+			throw new IllegalArgumentException("Invalid packet terminator char: " + t); 
+		}
+		String[] packets = rawData.split("" + EOT);
+		FlowerPlatformRemotingProtocolPacket[] res = new FlowerPlatformRemotingProtocolPacket[packets.length];
+		for (int i = 0; i < packets.length; i++) {
+			res[i] = new FlowerPlatformRemotingProtocolPacket(rawData + EOT);			
+		}
+		return res;
+	}
+	
 }
