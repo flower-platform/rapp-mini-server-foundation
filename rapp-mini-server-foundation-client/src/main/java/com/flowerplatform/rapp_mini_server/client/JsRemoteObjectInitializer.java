@@ -75,13 +75,13 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 					if (response.getStatusCode() == Response.SC_OK) {
 						callback.onSuccess(response.getText());
 					} else {
-						callback.onError();
+						callback.onError("HTTP status code: " + response.getStatusCode());
 					}
 				}
 				
 				@Override
 				public void onError(Request request, Throwable exception) {
-					callback.onError();
+					callback.onError(exception.toString());
 				}
 			});
 		} catch (RequestException e) {

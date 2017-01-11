@@ -8,6 +8,6 @@ public interface ResponseCallback {
 
 	void onSuccess(Object response);
 	
-	void onError();
+	void onError(String message);
 	
 }

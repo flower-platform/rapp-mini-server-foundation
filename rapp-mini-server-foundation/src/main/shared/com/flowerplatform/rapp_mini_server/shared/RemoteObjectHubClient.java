@@ -53,6 +53,11 @@ public class RemoteObjectHubClient {
 		return this;
 	}
 
+	public RemoteObjectHubClient setServiceInvoker(IRemoteObjectServiceInvoker serviceInvoker) {
+		this.serviceInvoker = serviceInvoker;
+		return this;
+	}
+
 	public void start() {
 		requestRegistration();
 	}
@@ -92,59 +97,61 @@ public class RemoteObjectHubClient {
 
 		@Override
 		public void onSuccess(Object response) {
-			FlowerPlatformRemotingProtocolPacket[] packets = FlowerPlatformRemotingProtocolPacket.getPackets(response.toString());
-			FlowerPlatformRemotingProtocolPacket responsePacket = packets[0];
-
-			String callbackId;
-
-			switch (responsePacket.getCommand()) {
-			case 'A':
-				registered = true;
-				if (serviceInvoker != null) {
-					requestPendingInvocations();
-				} else {
-					requestPendingResponses();
-				}
-				break;
-			case 'I':
-				if (serviceInvoker != null) {
+			try {
+				FlowerPlatformRemotingProtocolPacket[] packets = FlowerPlatformRemotingProtocolPacket.getPackets(response.toString());
+				FlowerPlatformRemotingProtocolPacket responsePacket = packets[0];
+	
+				String callbackId;
+	
+				switch (responsePacket.getCommand()) {
+				case 'A':
+					registered = true;
+					if (serviceInvoker != null) {
+						requestPendingInvocations();
+					} else {
+						requestPendingResponses();
+					}
 					break;
-				}
-				responsePacket.nextField(); // hasNext (ignored)
-				responsePacket.nextField(); // rappInstanceId (ignored)
-				callbackId = responsePacket.nextField();
-				try {
+				case 'I': {
+					if (serviceInvoker == null) {
+						scheduler.schedule(new HubConnectTask(), 5000);
+						break;
+					}
+					responsePacket.nextField(); // hasNext (ignored)
+					responsePacket.nextField(); // rappInstanceId (ignored)
+					callbackId = responsePacket.nextField();
 					Object value = serviceInvoker.invoke(responsePacket);
 					FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
+					packet.addField("0"); // hasNext
 					packet.addField(callbackId);
 					packet.addField(value.toString());
 					requestSender.sendRequest("http://" + remoteAddress + "/hub", packet.getRawData(), new HubResponseCallback());
-				} catch (Exception e) {
+					break; }
+				case 'J':
+					requestPendingResponses();
+					break;
+				case 'R': {
+					for (FlowerPlatformRemotingProtocolPacket packet : packets) {
+						packet.nextField(); // hasNext (ignored)
+						callbackId = packet.nextField();
+						String valueStr = packet.nextField();
+						ResultCallback callback = RemoteObject.getCallbacks().get(callbackId);
+						if (callback != null) {
+							callback.run(valueStr);
+						}
+					}
+					scheduler.schedule(new HubConnectTask(), 5000);
+					break; }
+				default:
 					scheduler.schedule(new HubConnectTask(), 5000);
 				}
-				break;
-			case 'J':
-				requestPendingResponses();
-				break;
-			case 'R':
-				for (FlowerPlatformRemotingProtocolPacket packet : packets) {
-					packet.nextField(); // hasNext (ignored)
-					callbackId = packet.nextField();
-					String valueStr = packet.nextField();
-					ResultCallback callback = RemoteObject.getCallbacks().get(callbackId);
-					if (callback != null) {
-						callback.run(valueStr);
-					}
-				}
-				scheduler.schedule(new HubConnectTask(), 5000);
-				break;
-			default:
+			} catch (Exception e) {
 				scheduler.schedule(new HubConnectTask(), 5000);
 			}
 		}
 
 		@Override
-		public void onError() {
+		public void onError(String message) {
 			registered = false;
 			scheduler.schedule(new HubConnectTask(), 5000);
 		}

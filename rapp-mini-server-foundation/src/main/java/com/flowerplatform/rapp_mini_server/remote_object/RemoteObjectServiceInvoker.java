@@ -42,7 +42,7 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		while ((k = methodPath.indexOf('.')) > 0) {
 			String instanceStr = methodPath.substring(0,  k);
 			try {
-				instance = instance.getClass().getDeclaredField(instanceStr).get(instance);
+				instance = instance.getClass().getField(instanceStr).get(instance);
 			} catch (ReflectiveOperationException e) {
 				throw new IllegalArgumentException(methodPath, e);
 			}

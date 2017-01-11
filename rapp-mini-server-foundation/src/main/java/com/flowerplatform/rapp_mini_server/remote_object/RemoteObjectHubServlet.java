@@ -114,6 +114,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 				res.addField(pendingResponse); // includes callbackId
 				sbRes.append(res.getRawData());
 			}
+			System.out.println("<- " + sbRes.toString());
 			response.getWriter().print(sbRes.toString());
 			return;
 		}	

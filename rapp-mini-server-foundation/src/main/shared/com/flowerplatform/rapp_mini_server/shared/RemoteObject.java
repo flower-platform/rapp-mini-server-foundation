@@ -57,8 +57,10 @@ public class RemoteObject {
 		return callbacks;
 	}
 
-	public void setRequestSender(IRequestSender requestSender) {
+	@SuppressWarnings("unchecked")
+	public <T extends RemoteObject> T setRequestSender(IRequestSender requestSender) {
 		this.requestSender = requestSender;
+		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -74,8 +76,8 @@ public class RemoteObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends RemoteObject> T setRappInstanceId(String hubAddress) {
-		this.rappInstanceId = hubAddress;
+	public <T extends RemoteObject> T setRappInstanceId(String remoteRappInstanceId) {
+		this.rappInstanceId = remoteRappInstanceId;
 		return (T) this;
 	}
 
@@ -139,7 +141,7 @@ public class RemoteObject {
 			}
 		}
 	
-		public void onError() {
+		public void onError(String message) {
 			
 		}
 		
