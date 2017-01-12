@@ -23,9 +23,9 @@
 
     	var roi, rohc;
 		
-    	function startHubClient() {
+    	function startHubConnection() {
         	roi = new rapp_mini_server.JsRemoteObjectInitializer();
-        	rohc = new rapp_mini_server.RemoteObjectHubClient()
+        	rohc = new rapp_mini_server.RemoteObjectHubConnection()
 					.setRemoteAddress(document.getElementById("remoteAddress").value)
 					.setSecurityToken(document.getElementById("securityToken").value)
         			.setLocalRappInstanceId("UITest")
@@ -41,7 +41,7 @@
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
 				.setRemoteAddress(document.getElementById("remoteAddress").value)
 				.setSecurityToken(document.getElementById("securityToken").value)
-				.setRappInstanceId(document.getElementById("rappInstanceId").value)
+				.setRappInstanceId(document.getElementById("rappInstanceId").value || null)
 				.setInstanceName(document.getElementById("instanceName").value)
 			);
 			var argumentsStr = document.getElementById("arguments").value;
@@ -111,7 +111,7 @@
 		  </div>
 		</form>
 		<button class="btn btn-default" onclick="clickHandler()">Invoke Remote Object</button>
-		<button class="btn btn-default" onclick="startHubClient()">Start hub client</button>
+		<button class="btn btn-default" onclick="startHubConnection()">Start hub connection</button>
 	</div>
 </body>
 </html>

@@ -86,6 +86,7 @@ public class RemoteObject {
 		this.instanceName = instance;
 		return (T) this;
 	}
+
 	
 	public void invokeMethod(String method, Object[] arguments, ResultCallback callback) {
 		if (requestSender == null) {

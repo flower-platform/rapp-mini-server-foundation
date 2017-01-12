@@ -17,9 +17,9 @@ public class RemoteObjectHubServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private Map<String, RemoteObjectHubClientInfo> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
-	private Map<String, RemoteObjectHubClientInfo> registeredClientsByRappInstanceId= new ConcurrentHashMap<>();
-	private Map<Integer, RemoteObjectHubClientInfo> callbackIdCallerMap = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClient> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClient> registeredClientsByRappInstanceId= new ConcurrentHashMap<>();
+	private Map<Integer, RemoteObjectHubClient> callbackIdCallerMap = new ConcurrentHashMap<>();
 	
 	
 	private AtomicInteger lastCallbackId = new AtomicInteger(0);
@@ -38,7 +38,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
 		// retrieve registered client
-		RemoteObjectHubClientInfo client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
+		RemoteObjectHubClient client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
 		if (client != null) {
 			client.setLastActivityTimestamp(System.currentTimeMillis());
 		} else if (packet.getCommand() != 'A') {
@@ -52,7 +52,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		case 'A': // register
 			if (client == null) {
 				rappInstanceId = packet.nextField();
-				client = new RemoteObjectHubClientInfo(rappInstanceId);
+				client = new RemoteObjectHubClient(rappInstanceId);
 				registeredClientsBySecurityToken.put(packet.getSecurityToken(), client);
 				registeredClientsByRappInstanceId.put(rappInstanceId, client);
 			}
@@ -63,7 +63,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			packet.nextField(); // hasNext (ignored);
 			rappInstanceId = packet.nextField(); // rappInstanceId
 			packet.nextField(); // callbackId (ignored)
-			RemoteObjectHubClientInfo invokedClient = registeredClientsByRappInstanceId.get(rappInstanceId);
+			RemoteObjectHubClient invokedClient = registeredClientsByRappInstanceId.get(rappInstanceId);
 			if (invokedClient == null) {
 				break;
 			}
@@ -85,7 +85,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			if (packet.getCommand() == 'R') {
 				packet.nextField(); // hasNext (ignored)
 				callbackId = Integer.parseInt(packet.nextField()); // callbackId
-				RemoteObjectHubClientInfo invokerClient = callbackIdCallerMap.remove(callbackId);
+				RemoteObjectHubClient invokerClient = callbackIdCallerMap.remove(callbackId);
 				if (invokerClient != null) {
 					String value = packet.nextField(); // value
 					invokerClient.addPendingResponse(callbackId + "\0" + value);
@@ -104,6 +104,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			break;
 		case 'S': // get pending results
 			if (client.getPendingResponses().size() == 0) {
+				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'S');
 				break;
 			}
 			StringBuilder sbRes = new StringBuilder();

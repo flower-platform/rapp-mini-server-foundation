@@ -3,7 +3,7 @@ package com.flowerplatform.rapp_mini_server.shared;
 import jsinterop.annotations.JsType;
 
 @JsType(namespace="rapp_mini_server")
-public class RemoteObjectHubClient {
+public class RemoteObjectHubConnection {
 
 	private IRequestSender requestSender;
 
@@ -28,32 +28,32 @@ public class RemoteObjectHubClient {
 
 	private boolean registered;
 	
-	public RemoteObjectHubClient setRemoteAddress(String remoteAddress) {
+	public RemoteObjectHubConnection setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
 		return this;
 	}
 
-	public RemoteObjectHubClient setSecurityToken(String securityToken) {
+	public RemoteObjectHubConnection setSecurityToken(String securityToken) {
 		this.securityToken = securityToken;
 		return this;
 	}
 
-	public RemoteObjectHubClient setLocalRappInstanceId(String rappInstanceId) {
+	public RemoteObjectHubConnection setLocalRappInstanceId(String rappInstanceId) {
 		this.localRappInstanceId = rappInstanceId;
 		return this;
 	}
 
-	public RemoteObjectHubClient setRequestSender(IRequestSender requestSender) {
+	public RemoteObjectHubConnection setRequestSender(IRequestSender requestSender) {
 		this.requestSender = requestSender;
 		return this;
 	}
 	
-	public RemoteObjectHubClient setScheduler(IScheduler scheduler) {
+	public RemoteObjectHubConnection setScheduler(IScheduler scheduler) {
 		this.scheduler = scheduler;
 		return this;
 	}
 
-	public RemoteObjectHubClient setServiceInvoker(IRemoteObjectServiceInvoker serviceInvoker) {
+	public RemoteObjectHubConnection setServiceInvoker(IRemoteObjectServiceInvoker serviceInvoker) {
 		this.serviceInvoker = serviceInvoker;
 		return this;
 	}
