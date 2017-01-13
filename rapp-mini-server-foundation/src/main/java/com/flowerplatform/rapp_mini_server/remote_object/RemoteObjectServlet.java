@@ -41,7 +41,7 @@ public class RemoteObjectServlet extends HttpServlet {
 			return;
 		}
 		
-		packet.nextField(); // hasNext (ignore)
+//		packet.nextField(); // hasNext (ignore)
 		packet.nextField(); // rappInstanceId (ignore)
 		String callbackId =	packet.nextField(); // callbackId
 		
@@ -49,7 +49,7 @@ public class RemoteObjectServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
-		res.addField("0"); // hasNext
+//		res.addField("0"); // hasNext
 		res.addField(callbackId); // callbackId
 		res.addField(result.toString());
 		out.write(res.getRawData());

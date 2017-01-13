@@ -98,7 +98,7 @@ public class RemoteObject {
 		sb.append("1").append(TERM); // protocol version
 		sb.append(securityToken).append(TERM); // security token
 		sb.append("I").append(TERM); // command = INVOKE
-		sb.append("0").append(TERM); // hasNext = false
+//		sb.append("0").append(TERM); // hasNext = false
 		sb.append(rappInstanceId == null ? "" : rappInstanceId).append(TERM); // rappInstanceId
 		sb.append(TERM); // callbackId (null)
 		if (instanceName != null) {
@@ -130,7 +130,7 @@ public class RemoteObject {
 			FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(result.toString());
 			switch(packet.getCommand()) {
 			case 'R':
-				packet.nextField(); // hasNext (ignored)
+//				packet.nextField(); // hasNext (ignored)
 				packet.nextField(); // callbackId
 				String value = packet.nextField(); // result value
 				clientCallback.run(value);

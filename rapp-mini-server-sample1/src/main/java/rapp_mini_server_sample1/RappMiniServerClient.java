@@ -88,11 +88,11 @@ public class RappMiniServerClient {
 	
 	public void test() {
 		startHubClient();
-//		callArduinoDirect();
+		callArduinoDirect();
 		callArduinoHub();
-		callArduinoHub();
-		callArduinoHub();
-//		callJavaDirect();
+//		callArduinoHub();
+//		callArduinoHub();
+		callJavaDirect();
 		callJavaHub();
 	}
 	

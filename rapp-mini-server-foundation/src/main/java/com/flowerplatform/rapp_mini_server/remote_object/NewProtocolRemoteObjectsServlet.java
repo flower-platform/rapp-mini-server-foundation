@@ -35,7 +35,7 @@ public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServle
 		System.out.println("-> " + rawPacket);
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
-		packet.nextField(); // hasNext (ignore)
+//		packet.nextField(); // hasNext (ignore)
 		packet.nextField(); // rappInstanceId (ignore)
 //		String callbackId = 
 				packet.nextField(); // callbackId
@@ -80,7 +80,7 @@ public class NewProtocolRemoteObjectsServlet extends AbstractRemoteObjectsServle
 	protected void writeResponse(Object result, HttpServletResponse response) throws IOException {
 		PrintWriter out = response.getWriter();
 		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
-		res.addField("0"); // hasNext
+//		res.addField("0"); // hasNext
 		res.addField(""); // callbackId
 		res.addField(result.toString());
 		out.write(res.getRawData());
