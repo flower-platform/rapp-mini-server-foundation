@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.flowerplatform</groupId>
 	<artifactId>rapp-mini-server-foundation</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -15,6 +15,13 @@
 		<!-- The name of the GitHub repository where we should deploy this artifact, when built. -->
 		<github.repository.name>rapp-mini-server-foundation</github.repository.name>
 		<github.repository.owner>flower-platform</github.repository.owner>
+		<!-- 
+			To be able to deploy to the github maven repo,
+			you need to have a file "pom.DO_NOT_COMMIT.properties" containing:
+			
+			github.global.userName = ...
+			github.global.oauth2Token = ...
+		 -->
 	</properties>
 
 	<dependencies>
@@ -68,7 +75,7 @@
 						</goals>
 						<configuration>
 							<files>
-								<file>maven-local.properties</file>
+								<file>pom.DO_NOT_COMMIT.properties</file>
 							</files>
 						</configuration>
 					</execution>
