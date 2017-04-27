@@ -1,0 +1,9 @@
+{
+    "name": "${gwt.module.name}",
+    "version": "${project.version}",
+    "ignore": [
+        ".bowerrc",
+        ".gitignore",
+        ".nojekyll"
+    ]
+}
