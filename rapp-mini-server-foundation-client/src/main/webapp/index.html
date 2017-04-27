@@ -17,7 +17,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     
 	<!-- Load our main app JS file. -->
-    <script type="text/javascript" src="RappMiniServerFoundationClient/RappMiniServerFoundationClient.nocache.js"></script>
+    <script type="text/javascript" src="FlowerPlatformUiRuntime/FlowerPlatformUiRuntime.nocache.js"></script>
     
     <script type="text/javascript">
 
@@ -44,6 +44,7 @@
 				.setRappInstanceId(document.getElementById("rappInstanceId").value || null)
 				.setInstanceName(document.getElementById("instanceName").value)
 			);
+
 			var argumentsStr = document.getElementById("arguments").value;
 			var arguments = argumentsStr ? argumentsStr.split(",") : [];
 	
@@ -53,10 +54,10 @@
 			var method = document.getElementById("method").value;
 			ro[method].apply(this, arguments);
 
+//			ro.sayHello("Lume", 4);
 //			ro.ceva.apply(arguments, function(result) {
 //				$("#textArea").get(0).value = result; 
 //			});
-			//ro.altceva(3, 4, 5);
 		}
     	
 		    	

@@ -5,7 +5,7 @@
 <booleanAttribute key="com.google.gdt.eclipse.suiteWarArgumentProcessor.IS_WAR_FROM_PROJECT_PROPERTIES" value="true"/>
 <booleanAttribute key="com.google.gwt.eclipse.core.CODE_SERVER_PORT_AUTO" value="true"/>
 <listAttribute key="com.google.gwt.eclipse.core.ENTRY_POINT_MODULES">
-<listEntry value="com.flowerplatform.rapp_mini_server.RappMiniServerFoundationClient"/>
+<listEntry value="com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
 </listAttribute>
 <booleanAttribute key="com.google.gwt.eclipse.core.SUPERDEVMODE_ENABLED" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
@@ -23,7 +23,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.maven.mavenClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-generateJsInteropExports -port auto -logLevel INFO -war &quot;${project_loc:rapp-mini-server-foundation-client}/src/main/webapp&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.RappMiniServerFoundationClient"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-generateJsInteropExports -port auto -logLevel INFO -war &quot;${project_loc:rapp-mini-server-foundation-client}/src/main/webapp&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="rapp-mini-server-foundation-client"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m"/>
 </launchConfiguration>

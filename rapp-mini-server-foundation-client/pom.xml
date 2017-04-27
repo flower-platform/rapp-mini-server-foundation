@@ -19,9 +19,8 @@
 		<!-- The name of the GWT module we're packaging the JS files for. -->
 		<gwt.module.name>FlowerPlatformUiRuntime</gwt.module.name>
 		<!-- The repository name where to deploy the built bower components -->
-		<github.repository.name>test-mvn-repository</github.repository.name>
-		<!-- The repository owner name, where the bower components will be deployed -->
-		<github.repository.owner>andrei-taras</github.repository.owner>
+		<github.repository.name>rapp-mini-server-foundation</github.repository.name>
+		<github.repository.owner>flower-platform</github.repository.owner>
 	</properties>
 
 	<dependencies>
@@ -73,7 +72,7 @@
 						</goals>
 						<configuration>
 							<files>
-								<file>maven-local.properties</file>
+								<file>../rapp-mini-server-foundation/pom.DO_NOT_COMMIT.properties</file>
 							</files>
 						</configuration>
 					</execution>
