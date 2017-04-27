@@ -1,2 +1,3 @@
 /target/
 *.DO_NOT_COMMIT.*
+/maven-local.properties
