@@ -1,0 +1,9 @@
+{
+    "name": "FlowerPlatformUiRuntime",
+    "version": "0.0.1-SNAPSHOT",
+    "ignore": [
+        ".bowerrc",
+        ".gitignore",
+        ".nojekyll"
+    ]
+}
