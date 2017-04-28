@@ -19,11 +19,12 @@
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/src/main/java&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/src-shared&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#13;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;rapp-mini-server-foundation-client&quot;/&gt;&#13;&#10;&lt;/runtimeClasspathEntry&gt;&#13;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/etc/gwt-dev-mode-extra-classpath&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.google.gdt.eclipse.maven.mavenClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-generateJsInteropExports -port auto -logLevel INFO -war &quot;${project_loc:rapp-mini-server-foundation-client}/src/main/webapp&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.RappMiniServerFoundationClient com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-generateJsInteropExports -port auto -logLevel INFO -war &quot;${project_loc:rapp-mini-server-foundation-client}/src/main/webapp&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="rapp-mini-server-foundation-client"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m"/>
 </launchConfiguration>
