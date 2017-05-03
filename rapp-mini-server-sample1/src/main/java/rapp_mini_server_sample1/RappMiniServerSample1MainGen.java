@@ -9,6 +9,8 @@ public class RappMiniServerSample1MainGen extends AbstractRappMiniServerMain {
 
 	public HelloService helloService = new HelloService();
 	
+	public RoboticArmAndTankService roboticArmAndTankService = new RoboticArmAndTankService();
+	
 	public static void main(String... args) throws Exception {
 		RappMiniServerSample1Main main = new RappMiniServerSample1Main();
 		main.port = 9001;
