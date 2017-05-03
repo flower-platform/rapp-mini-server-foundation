@@ -19,8 +19,10 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 	public ServoService3 servo2;
 	public ServoService3 servo3;
 	
+	public RoboticArmAndTankService roboticArmAndTankService;
+	
 	public static void main(String[] args) throws Exception {
-		System.setProperty(LogbackConfigurator.LOGBACK_MAIN_XML, "true");
+//		System.setProperty(LogbackConfigurator.LOGBACK_MAIN_XML, "true");
 		
 		System.out.println("Salut ba4!");
 		
@@ -66,10 +68,19 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 //	        }
 //		}
 		
+		main.roboticArmAndTankService = new RoboticArmAndTankService();
+
 		JPigpio pigpio = new PigpioSocket("localhost", 8888);
-		main.servo1 = new ServoService3(pigpio, 26);
+		main.servo1 = new ServoService3(pigpio, 13);
+		main.roboticArmAndTankService.servos.put("Servo1", main.servo1);
 		main.servo2 = new ServoService3(pigpio, 19);
-		main.servo3 = new ServoService3(pigpio, 13);
+		main.roboticArmAndTankService.servos.put("Servo2", main.servo2);
+		main.servo3 = new ServoService3(pigpio, 26);
+		main.roboticArmAndTankService.servos.put("Servo3", main.servo3);
+		
+		main.roboticArmAndTankService.servos.put("Servo4", new ServoService3(pigpio, 16));
+		main.roboticArmAndTankService.servos.put("Servo5", new ServoService3(pigpio, 20));
+		main.roboticArmAndTankService.servos.put("Servo6", new ServoService3(pigpio, 21));
 		
 //		new Thread() {
 //			@Override
