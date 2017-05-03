@@ -80,7 +80,7 @@
     <div class="container">
 		<h1>Remote Object Tester UI</h1>
 		
-		<form>
+		<form action="javascript:clickHandler()">
 		  <div class="form-group">
 		    <label>remoteAddress</label>
 		    <input class="form-control" id="remoteAddress" value="localhost:9001">
@@ -110,8 +110,8 @@
 		    <label>result</label>
 		  	<textarea id="textArea" class="form-control" rows="3"></textarea>
 		  </div>
+		  <button type="submit" class="btn btn-default">Invoke Remote Object</button>
 		</form>
-		<button class="btn btn-default" onclick="clickHandler()">Invoke Remote Object</button>
 		<button class="btn btn-default" onclick="startHubConnection()">Start hub connection</button>
 	</div>
 </body>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<include resource="logback-base-included.xml" />
+
+    <logger name="com.flowerplatform.rapp_mini_server.python.PythonRemoteControl_RECEPTION_UNKNOWN_LOG" level="DEBUG"/>
+</configuration>
