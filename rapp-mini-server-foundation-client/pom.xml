@@ -18,9 +18,6 @@
 		
 		<!-- The name of the GWT module we're packaging the JS files for. -->
 		<gwt.module.name>FlowerPlatformUiRuntime</gwt.module.name>
-		<!-- The repository name where to deploy the built bower components -->
-		<github.repository.name>rapp-mini-server-foundation</github.repository.name>
-		<github.repository.owner>flower-platform</github.repository.owner>
 	</properties>
 
 	<dependencies>
@@ -91,6 +88,7 @@
 							<!-- style>DETAILED</style -->
 							<style>OBFUSCATED</style>
 							<strict>true</strict>
+							<generateJsInteropExports>true</generateJsInteropExports>
 						</configuration>
 					</execution>
 				</executions>
