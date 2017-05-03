@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.flowerplatform</groupId>
+  <artifactId>rapp-mini-server-foundation</artifactId>
+  <version>0.0.7-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20170503.124303</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20170503124303</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.0.7-20170503.124303-1</value>
+        <updated>20170503124303</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.0.7-20170503.124303-1</value>
+        <updated>20170503124303</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
