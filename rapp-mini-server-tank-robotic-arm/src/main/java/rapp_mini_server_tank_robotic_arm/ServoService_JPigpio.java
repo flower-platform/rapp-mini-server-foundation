@@ -3,13 +3,13 @@ package rapp_mini_server_tank_robotic_arm;
 import jpigpio.JPigpio;
 import jpigpio.PigpioException;
 
-public class ServoService3 {
+public class ServoService_JPigpio {
 
 	protected JPigpio pigpio;
 	
 	protected int pin;
 
-	public ServoService3(JPigpio pigpio, int pin) {
+	public ServoService_JPigpio(JPigpio pigpio, int pin) {
 		super();
 		this.pigpio = pigpio;
 		this.pin = pin;

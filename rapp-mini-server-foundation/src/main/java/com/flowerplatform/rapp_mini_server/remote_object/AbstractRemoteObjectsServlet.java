@@ -158,6 +158,7 @@ public abstract class AbstractRemoteObjectsServlet extends HttpServlet {
 					}
 			);
 		} else {
+			// TODO CS: am putea folosi StringConversionutil pe care l-am facut, si sa cerem mereu de aici string?
 			if (String.class.equals(expectedParameterType)) {
 				return argParser.getValueAsString();
 			} else if (int.class.equals(expectedParameterType) || Integer.class.equals(expectedParameterType)) {
@@ -171,6 +172,7 @@ public abstract class AbstractRemoteObjectsServlet extends HttpServlet {
 			} else if (double.class.equals(expectedParameterType) || Double.class.equals(expectedParameterType)) {
 				return argParser.getDoubleValue();
 			} else if (char.class.equals(expectedParameterType) || Character.class.equals(expectedParameterType)) {
+				// TODO CS: asta o fi bine? cred ca nu
 				return (char)argParser.getByteValue();
 			} else if (byte.class.equals(expectedParameterType) || Byte.class.equals(expectedParameterType)) {
 				return argParser.getByteValue();

@@ -20,7 +20,7 @@ public class RoboticArmAndTankService {
 	
 	protected Data data;
 	
-	protected Map<String, ServoService3> servos = new HashMap<>();
+	protected Map<String, ServoService_JPigpio> servos = new HashMap<>();
 	
 	protected void save() {
 		File file = new File(PERSISTENCE_FILE);

@@ -2,11 +2,11 @@ package rapp_mini_server_tank_robotic_arm;
 
 import com.diozero.sandpit.Servo;
 
-public class ServoService2 {
+public class ServoService_DioZero {
 
 	protected Servo servo;
 	
-	public ServoService2(int pin) {
+	public ServoService_DioZero(int pin) {
 		super();
 		servo = new Servo(pin, 50, 1.5f);
 	}
