@@ -75,6 +75,7 @@
 							<goal>read-project-properties</goal>
 						</goals>
 						<configuration>
+							<quiet>true</quiet>
 							<files>
 								<file>pom.DO_NOT_COMMIT.properties</file>
 							</files>
