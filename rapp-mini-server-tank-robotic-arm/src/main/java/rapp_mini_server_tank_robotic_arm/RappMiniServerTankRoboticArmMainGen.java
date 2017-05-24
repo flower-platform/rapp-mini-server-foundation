@@ -109,12 +109,12 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 
 		
 		// Diozero implementation
-		main.servoService1 = new DioZeroPwmOutputServoService(null, "servoService1", 13).loadPersistentProperties();
-		main.servoService2 = new DioZeroPwmOutputServoService(null, "servoService2", 19).loadPersistentProperties();
-		main.servoService3 = new DioZeroPwmOutputServoService(null, "servoService3", 26).loadPersistentProperties();
-		main.servoService4 = new DioZeroPwmOutputServoService(null, "servoService4", 16).loadPersistentProperties();
-		main.servoService5 = new DioZeroPwmOutputServoService(null, "servoService5", 20).loadPersistentProperties();
-		main.servoService6 = new DioZeroPwmOutputServoService(null, "servoService6", 21).loadPersistentProperties();
+		main.servoService1 = new DiozeroPwmOutputServoService(null, "servoService1", 13).loadPersistentProperties();
+		main.servoService2 = new DiozeroPwmOutputServoService(null, "servoService2", 19).loadPersistentProperties();
+		main.servoService3 = new DiozeroPwmOutputServoService(null, "servoService3", 26).loadPersistentProperties();
+		main.servoService4 = new DiozeroPwmOutputServoService(null, "servoService4", 16).loadPersistentProperties();
+		main.servoService5 = new DiozeroPwmOutputServoService(null, "servoService5", 20).loadPersistentProperties();
+		main.servoService6 = new DiozeroPwmOutputServoService(null, "servoService6", 21).loadPersistentProperties();
 		
 
 		main.rightMotorService = new MotorService(22, 27);
