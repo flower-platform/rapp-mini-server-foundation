@@ -5,9 +5,6 @@ import com.flowerplatform.rapp_mini_server.logback.LogbackConfigurator;
 import com.flowerplatform.rapp_mini_server.persistent_properties.PersistentPropertiesCapable;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
 
-import jpigpio.JPigpio;
-import jpigpio.PigpioSocket;
-
 public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerMain {
 
 //	public ServoService servo1;
@@ -29,10 +26,15 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 	public ServoService servoService5;
 	public ServoService servoService6;
 	
+	public MotorService rightMotorService;
+	public MotorService leftMotorService;
+	
 	public static void main(String[] args) throws Exception {
 		System.setProperty(LogbackConfigurator.LOGBACK_MAIN_XML, "true");
+		System.setProperty("PIGPIOD_HOST", "localhost");
+		System.setProperty("PIGPIOD_PORT", "8888");
 		
-		System.out.println("Salut ba4!");
+		System.out.println("Salut, bah!");
 		
 //		prc.callFunction("servo", "set_servo", "int", "17", "int", "1500");
 //		Thread.sleep(2000);
@@ -78,8 +80,8 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 		
 		PersistentPropertiesCapable.setPropertiesFilePath("../persistent.properties");
 
-		JPigpio pigpio = null;
-		pigpio = new PigpioSocket("localhost", 8888);
+//		JPigpio pigpio = null;
+//		pigpio = new PigpioSocket("localhost", 8888);
 //		main.roboticArmAndTankService = new RoboticArmAndTankService();
 
 //		main.servo1 = new ServoService_JPigpio(pigpio, 13);
@@ -94,17 +96,35 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 //		main.roboticArmAndTankService.servos.put("Servo6", new ServoService_JPigpio(pigpio, 21));
 		
 		// TODO CS: ce facem cu necesitatea acestui load? sa-l transormam in init? sau vreun "start"?
-		main.servoService1 = new ServoService(null, "servoService1", pigpio, 13).loadPersistentProperties();
-		main.servoService2 = new ServoService(null, "servoService2", pigpio, 19).loadPersistentProperties();
-		main.servoService3 = new ServoService(null, "servoService3", pigpio, 26).loadPersistentProperties();
-		main.servoService4 = new ServoService(null, "servoService4", pigpio, 16).loadPersistentProperties();
-		main.servoService5 = new ServoService(null, "servoService5", pigpio, 20).loadPersistentProperties();
-		main.servoService6 = new ServoService(null, "servoService6", pigpio, 21).loadPersistentProperties();
+		main.servoService1 = new ServoService(null, "servoService1", 13).loadPersistentProperties();
+		main.servoService2 = new ServoService(null, "servoService2", 19).loadPersistentProperties();
+		main.servoService3 = new ServoService(null, "servoService3", 26).loadPersistentProperties();
+		main.servoService4 = new ServoService(null, "servoService4", 16).loadPersistentProperties();
+		main.servoService5 = new ServoService(null, "servoService5", 20).loadPersistentProperties();
+		main.servoService6 = new ServoService(null, "servoService6", 21).loadPersistentProperties();
+		
+		main.rightMotorService = new MotorService(22, 27);
+		main.leftMotorService = new MotorService(17, 4);
+		main.rightMotorService.stop();
+		main.leftMotorService.stop();
 		
 //		new Thread() {
 //			@Override
 //			public void run() {
-//				Test_ServoSweep.main(null);
+//				try (PwmOutputDevice led = new PwmOutputDevice(18, 1f)) {
+//					while(true) {
+//						System.out.println("led test");
+//						for (float f = 0f; f <= 1; f += 0.1) {
+//							led.setValue(f);
+//						    SleepUtil.sleepSeconds(.1);
+//						}
+//						for (float f = 1f; f >= 0f; f -= 0.1) {
+//							led.setValue(f);
+//						    SleepUtil.sleepSeconds(.1);
+//						}
+//					    System.out.println("led test end");
+//					}
+//				}
 //			}
 //		}.start();
 		
