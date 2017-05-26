@@ -69,10 +69,18 @@ public class RemoteObject {
 		return (T) this;
 	}
 
+	public String getRemoteAddress() {
+		return remoteAddress;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends RemoteObject> T setSecurityToken(String securityToken) {
 		this.securityToken = securityToken;
 		return (T) this;
+	}
+	
+	public String getSecurityToken() {
+		return securityToken;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -81,12 +89,19 @@ public class RemoteObject {
 		return (T) this;
 	}
 
+	public String getRappInstanceId() {
+		return rappInstanceId;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends RemoteObject> T setInstanceName(String instance) {
 		this.instanceName = instance;
 		return (T) this;
 	}
-
+	
+	public String getInstanceName() {
+		return instanceName;
+	}
 	
 	public void invokeMethod(String method, Object[] arguments, ResultCallback callback) {
 		if (requestSender == null) {
