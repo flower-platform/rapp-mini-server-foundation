@@ -32,6 +32,7 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 	
 	public static void main(String[] args) throws Exception {
 		System.setProperty(LogbackConfigurator.LOGBACK_MAIN_XML, "true");
+		System.setProperty("com.diozero.devicefactory", "com.diozero.internal.provider.pigpioj.PigpioJDeviceFactory");
 		System.setProperty("PIGPIOD_HOST", "localhost");
 		System.setProperty("PIGPIOD_PORT", "8888");
 		
@@ -108,14 +109,21 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 //		main.servoService6 = new JPigpioServoService(null, "servoService6", pigpio, 21).loadPersistentProperties();
 
 		
-		// Diozero implementation
-		main.servoService1 = new DiozeroPwmOutputServoService(null, "servoService1", 13).loadPersistentProperties();
-		main.servoService2 = new DiozeroPwmOutputServoService(null, "servoService2", 19).loadPersistentProperties();
-		main.servoService3 = new DiozeroPwmOutputServoService(null, "servoService3", 26).loadPersistentProperties();
-		main.servoService4 = new DiozeroPwmOutputServoService(null, "servoService4", 16).loadPersistentProperties();
-		main.servoService5 = new DiozeroPwmOutputServoService(null, "servoService5", 20).loadPersistentProperties();
-		main.servoService6 = new DiozeroPwmOutputServoService(null, "servoService6", 21).loadPersistentProperties();
+		// Diozero PwmOutput implementation
+//		main.servoService1 = new DiozeroPwmOutputServoService(null, "servoService1", 13).loadPersistentProperties();
+//		main.servoService2 = new DiozeroPwmOutputServoService(null, "servoService2", 19).loadPersistentProperties();
+//		main.servoService3 = new DiozeroPwmOutputServoService(null, "servoService3", 26).loadPersistentProperties();
+//		main.servoService4 = new DiozeroPwmOutputServoService(null, "servoService4", 16).loadPersistentProperties();
+//		main.servoService5 = new DiozeroPwmOutputServoService(null, "servoService5", 20).loadPersistentProperties();
+//		main.servoService6 = new DiozeroPwmOutputServoService(null, "servoService6", 21).loadPersistentProperties();
 		
+		// Diozero Servo implementation
+		main.servoService1 = new DiozeroServoService(null, "servoService1", 13).loadPersistentProperties();
+		main.servoService2 = new DiozeroServoService(null, "servoService2", 19).loadPersistentProperties();
+		main.servoService3 = new DiozeroServoService(null, "servoService3", 26).loadPersistentProperties();
+		main.servoService4 = new DiozeroServoService(null, "servoService4", 16).loadPersistentProperties();
+		main.servoService5 = new DiozeroServoService(null, "servoService5", 20).loadPersistentProperties();
+		main.servoService6 = new DiozeroServoService(null, "servoService6", 21).loadPersistentProperties();
 
 		main.rightMotorService = new MotorService(22, 27);
 		main.leftMotorService = new MotorService(17, 4);

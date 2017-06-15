@@ -1,6 +1,6 @@
 package rapp_mini_server_tank_robotic_arm.obsolete;
 
-import com.diozero.sandpit.Servo;
+import com.diozero.Servo;
 
 public class ServoService_DioZero {
 
