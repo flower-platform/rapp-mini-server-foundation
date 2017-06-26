@@ -25,6 +25,19 @@
 		 -->
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>ossrh-snapshots</id>
+			<name>Sonatype Open Source Maven Snapshots Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+		<repository>
+			<id>geotoolkit</id>
+			<name>Geotoolkit Repository</name>
+			<url>http://maven.geotoolkit.org/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.jsinterop</groupId>
@@ -50,6 +63,21 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.diozero</groupId>
+			<artifactId>diozero-core</artifactId>
+			<version>0.10-SNAPSHOT</version>
+		</dependency>
+			<dependency>
+			<groupId>com.diozero</groupId>
+			<artifactId>diozero-provider-pigpio</artifactId>
+			<version>0.10-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.rxtx</groupId>
+		    <artifactId>rxtxcomm</artifactId>
+		    <version>2.2pre2</version>
 		</dependency>
 	</dependencies>
 

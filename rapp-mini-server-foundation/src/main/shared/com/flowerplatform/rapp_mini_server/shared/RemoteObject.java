@@ -98,10 +98,9 @@ public class RemoteObject {
 		sb.append("1").append(TERM); // protocol version
 		sb.append(securityToken).append(TERM); // security token
 		sb.append("I").append(TERM); // command = INVOKE
-//		sb.append("0").append(TERM); // hasNext = false
 		sb.append(rappInstanceId == null ? "" : rappInstanceId).append(TERM); // rappInstanceId
 		sb.append(TERM); // callbackId (null)
-		if (instanceName != null) {
+		if (instanceName != null && instanceName.length() > 0) {
 			sb.append(instanceName).append('.'); // instanceName
 		}
 		sb.append(method).append(TERM); // method
@@ -111,7 +110,7 @@ public class RemoteObject {
 			sb.append(TERM);
 		}
 		sb.append(EOT); // ASCII EOT
-		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/hub"), sb.toString(), new RemoteObjectResponseCallback(callback));
+		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/serialBus"), sb.toString(), new RemoteObjectResponseCallback(callback));
 	}
 
 	final class RemoteObjectResponseCallback implements ResponseCallback {
@@ -128,9 +127,8 @@ public class RemoteObject {
 				return;
 			}
 			FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(result.toString());
-			switch(packet.getCommand()) {
+			switch(packet.getCommand()) { // command
 			case 'R':
-//				packet.nextField(); // hasNext (ignored)
 				packet.nextField(); // callbackId
 				String value = packet.nextField(); // result value
 				clientCallback.run(value);

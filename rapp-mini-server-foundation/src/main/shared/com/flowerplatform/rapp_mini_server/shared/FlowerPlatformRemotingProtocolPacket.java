@@ -15,7 +15,7 @@ public class FlowerPlatformRemotingProtocolPacket {
 	private static final char EOT = (char) 0x04;
 			
 	
-	private List<String> packetFields;
+	public List<String> packetFields;
 	
 	private String securityToken;
 	
@@ -36,19 +36,19 @@ public class FlowerPlatformRemotingProtocolPacket {
 			throw new IllegalArgumentException("Invalid packet terminator char: " + t); 
 		}
 		rawPacket = rawPacket.substring(0,  rawPacket.length() - 1);
-		packetFields = Arrays.asList(rawPacket.split("\0"));
+		packetFields = new ArrayList<String>(Arrays.asList(rawPacket.split("\0")));
 		if (packetFields.size() < 4) {
 			throw new RuntimeException("Invalid packet. Raw data: " + rawPacket);
 		}
-		if (!packetFields.get(0).equals(PROTOCOL_HEADER)) {
+		if (!packetFields.remove(0).equals(PROTOCOL_HEADER)) {
 			throw new IllegalArgumentException("Invalid packet Header: " + packetFields.get(0)); 
 		}
-		if (!packetFields.get(1).equals(VERSION)) {
+		if (!packetFields.remove(0).equals(VERSION)) {
 			throw new IllegalArgumentException("Unsupported protocol version: " + packetFields.get(0)); 
 		}
-		securityToken = packetFields.get(2);
-		command = packetFields.get(3).charAt(0);
-		currentFieldIndex = 4;
+		securityToken = packetFields.remove(0);
+		command = packetFields.remove(0).charAt(0);
+		currentFieldIndex = 0;
 	}
 	
 	public String getSecurityToken() {
