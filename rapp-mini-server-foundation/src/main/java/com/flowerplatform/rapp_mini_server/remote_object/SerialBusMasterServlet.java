@@ -57,7 +57,16 @@ public class SerialBusMasterServlet extends HttpServlet {
     	}
     }
 
+	private void clearInputBuffer() throws IOException {
+		InputStream in = port.getInputStream();
+		byte[] buf = new byte[128];
+		while (in.available() > 0) {
+			in.read(buf);
+		}
+	}
+
 	private void sendData(byte[] data) throws IOException {
+		clearInputBuffer();
 		if (writeEnableOutput != null) { // rs485
 			try { Thread.sleep(1); } catch (Exception e) { } // clients release rs485 bus 1ms after flushing (Serial.flush() bug of esp8266); must wait 1ms
 			writeEnableOutput.on();
