@@ -32,7 +32,18 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 	
 	protected native void createProxyHandler()/*-{
 		this.proxyHandler = { 
+			apply: function(target, thisArg, argumentsList) {
+				console.log(target);
+				console.log(thisArg);
+				console.log(argumentsList);
+			}, 			
 			get: function(target, name) {
+				// bypass logic for invokeMethod
+				if (name == 'invokeMethod') {
+					return function() {
+						target.delegate[name].apply(target.delegate, arguments);
+					};
+				};
 				return function() {
 					// NOTE: in GWT using ...args didn't work, thus we use "arguments"
 					// convert to array (from an object of type Arguments)
