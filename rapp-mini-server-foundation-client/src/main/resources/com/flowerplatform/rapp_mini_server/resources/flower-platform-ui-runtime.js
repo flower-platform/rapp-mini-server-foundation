@@ -29,7 +29,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.rappInstanceId = value;
 				return this;
 			},
-			addRemoteObject: function(remoteObject) {
+			addRemoteObject: function(name, remoteObject) {
 				if (!remoteObject.getRemoteAddress()) {
 					remoteObject.setRemoteAddress(remoteObjectRegistry.remoteAddress);
 				}
@@ -49,7 +49,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				}
 
 				// a = instanceName
-				remoteObjectRegistry.remoteObjects[remoteObject.getInstanceName()] = remoteObjectRegistry.remoteObjectInitializer.initialize(remoteObject);
+				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectInitializer.initialize(remoteObject);
 				return this;
 			}
 	};
