@@ -110,7 +110,15 @@ public class RemoteObject {
 			sb.append(TERM);
 		}
 		sb.append(EOT); // ASCII EOT
-		requestSender.sendRequest("http://" + remoteAddress + (rappInstanceId == null ? "/remoteObject" : "/serialBus"), sb.toString(), new RemoteObjectResponseCallback(callback));
+		String url;
+		if (rappInstanceId == null) {
+			url = "remoteObject";
+		} else if (rappInstanceId.startsWith("serial/")) {
+			url = "serialBus";
+		} else {
+			url = "hub";
+		}
+		requestSender.sendRequest("http://" + remoteAddress + "/" + url, sb.toString(), new RemoteObjectResponseCallback(callback));
 	}
 
 	final class RemoteObjectResponseCallback implements ResponseCallback {

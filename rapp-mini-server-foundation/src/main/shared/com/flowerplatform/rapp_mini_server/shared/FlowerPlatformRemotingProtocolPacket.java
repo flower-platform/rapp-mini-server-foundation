@@ -66,6 +66,14 @@ public class FlowerPlatformRemotingProtocolPacket {
 	public void setCommand(char command) {
 		this.command = command;
 	}
+
+	public void setField(int index, String value) {
+		packetFields.set(index, value);
+	}
+
+	public String getField(int index) {
+		return packetFields.get(index);
+	}
 	
 	public String nextField() {
 		if (currentFieldIndex >= packetFields.size()) {
