@@ -24,6 +24,8 @@ import gnu.io.UnsupportedCommOperationException;
 
 public class SerialBusMasterServlet extends HttpServlet {
 
+	private static final String SERIAL_NODE_ID_PREFIX = "serial/";
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = Logger.getGlobal();
@@ -131,10 +133,14 @@ public class SerialBusMasterServlet extends HttpServlet {
 		case 'I': // invoke
 			try { 
 				semaphore.acquire(); 
-				sendData(buf);
+				String rappInstanceId = packet.nextField();
+				if (rappInstanceId.startsWith(SERIAL_NODE_ID_PREFIX)) {
+					packet.setField(0, rappInstanceId.substring(SERIAL_NODE_ID_PREFIX.length()));
+				}
+				sendData(packet.getRawData().getBytes());
 				byte[] busResponse = receiveData();
-				System.out.println(new String(busResponse));
 				if (busResponse != null) {
+					System.out.println(new String(busResponse));
 					res = new FlowerPlatformRemotingProtocolPacket(new String(busResponse));
 				}
 			} catch (Exception e) {
