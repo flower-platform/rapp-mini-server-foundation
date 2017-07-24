@@ -18,6 +18,10 @@
 		
 		<!-- The name of the GWT module we're packaging the JS files for. -->
 		<gwt.module.name>FlowerPlatformUiRuntime</gwt.module.name>
+		
+		<!-- The name of the GitHub repository where we should deploy this artifact, when built. -->
+		<github.repository.name>rapp-mini-server-foundation</github.repository.name>
+		<github.repository.owner>flower-platform</github.repository.owner>
 	</properties>
 
 	<dependencies>
