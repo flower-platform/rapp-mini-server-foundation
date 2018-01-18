@@ -127,7 +127,7 @@ public class RemoteObject {
 		}
 		sb.append(EOT); // ASCII EOT
 		String url;
-		if (rappInstanceId == null) {
+		if (rappInstanceId == null || rappInstanceId.length() == 0) {
 			url = "remoteObject";
 		} else if (rappInstanceId.startsWith("serial/")) {
 			url = "serialBus";
