@@ -74,8 +74,9 @@ public class SerialBusMasterServlet extends HttpServlet {
 			writeEnableOutput.on();
 		}
 		OutputStream out = port.getOutputStream();
-		out.write((data.length >> 8) & 0xFF);
-		out.write(data.length & 0xFF);
+//		TODO CM: not sending data length any more
+//		out.write((data.length >> 8) & 0xFF);
+//		out.write(data.length & 0xFF);
 		out.write(data);
 		out.flush();
 		if (writeEnableOutput != null) {
