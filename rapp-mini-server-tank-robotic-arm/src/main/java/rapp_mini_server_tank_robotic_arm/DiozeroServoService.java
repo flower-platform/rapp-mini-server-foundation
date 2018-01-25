@@ -1,7 +1,7 @@
 package rapp_mini_server_tank_robotic_arm;
 
-import com.diozero.Servo;
-import com.diozero.Servo.Trim;
+import com.diozero.devices.Servo;
+import com.diozero.devices.Servo.Trim;
 import com.flowerplatform.rapp_mini_server.persistent_properties.PersistentPropertiesCapable;
 
 public class DiozeroServoService extends AbstractServoService {

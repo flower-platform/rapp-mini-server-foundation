@@ -39,9 +39,9 @@
 		<dependency>
 			<groupId>com.diozero</groupId>
 			<artifactId>diozero-core</artifactId>
-			<version>0.10-SNAPSHOT</version>
+			<version>0.11-SNAPSHOT</version>
 		</dependency>
-<!-- 		<dependency> -->
+<!-- 		<dependency> --> 
 <!-- 			<groupId>com.diozero</groupId> -->
 <!-- 			<artifactId>diozero-sampleapps</artifactId> -->
 <!-- 			<version>0.9</version> -->
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>com.diozero</groupId>
 			<artifactId>diozero-provider-pigpio</artifactId>
-			<version>0.10-SNAPSHOT</version>
+			<version>0.11-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -26,7 +26,7 @@ public class RappMiniServerRs485SampleMainGen extends AbstractRappMiniServerMain
 	protected void addRemoteObjectsServlet(ServletHandler handler) {
 		super.addRemoteObjectsServlet(handler);
 		try {
-			SerialBusMasterServlet sbm = new SerialBusMasterServlet("/dev/ttyS0", 460800, 18, 2000);
+			SerialBusMasterServlet sbm = new SerialBusMasterServlet("/dev/ttyS0", 115200, 18, 2000);
 			handler.addServletWithMapping(new ServletHolder(sbm), "/serialBus");
 		} catch (Exception e) {
 			e.printStackTrace();
