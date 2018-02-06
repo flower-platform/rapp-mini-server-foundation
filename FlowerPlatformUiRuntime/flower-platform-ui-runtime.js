@@ -1,6 +1,6 @@
 var gwtReadyListeners;
 function onGwtReady() {
-	gwtReady = true;
+	window["gwtReady"] = true;
 	if (gwtReadyListeners) {
 		for (var i = 0; i < gwtReadyListeners.length; i++) {
 			gwtReadyListeners[i]();
@@ -29,7 +29,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.rappInstanceId = value;
 				return this;
 			},
-			addRemoteObject: function(name, remoteObject) {
+			addRemoteObject: function(remoteObject) {
 				if (!remoteObject.getRemoteAddress()) {
 					remoteObject.setRemoteAddress(remoteObjectRegistry.remoteAddress);
 				}
@@ -49,7 +49,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				}
 
 				// a = instanceName
-				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectInitializer.initialize(remoteObject);
+				remoteObjectRegistry.remoteObjects[remoteObject.getInstanceName()] = remoteObjectRegistry.remoteObjectInitializer.initialize(remoteObject);
 				return this;
 			}
 	};
@@ -68,7 +68,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 					}
 				} else {
 					// Proxy code
-					if (gwtReady) {
+					if (typeof window["gwtReady"] !== 'undefined') {
 						// Return from the memorized remote objects
 						if (remoteObjectRegistry.remoteObjects[name]) {
 							return remoteObjectRegistry.remoteObjects[name];
