@@ -1,0 +1,4 @@
+com.crispico.flower.enable.intergration.with.flower.platform=true
+com.crispico.flower.rapp.full.name=rapp-mini-server-rs485-sample
+com.crispico.flower.upload.to.server.automatically.on.save=false
+eclipse.preferences.version=1

@@ -1,4 +1,4 @@
-package rapp_mini_server_tank_robotic_arm;
+package rapp_mini_server_tank_robotic_arm.obsolete;
 
 import com.flowerplatform.rapp_mini_server.python.PythonRemoteControl;
 

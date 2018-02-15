@@ -3,12 +3,7 @@ package rapp_mini_server_tank_robotic_arm;
 import com.flowerplatform.rapp_mini_server.persistent_properties.PersistentPropertiesCapable;
 import com.flowerplatform.rapp_mini_server.persistent_properties.PersistentProperty;
 
-import jpigpio.JPigpio;
-import jpigpio.PigpioException;
-
-public class ServoService extends PersistentPropertiesCapable {
-	
-	protected JPigpio pigpio;
+public abstract class AbstractServoService extends PersistentPropertiesCapable {
 	
 	protected int pin;
 	
@@ -21,9 +16,8 @@ public class ServoService extends PersistentPropertiesCapable {
 	@PersistentProperty
 	protected int currentPosition = 1500;
 
-	public ServoService(PersistentPropertiesCapable parent, String referencingPropertyFromParent, JPigpio pigpio, int pin) {
+	public AbstractServoService(PersistentPropertiesCapable parent, String referencingPropertyFromParent, int pin) {
 		super(parent, referencingPropertyFromParent);
-		this.pigpio = pigpio;
 		this.pin = pin;
 	}
 
@@ -31,14 +25,16 @@ public class ServoService extends PersistentPropertiesCapable {
 		return currentPosition;
 	}
 
-	public void setCurrentPosition(int currentPosition, boolean save) throws PigpioException {
-		pigpio.gpioServo(pin, currentPosition);
+	public void setCurrentPosition(int currentPosition, boolean save) throws Exception {
+		setServoPosition(currentPosition);
 		if (save) {
 			this.currentPosition = currentPosition;
 			storePersistentProperties();
 		}
 	}
 
+	protected abstract void setServoPosition(int currentPosition) throws Exception;  
+	
 	public int getMinPosition() {
 		return minPosition;
 	}
