@@ -49,7 +49,6 @@ public class RemoteObjectServlet extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
-//		res.addField("0"); // hasNext
 		res.addField(callbackId); // callbackId
 		if (result != null) {
 			res.addField(result.toString());

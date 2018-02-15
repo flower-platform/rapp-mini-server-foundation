@@ -68,45 +68,6 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		return method;
 	}
 
-	public Object invoke(String methodPath, String argumentsAsJsonArray) {
-		Object instance = findInstance(methodPath);
-		Method method = findMethod(instance, methodPath);
-		Object result = invoke(instance, method, argumentsAsJsonArray);
-		return result;
-	}
-
-	@Override
-	public Object invoke(FlowerPlatformRemotingProtocolPacket packet) {
-		String methodPath = packet.nextField();
-		Object instance = findInstance(methodPath);
-		Method method = findMethod(instance, methodPath);
-		
-		// build JSON array containing arguments 
-		Parameter[] parameters = method.getParameters();
-		StringBuilder argumentsAsJsonArray = new StringBuilder();
-		argumentsAsJsonArray.append("[");
-		int i = 0;
-		for (Parameter param : parameters) {
-			if (String.class.equals(param.getType())) {
-				argumentsAsJsonArray.append('"');
-			}
-			argumentsAsJsonArray.append(packet.nextField());
-			if (String.class.equals(param.getType())) {
-				argumentsAsJsonArray.append('"');
-			}
-			if (i < parameters.length - 1) {
-				// i.e. not last one
-				argumentsAsJsonArray.append(',');
-			}
-			i++;
-		}
-		argumentsAsJsonArray.append(']');
-		
-		Object result = invoke(instance, method, argumentsAsJsonArray.toString());
-		return result;
-	}
-	
-	
 	private Object invoke(Object instance, Method method, String argumentsAsJsonArray) {
 		// get typed arguments from methodInvocation string
 		Object[] args;
@@ -202,6 +163,46 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 
 		return argParser.readValueAs(expectedParameterType);
 	}
+
+	
+	public Object invoke(String methodPath, String argumentsAsJsonArray) {
+		Object instance = findInstance(methodPath);
+		Method method = findMethod(instance, methodPath);
+		Object result = invoke(instance, method, argumentsAsJsonArray);
+		return result;
+	}
+
+	@Override
+	public Object invoke(FlowerPlatformRemotingProtocolPacket packet) {
+		String methodPath = packet.nextField();
+		Object instance = findInstance(methodPath);
+		Method method = findMethod(instance, methodPath);
+		
+		// build JSON array containing arguments 
+		Parameter[] parameters = method.getParameters();
+		StringBuilder argumentsAsJsonArray = new StringBuilder();
+		argumentsAsJsonArray.append("[");
+		int i = 0;
+		for (Parameter param : parameters) {
+			if (String.class.equals(param.getType())) {
+				argumentsAsJsonArray.append('"');
+			}
+			argumentsAsJsonArray.append(packet.nextField());
+			if (String.class.equals(param.getType())) {
+				argumentsAsJsonArray.append('"');
+			}
+			if (i < parameters.length - 1) {
+				// i.e. not last one
+				argumentsAsJsonArray.append(',');
+			}
+			i++;
+		}
+		argumentsAsJsonArray.append(']');
+		
+		Object result = invoke(instance, method, argumentsAsJsonArray.toString());
+		return result;
+	}
+	
 
 	/**
 	 * Test

@@ -32,6 +32,11 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 	
 	protected native void createProxyHandler()/*-{
 		this.proxyHandler = { 
+			apply: function(target, thisArg, argumentsList) {
+				console.log(target);
+				console.log(thisArg);
+				console.log(argumentsList);
+			}, 			
 			get: function(target, name) {
 				// bypass logic for invokeMethod
 				if (name == 'invokeMethod') {
