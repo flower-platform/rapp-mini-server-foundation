@@ -125,12 +125,10 @@ public class RemoteObjectHubConnection {
 						scheduler.schedule(new HubConnectTask(), 5000);
 						break;
 					}
-//					responsePacket.nextField(); // hasNext (ignored)
 					responsePacket.nextField(); // rappInstanceId (ignored)
 					callbackId = responsePacket.nextField();
 					Object value = serviceInvoker.invoke(responsePacket);
 					FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
-//					packet.addField("0"); // hasNext
 					packet.addField(callbackId);
 					packet.addField(value.toString());
 					requestSender.sendRequest("http://" + remoteAddress + "/hub", packet.getRawData(), new HubResponseCallback());
@@ -140,7 +138,6 @@ public class RemoteObjectHubConnection {
 					break;
 				case 'R': {
 					for (FlowerPlatformRemotingProtocolPacket packet : packets) {
-//						packet.nextField(); // hasNext (ignored)
 						callbackId = packet.nextField();
 						String valueStr = packet.nextField();
 						ResultCallback callback = RemoteObject.getCallbacks().get(callbackId);
