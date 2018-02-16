@@ -36,6 +36,9 @@
     	}
     	
     	function clickHandler() {
+//    		programmaticInvocation();
+//    		return;
+    		
 			$("#textArea").get(0).value = ""; 
         	var roi = new rapp_mini_server.JsRemoteObjectInitializer();
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
@@ -53,15 +56,26 @@
 			});
 			var method = document.getElementById("method").value;
 			ro[method].apply(this, arguments);
-
-//			ro.sayHello("Lume", 4);
-//			ro.ceva.apply(arguments, function(result) {
-//				$("#textArea").get(0).value = result; 
-//			});
 		}
     	
+    	function programmaticInvocation() {
+        	var roi = new rapp_mini_server.JsRemoteObjectInitializer();
+			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
+				.setRemoteAddress("localhost:9001")
+				.setSecurityToken("0")
+				.setRappInstanceId(null)
+				.setInstanceName("helloService")
+			);    		
+			
+//			ro.sayHelloComplex("Lume", 4, function(result) {
+//				$("#textArea").get(0).value = result; 
+//			});
+			
+			ro.sayHelloComplex2(JSON.stringify({ a: 0, b:"hello" }), function(result) {
+				$("#textArea").get(0).value = JSON.parse(result).b; 
+			});
+    	}
 		    	
-    	
 		</script>
 </head>
 <body>

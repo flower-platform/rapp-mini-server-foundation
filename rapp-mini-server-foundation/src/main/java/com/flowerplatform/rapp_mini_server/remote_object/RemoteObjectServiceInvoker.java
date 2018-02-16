@@ -17,7 +17,6 @@ import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocol
 import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
 
 /**
- * 
  * @author Claudiu Matei
  */
 public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
@@ -29,10 +28,16 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 
 	private JsonFactory jsonFactory;
 	
+	private static ObjectMapper objectMapper = new ObjectMapper();
+	
+	public static ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
 	public RemoteObjectServiceInvoker(Object serviceInstance) {
 		this.serviceInstance = serviceInstance;
 		jsonFactory = new JsonFactory();
-		jsonFactory.setCodec(new ObjectMapper());
+		jsonFactory.setCodec(objectMapper);
 	}
 	
 	private Object findInstance(String methodPath) {
