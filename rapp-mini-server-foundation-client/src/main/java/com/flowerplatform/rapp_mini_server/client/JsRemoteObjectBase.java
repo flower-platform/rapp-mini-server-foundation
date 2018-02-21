@@ -1,10 +1,16 @@
 package com.flowerplatform.rapp_mini_server.client;
 
-import com.flowerplatform.rapp_mini_server.shared.AbstractRemoteObjectInitializer;
+import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
+
+import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
+import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectInitializer;
+import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
 import com.flowerplatform.rapp_mini_server.shared.IRequestSender;
 import com.flowerplatform.rapp_mini_server.shared.IScheduler;
 import com.flowerplatform.rapp_mini_server.shared.RemoteObject;
 import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -21,13 +27,14 @@ import jsinterop.annotations.JsType;
  * @author Cristian Spiescu
  */
 @JsType(namespace="rapp_mini_server")
-public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer implements IRequestSender, IScheduler {
+public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSender, IScheduler, IRemoteObjectServiceInvoker {
 
 	protected Object proxyHandler;
 	
-	public JsRemoteObjectInitializer() {
+	public JsRemoteObjectBase() {
 		super();
 		createProxyHandler();
+		GWT.log("ROI created");
 	}
 	
 	protected native void createProxyHandler()/*-{
@@ -75,10 +82,11 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 		}, this.proxyHandler);
 	}-*/;
 
+	private WebSocket webSocket; 
+	
 	@Override
 	public void sendRequest(String url, String payload, ResponseCallback callback) {
 		RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, url);
-		log(url);
 		try {
 			rb.sendRequest(payload, new RequestCallback() {
 				@Override
@@ -99,9 +107,27 @@ public class JsRemoteObjectInitializer extends AbstractRemoteObjectInitializer i
 			throw new RuntimeException(e);
 		}
 	};
+
+	@Override
+	public Object invoke(FlowerPlatformRemotingProtocolPacket packet) {
+		String functionCall = packet.nextField();
+		String[] argsStr = packet.nextField().split("" + TERM);
+		JavaScriptObject res = jsInvoke(functionCall, new Object[] { argsStr });
+		if (res != null) {
+			return res.toString();
+		}
+		return res;
+	}
 	
-	public static native void log(String s)/*-{
-		console.log(s);
+	private final native JavaScriptObject jsInvoke(String functionCall, Object[] args)/*-{
+		var splitCall = functionCall.split('.');
+		var method = $wnd;
+		for (var i in splitCall) {
+			method = method[splitCall[i]];
+		}	
+		console.log("exec: " + functionCall);
+		console.log("exec: " + method);
+		return method.apply($wnd, args);
 	}-*/;
 
 	@Override

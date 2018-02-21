@@ -21,18 +21,35 @@
     
     <script type="text/javascript">
 
-    	var roi, rohc;
-		
+    	var roi, rohc, wsConnection;
+    	
+    	var testService = new function() {
+    		
+    		this.jsHello = function(name) {
+    			console.log("Hello, " + name);
+    		};
+    		
+    	};
+    	
     	function startHubConnection() {
-        	roi = new rapp_mini_server.JsRemoteObjectInitializer();
+        	roi = new rapp_mini_server.JsRemoteObjectBase();
         	rohc = new rapp_mini_server.RemoteObjectHubConnection()
 					.setRemoteAddress(document.getElementById("remoteAddress").value)
 					.setSecurityToken(document.getElementById("securityToken").value)
-        			.setLocalRappInstanceId("UITest")
+        			.setLocalNodeId("UITest")
         			.setScheduler(roi)
         			.setRequestSender(roi);
         	rohc.start();
-        	
+    	}
+
+    	function startWebSocketConnection() {
+        	roi = new rapp_mini_server.JsRemoteObjectBase();
+        	wsConnection = new rapp_mini_server.RemoteObjectWebSocketConnection()
+					.setRemoteAddress(document.getElementById("remoteAddress").value)
+					.setSecurityToken(document.getElementById("securityToken").value)
+        			.setLocalNodeId("UITest")
+        			.setServiceInvoker(roi);
+        	wsConnection.start();
     	}
     	
     	function clickHandler() {
@@ -40,11 +57,11 @@
 //    		return;
     		
 			$("#textArea").get(0).value = ""; 
-        	var roi = new rapp_mini_server.JsRemoteObjectInitializer();
+        	roi = new rapp_mini_server.JsRemoteObjectBase();
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
 				.setRemoteAddress(document.getElementById("remoteAddress").value)
 				.setSecurityToken(document.getElementById("securityToken").value)
-				.setRappInstanceId(document.getElementById("rappInstanceId").value || null)
+				.setNodeId(document.getElementById("nodeId").value || null)
 				.setInstanceName(document.getElementById("instanceName").value)
 			);
 
@@ -59,11 +76,11 @@
 		}
     	
     	function programmaticInvocation() {
-        	var roi = new rapp_mini_server.JsRemoteObjectInitializer();
+        	roi = new rapp_mini_server.JsRemoteObjectBase();
 			var ro = roi.initialize(new rapp_mini_server.RemoteObject()
 				.setRemoteAddress("localhost:9001")
 				.setSecurityToken("0")
-				.setRappInstanceId(null)
+				.setNodeId(null)
 				.setInstanceName("helloService")
 			);    		
 			
@@ -75,9 +92,12 @@
 				$("#textArea").get(0).value = JSON.parse(result).b; 
 			});
     	}
-		    	
-		</script>
+	    	
+    	
+	</script>
+	
 </head>
+
 <body>
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
         style="position: absolute; width: 0;height: 0; border: 0;"></iframe>
@@ -104,8 +124,8 @@
 		    <input class="form-control" id="securityToken" value="44444444">
 		  </div>
 		  <div class="form-group">
-		    <label>rappInstanceId</label>
-		    <input class="form-control" id="rappInstanceId" value="">
+		    <label>nodeId</label>
+		    <input class="form-control" id="nodeId" value="">
 		  </div>
 		  <div class="form-group">
 		    <label>instanceName</label>
@@ -128,6 +148,7 @@
 		  <button type="submit" class="btn btn-default">Invoke Serial Bus</button>
 		</form>
 		<button class="btn btn-default" onclick="startHubConnection()">Start hub connection</button>
+		<button class="btn btn-default" onclick="startWebSocketConnection()">Start web socket connection</button>
 	</div>
 </body>
 </html>

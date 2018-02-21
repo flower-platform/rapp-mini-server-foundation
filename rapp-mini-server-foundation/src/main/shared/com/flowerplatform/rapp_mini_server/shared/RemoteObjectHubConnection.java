@@ -24,7 +24,7 @@ public class RemoteObjectHubConnection {
 	/**
 	 * Local rapp instance id
 	 */
-	private String localRappInstanceId;
+	private String localNodeId;
 
 	private int localServerPort;
 	
@@ -40,8 +40,8 @@ public class RemoteObjectHubConnection {
 		return this;
 	}
 
-	public RemoteObjectHubConnection setLocalRappInstanceId(String rappInstanceId) {
-		this.localRappInstanceId = rappInstanceId;
+	public RemoteObjectHubConnection setLocalNodeId(String localNodeId) {
+		this.localNodeId = localNodeId;
 		return this;
 	}
 
@@ -71,7 +71,7 @@ public class RemoteObjectHubConnection {
 	
 	private void requestRegistration() {
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'A');
-		packet.addField(localRappInstanceId);
+		packet.addField(localNodeId);
 		packet.addField("" + localServerPort);
 		requestSender.sendRequest("http://" + remoteAddress +"/hub", packet.getRawData(), new HubResponseCallback());
 	}
@@ -125,7 +125,7 @@ public class RemoteObjectHubConnection {
 						scheduler.schedule(new HubConnectTask(), 5000);
 						break;
 					}
-					responsePacket.nextField(); // rappInstanceId (ignored)
+					responsePacket.nextField(); // nodeId (ignored)
 					callbackId = responsePacket.nextField();
 					Object value = serviceInvoker.invoke(responsePacket);
 					FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');

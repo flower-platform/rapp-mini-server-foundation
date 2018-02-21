@@ -18,51 +18,27 @@ public class RemoteObjectServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private RemoteObjectServiceInvoker serviceInvoker;
+	private RemoteObjectProcessor processor;
 	
-	private String securityToken;
-
 	public RemoteObjectServlet(RemoteObjectServiceInvoker serviceInvoker, String securityToken) {
-		this.serviceInvoker = serviceInvoker;
-		this.securityToken = securityToken;
+		processor = new RemoteObjectProcessor(securityToken, serviceInvoker);
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		byte[] buf = new byte[request.getContentLength()];
 		DataInputStream in = new DataInputStream(request.getInputStream());
 		in.readFully(buf);
 		String rawPacket = new String(buf);
-		
+
 		System.out.println("-> " + rawPacket);
+
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
-		
-		if (packet.getCommand() != 'I') {
-			return;
-		}
-		
-//		packet.nextField(); // hasNext (ignore)
-		packet.nextField(); // rappInstanceId (ignore)
-		String callbackId =	packet.nextField(); // callbackId
-		
-		Object result = serviceInvoker.invoke(packet);
+		FlowerPlatformRemotingProtocolPacket res = processor.processPacket(packet);
 
 		PrintWriter out = response.getWriter();
-		FlowerPlatformRemotingProtocolPacket res = new FlowerPlatformRemotingProtocolPacket(securityToken, 'R');
-		res.addField(callbackId); // callbackId
-
-		String ret;
-		if (result == null) {
-			ret = "";
-		} else if (result.getClass().isPrimitive() || result instanceof String) {
-			ret = result.toString();
-		} else {
-			ret = RemoteObjectServiceInvoker.getObjectMapper().writeValueAsString(result);
-		}
-		
-		res.addField(ret);
 		out.write(res.getRawData());
 	}
 
-	
+
 }

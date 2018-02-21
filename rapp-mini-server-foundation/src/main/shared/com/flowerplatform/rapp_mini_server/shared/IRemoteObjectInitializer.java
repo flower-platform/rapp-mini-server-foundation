@@ -9,7 +9,7 @@ package com.flowerplatform.rapp_mini_server.shared;
  * 
  * @author Cristian Spiescu
  */
-public abstract class AbstractRemoteObjectInitializer {
+public interface IRemoteObjectInitializer {
 
 	public abstract <T extends RemoteObject> T initialize(T remoteObject);
 	

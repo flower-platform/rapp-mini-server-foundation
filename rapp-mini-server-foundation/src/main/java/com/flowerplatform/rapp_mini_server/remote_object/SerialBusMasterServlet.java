@@ -134,9 +134,9 @@ public class SerialBusMasterServlet extends HttpServlet {
 		case 'I': // invoke
 			try { 
 				semaphore.acquire(); 
-				String rappInstanceId = packet.nextField();
-				if (rappInstanceId.startsWith(SERIAL_NODE_ID_PREFIX)) {
-					packet.setField(0, rappInstanceId.substring(SERIAL_NODE_ID_PREFIX.length()));
+				String nodeId = packet.nextField();
+				if (nodeId.startsWith(SERIAL_NODE_ID_PREFIX)) {
+					packet.setField(0, nodeId.substring(SERIAL_NODE_ID_PREFIX.length()));
 				}
 				sendData(packet.getRawData().getBytes());
 				byte[] busResponse = receiveData();

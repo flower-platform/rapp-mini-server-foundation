@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RemoteObjectHubClient {
 
-	private String rappInstanceId;
+	private String nodeId;
 
 	private String securityToken;
 	
@@ -19,8 +19,8 @@ public class RemoteObjectHubClient {
 	
 	private int remoteServerPort = 0;
 	
-	public RemoteObjectHubClient(String rappInstanceId, String securityToken) {
-		this.rappInstanceId = rappInstanceId;
+	public RemoteObjectHubClient(String nodeId, String securityToken) {
+		this.nodeId = nodeId;
 		this.securityToken = securityToken;
 	}
 
@@ -70,8 +70,8 @@ public class RemoteObjectHubClient {
 		this.lastActivityTimestamp = lastActivityTimestamp;
 	}
 
-	public String getRappInstanceId() {
-		return rappInstanceId;
+	public String getNodeId() {
+		return nodeId;
 	}
 
 }

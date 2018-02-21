@@ -1,5 +1,8 @@
 package com.flowerplatform.rapp_mini_server.shared;
 
+import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.EOT;
+import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,25 +17,18 @@ import jsinterop.annotations.JsType;
 @JsType(namespace="rapp_mini_server")
 public class RemoteObject {
 
-	private static final char EOT = (char) 0x04;
-
-	private static final char TERM = (char) 0x00;
-	
 	private static Map<String, ResultCallback> callbacks = new HashMap<>();
 	
-	/**
-	 * @see AbstractRemoteObjectInitializer
-	 */
 	protected IRequestSender requestSender;
 
 	/**
 	 * IP address or hostname of the board or hub which accepts requests.  
 	 * <ul>
-	 * <li>For <b>direct communication</b> (i.e. {@link #rappInstanceId} IS NOT used) is an IP address.</li>
+	 * <li>For <b>direct communication</b> (i.e. {@link #nodeId} IS NOT used) is an IP address.</li>
 	 * </li>
 	 * </ul> 
 	 * 
-	 * @see #rappInstanceId
+	 * @see #nodeId
 	 */
 	protected String remoteAddress;
 	
@@ -49,7 +45,7 @@ public class RemoteObject {
 	 * 
 	 * @see #remoteAddress
 	 */
-	protected String rappInstanceId;
+	protected String nodeId;
 	
 	protected String instanceName;
 
@@ -84,13 +80,13 @@ public class RemoteObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends RemoteObject> T setRappInstanceId(String remoteRappInstanceId) {
-		this.rappInstanceId = remoteRappInstanceId;
+	public <T extends RemoteObject> T setNodeId(String remoteNodeId) {
+		this.nodeId = remoteNodeId;
 		return (T) this;
 	}
 
-	public String getRappInstanceId() {
-		return rappInstanceId;
+	public String getNodeId() {
+		return nodeId;
 	}
 	
 
@@ -106,7 +102,7 @@ public class RemoteObject {
 	
 	public void invokeMethod(String method, Object[] arguments, ResultCallback callback) {
 		if (requestSender == null) {
-			throw new IllegalStateException("The RemoteObject is not initialized; i.e. requestSender is null. It should be initialized by a *RemoteObjectInitializer.");
+			throw new IllegalStateException("The RemoteObject is not initialized; i.e. requestSender is null. It should be initialized by an IRemoteObjectInitializer.");
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -114,7 +110,7 @@ public class RemoteObject {
 		sb.append("1").append(TERM); // protocol version
 		sb.append(securityToken).append(TERM); // security token
 		sb.append("I").append(TERM); // command = INVOKE
-		sb.append(rappInstanceId == null ? "" : rappInstanceId).append(TERM); // rappInstanceId
+		sb.append(nodeId == null ? "" : nodeId).append(TERM); // nodeId
 		sb.append(TERM); // callbackId (null)
 		if (instanceName != null && instanceName.length() > 0) {
 			sb.append(instanceName).append('.'); // instanceName
@@ -127,9 +123,9 @@ public class RemoteObject {
 		}
 		sb.append(EOT); // ASCII EOT
 		String url;
-		if (rappInstanceId == null || rappInstanceId.length() == 0) {
+		if (nodeId == null || nodeId.length() == 0) {
 			url = "remoteObject";
-		} else if (rappInstanceId.startsWith("serial/")) {
+		} else if (nodeId.startsWith("serial/")) {
 			url = "serialBus";
 		} else {
 			url = "hub";

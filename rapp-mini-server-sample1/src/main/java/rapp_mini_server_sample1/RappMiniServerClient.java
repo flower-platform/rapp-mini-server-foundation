@@ -12,7 +12,7 @@ public class RappMiniServerClient {
 
 	public void startHubClient()  {
 		RemoteObjectHubConnection client = new RemoteObjectHubConnection()
-				.setLocalRappInstanceId("JavaHubClient")
+				.setLocalNodeId("JavaHubClient")
 				.setRemoteAddress("localhost:9001")
 				.setSecurityToken("55555555")
 				.setRequestSender(remoteObjectBase)
@@ -41,7 +41,7 @@ public class RappMiniServerClient {
 		RemoteObject ro = new RemoteObject()
 				.setSecurityToken("55555555")
 				.setRemoteAddress("localhost:9001")
-				.setRappInstanceId("baieRapp")
+				.setNodeId("baieRapp")
 				.setInstanceName("lightController1")
 				.setRequestSender(remoteObjectBase);
 
@@ -74,7 +74,7 @@ public class RappMiniServerClient {
 		RemoteObject ro = new RemoteObject()
 				.setSecurityToken("55555555")
 				.setRemoteAddress("localhost:9001")
-				.setRappInstanceId("JavaHubClient")
+				.setNodeId("JavaHubClient")
 				.setInstanceName("helloService")
 				.setRequestSender(remoteObjectBase);
 

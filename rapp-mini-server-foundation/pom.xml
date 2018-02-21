@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.flowerplatform</groupId>
 	<artifactId>rapp-mini-server-foundation</artifactId>
@@ -16,13 +15,7 @@
 		<github.repository.name>rapp-mini-server-foundation</github.repository.name>
 		<github.repository.owner>flower-platform</github.repository.owner>
 
-		<!-- 
-			To be able to deploy to the github maven repo,
-			you need to have a file "pom.DO_NOT_COMMIT.properties" containing:
-			
-			github.global.userName = ...
-			github.global.oauth2Token = ...
-		 -->
+		<!-- To be able to deploy to the github maven repo, you need to have a file "pom.DO_NOT_COMMIT.properties" containing: github.global.userName = ... github.global.oauth2Token = ... -->
 	</properties>
 
 	<repositories>
@@ -55,6 +48,17 @@
 			<version>${jetty.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-api</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+		<!-- To run websockets in embedded server -->
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>websocket-server</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.8.4</version>
@@ -69,25 +73,25 @@
 			<artifactId>diozero-core</artifactId>
 			<version>0.10-SNAPSHOT</version>
 		</dependency>
-			<dependency>
+		<dependency>
 			<groupId>com.diozero</groupId>
 			<artifactId>diozero-provider-pigpio</artifactId>
 			<version>0.10-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.rxtx</groupId>
-		    <artifactId>rxtxcomm</artifactId>
-		    <version>2.2pre2</version>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtxcomm</artifactId>
+			<version>2.2pre2</version>
 		</dependency>
 	</dependencies>
 
 	<distributionManagement>
 		<!-- This repo is used as part of the scheme of deploying artifacts to GitHub. -->
-	    <repository>
-	        <id>internal.repo</id>
-	        <name>Temporary Staging Repository</name>
-	        <url>file://${project.build.directory}/mvn-repo</url>
-	    </repository>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
 	</distributionManagement>
 
 	<build>
@@ -157,8 +161,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
