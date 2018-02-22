@@ -10,6 +10,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
+import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHub;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubServlet;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
 import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServlet;
@@ -25,6 +26,8 @@ public abstract class AbstractRappMiniServerMain {
 	protected boolean threadJoin = false;
 	
 	protected RemoteObjectServiceInvoker serviceInvoker;
+
+	protected RemoteObjectHub hub = new RemoteObjectHub();
 	
 	protected void run() throws Exception {
         Server server = new Server(port);
@@ -56,8 +59,8 @@ public abstract class AbstractRappMiniServerMain {
 	
 	protected void addRemoteObjectServlets(ServletContextHandler handler) {
 		handler.addServlet(new ServletHolder(new RemoteObjectServlet(serviceInvoker, "12345678")), "/remoteObject/*");
-		handler.addServlet(new ServletHolder(new RemoteObjectWebSocketServlet(serviceInvoker, "12345678")), "/remoteObjectWs/*");
-		handler.addServlet(new ServletHolder(new RemoteObjectHubServlet()), "/hub/*");
+		handler.addServlet(new ServletHolder(new RemoteObjectWebSocketServlet(hub)), "/remoteObjectWs/*");
+		handler.addServlet(new ServletHolder(new RemoteObjectHubServlet(hub)), "/hub/*");
 	}
 
 }

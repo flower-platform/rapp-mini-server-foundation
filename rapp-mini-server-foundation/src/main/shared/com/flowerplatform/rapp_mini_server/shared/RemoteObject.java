@@ -143,6 +143,7 @@ public class RemoteObject {
 
 		@Override
 		public void onSuccess(Object result) {
+			System.out.println("-> " + result.toString());
 			if (clientCallback == null) {
 				return;
 			}

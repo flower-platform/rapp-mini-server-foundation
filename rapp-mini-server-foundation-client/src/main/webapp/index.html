@@ -26,7 +26,9 @@
     	var testService = new function() {
     		
     		this.jsHello = function(name) {
-    			console.log("Hello, " + name);
+    			var res = "Hello, " + name + "!";
+    			console.log(res);
+    			return res;
     		};
     		
     	};

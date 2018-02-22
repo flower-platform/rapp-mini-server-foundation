@@ -86,14 +86,32 @@ public class RappMiniServerClient {
 		});
 	}
 	
+	public void callWebSocketUI() {
+		RemoteObject ro = new RemoteObject()
+				.setSecurityToken("55555555")
+				.setRemoteAddress("localhost:9001")
+				.setNodeId("UITest")
+				.setInstanceName("testService")
+				.setRequestSender(remoteObjectBase);
+
+		ro.invokeMethod("jsHello", new Object[] {"UITest"}, new ResultCallback() {
+			@Override
+			public void run(Object result) {
+				System.out.println("callWebSocketUI: " + result);
+			}
+		});
+	}
+
+	
 	public void test() {
-		startHubClient();
-		callArduinoDirect();
-		callArduinoHub();
+//		startHubClient();
+//		callArduinoDirect();
 //		callArduinoHub();
 //		callArduinoHub();
-		callJavaDirect();
-		callJavaHub();
+//		callArduinoHub();
+//		callJavaDirect();
+//		callJavaHub();
+		callWebSocketUI();
 	}
 	
 	public static void main(String[] args) {

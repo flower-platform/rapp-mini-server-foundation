@@ -1,6 +1,6 @@
 package com.flowerplatform.rapp_mini_server.remote_object;
 
-import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
+import java.io.IOException;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
@@ -9,12 +9,14 @@ import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocol
 
 public class RemoteObjectWebSocket extends WebSocketAdapter {
 
-	private RemoteObjectProcessor processor;
+	private RemoteObjectHub hub;
 	
-	public RemoteObjectWebSocket(RemoteObjectProcessor processor) {
-		this.processor = processor;
+	private FlowerPlatformRemotingProtocolPacket lastPacket;
+	
+	public RemoteObjectWebSocket(RemoteObjectHub hub) {
+		this.hub = hub;
 	}
-	
+
 	@Override
 	public void onWebSocketConnect(Session sess) {
 		super.onWebSocketConnect(sess);
@@ -24,68 +26,46 @@ public class RemoteObjectWebSocket extends WebSocketAdapter {
 	@Override
 	public void onWebSocketText(String rawPacket) {
 		System.out.println("-> " + rawPacket);
-
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
-		FlowerPlatformRemotingProtocolPacket resp;
-		if (packet.getCommand() == 'A') {
-//			resp = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'A');
-			
-			//test
-			String securityToken = "12345678";
-			String nodeId = null;
-			String instanceName = "testService";
-			String method = "jsHello";
-			Object[] arguments = new Object[] { "world" };
-			
-			StringBuilder sb = new StringBuilder();
-			sb.append("FPRP").append(TERM); // protocol header
-			sb.append("1").append(TERM); // protocol version
-			sb.append(securityToken).append(TERM); // security token
-			sb.append("I").append(TERM); // command = INVOKE
-			sb.append(nodeId == null ? "" : nodeId).append(TERM); // nodeId
-			sb.append(TERM); // callbackId (null)
-			if (instanceName != null && instanceName.length() > 0) {
-				sb.append(instanceName).append('.'); // instanceName
-			}
-			sb.append(method).append(TERM); // method
-			
-			for (Object o : arguments) {
-				sb.append(o);
-				sb.append(TERM);
-			}
-			sb.append(FlowerPlatformRemotingProtocolPacket.EOT); // ASCII EOT
-			
-			resp = new FlowerPlatformRemotingProtocolPacket(sb.toString());
-			try {
-				super.getRemote().sendString(resp.getRawData());
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		} else if (packet.getCommand() == 'I') {
-			try {
-				resp = processor.processPacket(packet);
-				super.getRemote().sendString(resp.getRawData());
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
+		if (packet.getCommand() != 'A') {
+			this.lastPacket = packet;
+			synchronized(this) { this.notifyAll(); }
+			return;
 		}
+		String nodeId = packet.nextField();
+		RemoteObjectHubClient client = new RemoteObjectHubClient(RemoteObjectHubClient.CLIENT_TYPE_WEB_SOCKET, nodeId, packet.getSecurityToken());
+		client.setWebSocket(this);
+		hub.registerClient(client);
+	}
+
+	public synchronized FlowerPlatformRemotingProtocolPacket sendReceiveSynchronously(FlowerPlatformRemotingProtocolPacket packet) throws IOException {
+		if (!isConnected()) {
+			return null;
+		}
+		getRemote().sendString(packet.getRawData());
+		lastPacket = null;
+		try { this.wait(5000); } catch (InterruptedException e) { }
+		return lastPacket;
 	}
 
 	@Override
 	public void onWebSocketClose(int statusCode, String reason) {
 		super.onWebSocketClose(statusCode, reason);
+		synchronized(this) { this.notifyAll(); }
 		System.out.println("Socket Closed: [" + statusCode + "] " + reason);
 	}
 
 	@Override
 	public void onWebSocketError(Throwable cause) {
 		super.onWebSocketError(cause);
+		synchronized(this) { this.notifyAll(); }
 		cause.printStackTrace(System.err);
 	}
 
 	@Override
 	public void onWebSocketBinary(byte[] payload, int offset, int len) {
 		super.onWebSocketBinary(payload, offset, len);
+		synchronized(this) { this.notifyAll(); }
 		System.out.println(new String(payload, offset, len));
 	}
 

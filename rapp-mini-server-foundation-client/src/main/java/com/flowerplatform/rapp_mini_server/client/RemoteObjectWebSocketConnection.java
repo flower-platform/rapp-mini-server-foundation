@@ -2,10 +2,6 @@ package com.flowerplatform.rapp_mini_server.client;
 
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
 import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
-import com.flowerplatform.rapp_mini_server.shared.IScheduler;
-import com.flowerplatform.rapp_mini_server.shared.RemoteObject;
-import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
-import com.flowerplatform.rapp_mini_server.shared.ResultCallback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -34,8 +30,6 @@ public class RemoteObjectWebSocketConnection {
 	private String localNodeId;
 
 	private int localServerPort;
-	
-	private boolean registered;
 	
 	public RemoteObjectWebSocketConnection setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
@@ -97,7 +91,6 @@ public class RemoteObjectWebSocketConnection {
 		String callbackId;
 		switch (packet.getCommand()) {
 		case 'A':
-			registered = true;
 			break;
 		case 'I': {
 			packet.nextField(); // nodeId (ignored)

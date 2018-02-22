@@ -125,8 +125,6 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 		for (var i in splitCall) {
 			method = method[splitCall[i]];
 		}	
-		console.log("exec: " + functionCall);
-		console.log("exec: " + method);
 		return method.apply($wnd, args);
 	}-*/;
 

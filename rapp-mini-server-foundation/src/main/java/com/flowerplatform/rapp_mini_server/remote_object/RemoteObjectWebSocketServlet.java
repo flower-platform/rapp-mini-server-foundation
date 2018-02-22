@@ -10,10 +10,10 @@ public class RemoteObjectWebSocketServlet extends WebSocketServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private RemoteObjectProcessor processor;
+	private RemoteObjectHub hub;
 	
-	public RemoteObjectWebSocketServlet(RemoteObjectServiceInvoker serviceInvoker, String securityToken) {
-		processor = new RemoteObjectProcessor(securityToken, serviceInvoker);
+	public RemoteObjectWebSocketServlet(RemoteObjectHub hub) {
+		this.hub = hub;
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class RemoteObjectWebSocketServlet extends WebSocketServlet {
 		factory.setCreator(new WebSocketCreator() {
 			@Override
 			public Object createWebSocket(ServletUpgradeRequest request, ServletUpgradeResponse response) {
-				return new RemoteObjectWebSocket(processor);
+				return new RemoteObjectWebSocket(hub);
 			}
 		});
 //		factory.register(RemoteObjectWebSocket.class);
