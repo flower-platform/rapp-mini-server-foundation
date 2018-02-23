@@ -25,8 +25,8 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.securityToken = value;
 				return this;
 			},
-			setRappInstanceId: function(value) {
-				remoteObjectRegistry.rappInstanceId = value;
+			setNodeId: function(value) {
+				remoteObjectRegistry.nodeId = value;
 				return this;
 			},
 			addRemoteObject: function(name, remoteObject) {
@@ -36,20 +36,20 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				if (!remoteObject.getSecurityToken()) {
 					remoteObject.setSecurityToken(remoteObjectRegistry.securityToken);
 				}
-				if (!remoteObject.getRappInstanceId()) {
-					remoteObject.setRappInstanceId(remoteObjectRegistry.rappInstanceId);
+				if (!remoteObject.getNodeId()) {
+					remoteObject.setNodeId(remoteObjectRegistry.nodeId);
 				}
 				
 				// Memorize the initialized remoteObject
 				if (remoteObjectRegistry.remoteObjects === undefined) {
 					remoteObjectRegistry.remoteObjects = {};
 				}
-				if(remoteObjectRegistry.remoteObjectInitializer === undefined) {
-					remoteObjectRegistry.remoteObjectInitializer = new rapp_mini_server.JsRemoteObjectInitializer();
+				if(remoteObjectRegistry.remoteObjectBase === undefined) {
+					remoteObjectRegistry.remoteObjectBase = new rapp_mini_server.JsRemoteObjectBase();
 				}
 
 				// a = instanceName
-				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectInitializer.initialize(remoteObject);
+				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectBase.initialize(remoteObject);
 				return this;
 			}
 	};
@@ -57,7 +57,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 	var proxyHandler = {
 			get: function(remoteObjectRegistry, name, args) {
 				if (name in remoteObjectRegistry) {
-					// For the already existing methods: setRemoteAddress, setSecurityToken, setRappInstanceId, addRemoteObject
+					// For the already existing methods: setRemoteAddress, setSecurityToken, setNodeId, addRemoteObject
 					// just apply them (no proxy code)
 					if (typeof target[name] === "function") {
 						return function(...args) {
