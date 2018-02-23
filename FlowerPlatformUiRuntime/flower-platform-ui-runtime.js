@@ -25,6 +25,10 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.securityToken = value;
 				return this;
 			},
+			setLocalNodeId: function(value) {
+				remoteObjectRegistry.localNodeId = value;
+				return this;
+			},
 			setNodeId: function(value) {
 				remoteObjectRegistry.nodeId = value;
 				return this;
