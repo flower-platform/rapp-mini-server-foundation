@@ -67,8 +67,8 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 					wsConnection.setLocalNodeId(remoteObjectRegistry.localNodeId);
 				}
 
-				if (remoteObjectRegistry.remoteObjects === undefined) {
-					remoteObjectRegistry.remoteObjects = {};
+				if (remoteObjectRegistry.webSocketConnections === undefined) {
+					remoteObjectRegistry.webSocketConnections = {};
 				}
 				if(remoteObjectRegistry.remoteObjectBase === undefined) {
 					remoteObjectRegistry.remoteObjectBase = new rapp_mini_server.JsRemoteObjectBase();
