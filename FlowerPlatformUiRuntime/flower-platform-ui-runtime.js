@@ -51,6 +51,30 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				// a = instanceName
 				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectBase.initialize(remoteObject);
 				return this;
+			},
+			startRemoteObjectWebSocketConnection: function(name, wsConnection) {
+				if (!wsConnection.getRemoteAddress()) {
+					wsConnection.setRemoteAddress(remoteObjectRegistry.remoteAddress);
+				}
+				if (!wsConnection.getSecurityToken()) {
+					wsConnection.setSecurityToken(remoteObjectRegistry.securityToken);
+				}
+				if (!wsConnection.getLocalNodeId()) {
+					wsConnection.setLocalNodeId(remoteObjectRegistry.localNodeId);
+				}
+
+				if (remoteObjectRegistry.remoteObjects === undefined) {
+					remoteObjectRegistry.remoteObjects = {};
+				}
+				if(remoteObjectRegistry.remoteObjectBase === undefined) {
+					remoteObjectRegistry.remoteObjectBase = new rapp_mini_server.JsRemoteObjectBase();
+				}
+
+				wsConnection.setServiceInvoker(remoteObjectRegistry.remoteObjectBase);
+				remoteObjectRegistry.webSocketConnections[name] = wsConnection;
+		        wsConnection.start();
+		        
+		        return this;
 			}
 	};
 
