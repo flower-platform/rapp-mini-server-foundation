@@ -90,11 +90,11 @@ public class RappMiniServerClient {
 		RemoteObject ro = new RemoteObject()
 				.setSecurityToken("55555555")
 				.setRemoteAddress("localhost:9001")
-				.setNodeId("UITest")
-				.setInstanceName("testService")
+				.setNodeId("robot-ui")
+				.setInstanceName("robotUiService")
 				.setRequestSender(remoteObjectBase);
 
-		ro.invokeMethod("jsHello", new Object[] {"UITest"}, new ResultCallback() {
+		ro.invokeMethod("updateLocation", new Object[] {"sufragerie"}, new ResultCallback() {
 			@Override
 			public void run(Object result) {
 				System.out.println("callWebSocketUI: " + result);

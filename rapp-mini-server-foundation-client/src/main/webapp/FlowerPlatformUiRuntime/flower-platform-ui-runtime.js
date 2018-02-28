@@ -25,6 +25,10 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.securityToken = value;
 				return this;
 			},
+			setLocalNodeId: function(value) {
+				remoteObjectRegistry.localNodeId = value;
+				return this;
+			},
 			setNodeId: function(value) {
 				remoteObjectRegistry.nodeId = value;
 				return this;
@@ -51,6 +55,30 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				// a = instanceName
 				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectBase.initialize(remoteObject);
 				return this;
+			},
+			startRemoteObjectWebSocketConnection: function(name, wsConnection) {
+				if (!wsConnection.getRemoteAddress()) {
+					wsConnection.setRemoteAddress(remoteObjectRegistry.remoteAddress);
+				}
+				if (!wsConnection.getSecurityToken()) {
+					wsConnection.setSecurityToken(remoteObjectRegistry.securityToken);
+				}
+				if (!wsConnection.getLocalNodeId()) {
+					wsConnection.setLocalNodeId(remoteObjectRegistry.localNodeId);
+				}
+
+				if (remoteObjectRegistry.webSocketConnections === undefined) {
+					remoteObjectRegistry.webSocketConnections = {};
+				}
+				if(remoteObjectRegistry.remoteObjectBase === undefined) {
+					remoteObjectRegistry.remoteObjectBase = new rapp_mini_server.JsRemoteObjectBase();
+				}
+
+				wsConnection.setServiceInvoker(remoteObjectRegistry.remoteObjectBase);
+				remoteObjectRegistry.webSocketConnections[name] = wsConnection;
+		        wsConnection.start();
+		        
+		        return this;
 			}
 	};
 

@@ -2,6 +2,9 @@ package com.flowerplatform.rapp_mini_server.client;
 
 import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
 import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectInitializer;
 import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
@@ -111,8 +114,11 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 	@Override
 	public Object invoke(FlowerPlatformRemotingProtocolPacket packet) {
 		String functionCall = packet.nextField();
-		String[] argsStr = packet.nextField().split("" + TERM);
-		JavaScriptObject res = jsInvoke(functionCall, new Object[] { argsStr });
+		List<String> argsStr = new ArrayList<>();
+		while (packet.hasMoreFields()) {
+			argsStr.add(packet.nextField());
+		}
+		JavaScriptObject res = jsInvoke(functionCall, argsStr.toArray());
 		if (res != null) {
 			return res.toString();
 		}

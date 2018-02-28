@@ -76,12 +76,16 @@ public class FlowerPlatformRemotingProtocolPacket {
 	}
 	
 	public String nextField() {
-		if (currentFieldIndex >= packetFields.size()) {
+		if (!hasMoreFields()) {
 			return null;
 		}
 		return packetFields.get(currentFieldIndex++);
 	}
 
+	public boolean hasMoreFields() {
+		return currentFieldIndex < packetFields.size();
+	}
+	
 	public int availableFieldCount() {
 		return packetFields.size() - currentFieldIndex; 
 	}

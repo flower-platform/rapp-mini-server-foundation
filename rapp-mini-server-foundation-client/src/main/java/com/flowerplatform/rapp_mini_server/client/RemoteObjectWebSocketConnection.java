@@ -30,20 +30,37 @@ public class RemoteObjectWebSocketConnection {
 	private String localNodeId;
 
 	private int localServerPort;
-	
-	public RemoteObjectWebSocketConnection setRemoteAddress(String remoteAddress) {
+
+	public String getRemoteAddress() {
+		return remoteAddress;
+	}
+
+	public void setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
-		return this;
 	}
 
-	public RemoteObjectWebSocketConnection setSecurityToken(String securityToken) {
+	public String getSecurityToken() {
+		return securityToken;
+	}
+
+	public void setSecurityToken(String securityToken) {
 		this.securityToken = securityToken;
-		return this;
 	}
 
-	public RemoteObjectWebSocketConnection setLocalNodeId(String localNodeId) {
+	public String getLocalNodeId() {
+		return localNodeId;
+	}
+
+	public void setLocalNodeId(String localNodeId) {
 		this.localNodeId = localNodeId;
-		return this;
+	}
+
+	public IRemoteObjectServiceInvoker getServiceInvoker() {
+		return serviceInvoker;
+	}
+
+	public int getLocalServerPort() {
+		return localServerPort;
 	}
 
 	public RemoteObjectWebSocketConnection setServiceInvoker(IRemoteObjectServiceInvoker serviceInvoker) {
