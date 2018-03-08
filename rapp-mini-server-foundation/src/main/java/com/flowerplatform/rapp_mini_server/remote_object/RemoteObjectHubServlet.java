@@ -28,6 +28,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		if (request.getContentLength() == 0) {
 			return;
 		}
+		System.out.println("ROHS: Request from " + request.getRemoteAddr());
 		byte[] buf = new byte[request.getContentLength()];
 		DataInputStream in = new DataInputStream(request.getInputStream());
 		in.readFully(buf);

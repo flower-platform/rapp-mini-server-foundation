@@ -2,7 +2,7 @@ package com.flowerplatform.rapp_mini_server.client;
 
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
 import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
-import com.google.gwt.core.client.GWT;
+import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import jsinterop.annotations.JsType;
@@ -12,6 +12,8 @@ public class RemoteObjectWebSocketConnection {
 
 	private WebSocket webSocket; 
 
+	private boolean started = false;
+	
 	/**
 	 * May be null (e.g. for GWT client)
 	 */
@@ -35,24 +37,27 @@ public class RemoteObjectWebSocketConnection {
 		return remoteAddress;
 	}
 
-	public void setRemoteAddress(String remoteAddress) {
+	public RemoteObjectWebSocketConnection setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
+		return this;
 	}
 
 	public String getSecurityToken() {
 		return securityToken;
 	}
 
-	public void setSecurityToken(String securityToken) {
+	public RemoteObjectWebSocketConnection setSecurityToken(String securityToken) {
 		this.securityToken = securityToken;
+		return this;
 	}
 
 	public String getLocalNodeId() {
 		return localNodeId;
 	}
 
-	public void setLocalNodeId(String localNodeId) {
+	public RemoteObjectWebSocketConnection setLocalNodeId(String localNodeId) {
 		this.localNodeId = localNodeId;
+		return this;
 	}
 
 	public IRemoteObjectServiceInvoker getServiceInvoker() {
@@ -73,12 +78,16 @@ public class RemoteObjectWebSocketConnection {
 		return this;
 	}
 
-	public void start() {
-		GWT.log("Opening new web socket");
+	public void start(ResponseCallback callback) {
+		log("Opening new web socket");
 		webSocket = WebSocket.create("ws://" + remoteAddress + "/remoteObjectWs", new WebSocket.Listener() {
 			
 			@Override
 			public void onOpen(JavaScriptObject event) {
+				if (callback != null && !started) {
+					callback.onSuccess(null);
+				}
+				started = true;
 				requestRegistration();
 			}
 			
@@ -89,20 +98,25 @@ public class RemoteObjectWebSocketConnection {
 			
 			@Override
 			public void onError(JavaScriptObject error) {
-				GWT.log("Error: " + error);
+				if (callback != null && !started) {
+					callback.onError(error.toString());
+				}
+				log("Error: " + error);
 			}
 			
 			@Override
 			public void onClose(JavaScriptObject event) {
-				GWT.log("Socket closed: " + event);
-				start();
+				log("Socket closed: " + event + " " + started);
+				if (started) {
+					start(null);
+				}
 			}
 		
 		});
 	}
 	
 	private void packetReceived(String rawPacket) {
-		GWT.log("-> " + rawPacket);
+		log("-> " + rawPacket);
 		
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		String callbackId;
@@ -127,5 +141,16 @@ public class RemoteObjectWebSocketConnection {
 		packet.addField("" + localServerPort);
 		webSocket.sendMessage(packet.getRawData());
 	}
+
+	public void disconnect() {
+		started = false;
+		if (webSocket != null) {
+			webSocket.close();
+		}
+	}
+
+	public static native final void log(String s) /*-{
+		console.log(s);
+	}-*/;
 
 }

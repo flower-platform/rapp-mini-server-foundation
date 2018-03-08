@@ -59,6 +59,7 @@ public class RemoteObjectHub {
 	}
 	
 	public String processPacket(FlowerPlatformRemotingProtocolPacket packet) {
+		System.out.println("Hub process packet: " + packet.getRawData());
 		// retrieve registered client
 		RemoteObjectHubClient client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
 		if (client != null) {

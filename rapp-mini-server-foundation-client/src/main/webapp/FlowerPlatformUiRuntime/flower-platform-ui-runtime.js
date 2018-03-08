@@ -56,7 +56,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectBase.initialize(remoteObject);
 				return this;
 			},
-			startRemoteObjectWebSocketConnection: function(name, wsConnection) {
+			startRemoteObjectWebSocketConnection: function(name, wsConnection, callback) {
 				if (!wsConnection.getRemoteAddress()) {
 					wsConnection.setRemoteAddress(remoteObjectRegistry.remoteAddress);
 				}
@@ -76,7 +76,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 
 				wsConnection.setServiceInvoker(remoteObjectRegistry.remoteObjectBase);
 				remoteObjectRegistry.webSocketConnections[name] = wsConnection;
-		        wsConnection.start();
+		        wsConnection.start(callback);
 		        
 		        return this;
 			}
@@ -87,19 +87,21 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				if (name in remoteObjectRegistry) {
 					// For the already existing methods: setRemoteAddress, setSecurityToken, setNodeId, addRemoteObject
 					// just apply them (no proxy code)
-					if (typeof target[name] === "function") {
+					if (typeof remoteObjectRegistry[name] === "function") {
 						return function(...args) {
-							return target[name].apply(this, args);
+							return remoteObjectRegistry[name].apply(this, args);
 						};
 					} else {
-						return target[name];
+						return remoteObjectRegistry[name];
 					}
 				} else {
 					// Proxy code
 					if (typeof window["gwtReady"] !== 'undefined') {
 						// Return from the memorized remote objects
-						if (remoteObjectRegistry.remoteObjects[name]) {
+						if (remoteObjectRegistry.remoteObjects && remoteObjectRegistry.remoteObjects[name]) {
 							return remoteObjectRegistry.remoteObjects[name];
+						} else if (remoteObjectRegistry.webSocketConnections && remoteObjectRegistry.webSocketConnections[name]) {
+							return remoteObjectRegistry.webSocketConnections[name];
 						} else {
 							throw new Error("Remote object (" + name + ") was not configured");
 						}

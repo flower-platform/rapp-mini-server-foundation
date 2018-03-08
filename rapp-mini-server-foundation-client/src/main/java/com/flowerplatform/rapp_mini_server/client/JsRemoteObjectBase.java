@@ -1,7 +1,5 @@
 package com.flowerplatform.rapp_mini_server.client;
 
-import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
-
 import java.util.ArrayList;
 import java.util.List;
 
