@@ -98,8 +98,10 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 					// Proxy code
 					if (typeof window["gwtReady"] !== 'undefined') {
 						// Return from the memorized remote objects
-						if (remoteObjectRegistry.remoteObjects[name]) {
+						if (remoteObjectRegistry.remoteObjects && remoteObjectRegistry.remoteObjects[name]) {
 							return remoteObjectRegistry.remoteObjects[name];
+						} else if (remoteObjectRegistry.webSocketConnections && remoteObjectRegistry.webSocketConnections[name]) {
+							return remoteObjectRegistry.webSocketConnections[name];
 						} else {
 							throw new Error("Remote object (" + name + ") was not configured");
 						}
