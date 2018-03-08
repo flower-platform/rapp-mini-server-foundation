@@ -56,7 +56,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				remoteObjectRegistry.remoteObjects[name] = remoteObjectRegistry.remoteObjectBase.initialize(remoteObject);
 				return this;
 			},
-			startRemoteObjectWebSocketConnection: function(name, wsConnection) {
+			startRemoteObjectWebSocketConnection: function(name, wsConnection, callback) {
 				if (!wsConnection.getRemoteAddress()) {
 					wsConnection.setRemoteAddress(remoteObjectRegistry.remoteAddress);
 				}
@@ -76,7 +76,7 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 
 				wsConnection.setServiceInvoker(remoteObjectRegistry.remoteObjectBase);
 				remoteObjectRegistry.webSocketConnections[name] = wsConnection;
-		        wsConnection.start();
+		        wsConnection.start(callback);
 		        
 		        return this;
 			}
