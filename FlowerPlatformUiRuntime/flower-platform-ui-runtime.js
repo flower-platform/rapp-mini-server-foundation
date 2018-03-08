@@ -87,12 +87,12 @@ var RemoteObjectRegistry = function(defineRemoteObjects) {
 				if (name in remoteObjectRegistry) {
 					// For the already existing methods: setRemoteAddress, setSecurityToken, setNodeId, addRemoteObject
 					// just apply them (no proxy code)
-					if (typeof target[name] === "function") {
+					if (typeof remoteObjectRegistry[name] === "function") {
 						return function(...args) {
-							return target[name].apply(this, args);
+							return remoteObjectRegistry[name].apply(this, args);
 						};
 					} else {
-						return target[name];
+						return remoteObjectRegistry[name];
 					}
 				} else {
 					// Proxy code
