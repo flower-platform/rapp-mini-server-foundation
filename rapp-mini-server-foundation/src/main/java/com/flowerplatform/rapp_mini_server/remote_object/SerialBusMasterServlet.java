@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +32,8 @@ public class SerialBusMasterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = Logger.getGlobal();
+	
+	private DateFormat df = new SimpleDateFormat("HH:mm:ss.S");
 	
 	private Semaphore semaphore = new Semaphore(1,  true);
 
@@ -126,7 +131,7 @@ public class SerialBusMasterServlet extends HttpServlet {
 		in.readFully(buf);
 		String rawPacket = new String(buf);
 		
-		System.out.println("-> " + rawPacket);
+		System.out.println(df.format(new Date()) + " -> " + rawPacket);
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
 		FlowerPlatformRemotingProtocolPacket res = null;

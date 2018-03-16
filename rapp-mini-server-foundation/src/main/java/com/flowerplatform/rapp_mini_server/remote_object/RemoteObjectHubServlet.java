@@ -5,6 +5,9 @@ import static com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubC
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +20,8 @@ public class RemoteObjectHubServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	private DateFormat df = new SimpleDateFormat("HH:mm:ss.S");
+	
 	private RemoteObjectHub hub;
 	
 	public RemoteObjectHubServlet(RemoteObjectHub hub) {
@@ -33,8 +38,8 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		DataInputStream in = new DataInputStream(request.getInputStream());
 		in.readFully(buf);
 		String rawPacket = new String(buf);
+		System.out.println(String.format("[%s] %s -> %s", df.format(new Date()), request.getRemoteAddr(), rawPacket));
 		
-		System.out.println("-> " + rawPacket);
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		
 		String res;
@@ -51,8 +56,8 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			res = hub.processPacket(packet);
 		}
 		
-		System.out.println("<- " + res);
 		response.getWriter().print(res);
+		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res));
 	}
 	
 }

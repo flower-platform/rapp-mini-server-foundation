@@ -1,6 +1,9 @@
 package com.flowerplatform.rapp_mini_server.remote_object;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
@@ -8,6 +11,8 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
 
 public class RemoteObjectWebSocket extends WebSocketAdapter {
+
+	private DateFormat df = new SimpleDateFormat("HH:mm:ss.S");
 
 	private RemoteObjectHub hub;
 	
@@ -25,7 +30,7 @@ public class RemoteObjectWebSocket extends WebSocketAdapter {
 
 	@Override
 	public void onWebSocketText(String rawPacket) {
-		System.out.println("-> " + rawPacket);
+		System.out.println(String.format("[%s] %s -> %s", df.format(new Date()), getRemote().getInetSocketAddress().getAddress().getHostAddress(), rawPacket));
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
 		if (packet.getCommand() != 'A') {
 			this.lastPacket = packet;
