@@ -2,7 +2,7 @@ package com.flowerplatform.rapp_mini_server.remote_object;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,9 +43,10 @@ public class RemoteObjectServlet extends HttpServlet {
 
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");		
-		PrintWriter out = response.getWriter();
-		out.write(res.getRawData());
-//		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res.getRawData()));
+		OutputStream out = response.getOutputStream();
+		out.write(res.getRawData().getBytes());
+		out.flush();
+		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res.getRawData()));
 	}
 
 

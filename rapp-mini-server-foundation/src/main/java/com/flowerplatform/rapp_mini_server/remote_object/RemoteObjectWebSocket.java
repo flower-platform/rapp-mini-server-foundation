@@ -44,10 +44,12 @@ public class RemoteObjectWebSocket extends WebSocketAdapter {
 	}
 
 	public synchronized FlowerPlatformRemotingProtocolPacket sendReceiveSynchronously(FlowerPlatformRemotingProtocolPacket packet) throws IOException {
+		System.out.print(String.format("[%s] %s <- %s", df.format(new Date()), getRemote().getInetSocketAddress().getAddress().getHostAddress(), packet.getRawData()));
 		if (!isConnected()) {
 			return null;
 		}
 		getRemote().sendString(packet.getRawData());
+		System.out.println("\t[SENT]");
 		lastPacket = null;
 		try { this.wait(5000); } catch (InterruptedException e) { }
 		return lastPacket;

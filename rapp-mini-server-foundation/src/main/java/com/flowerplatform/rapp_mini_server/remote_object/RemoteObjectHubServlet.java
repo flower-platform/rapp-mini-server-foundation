@@ -55,9 +55,9 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		} else {
 			res = hub.processPacket(packet);
 		}
-		
+		System.out.print(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res));
 		response.getWriter().print(res);
-		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res));
+		System.out.println("\t[SENT]");
 	}
 	
 }
