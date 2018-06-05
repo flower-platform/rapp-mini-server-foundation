@@ -1,0 +1,19 @@
+{
+  "name": "FlowerPlatformUiRuntime",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "",
+  "main": "FlowerPlatformUiRuntime/flower-platform-ui-runtime.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flower-platform/rapp-mini-server-foundation.git#bower-repo"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/flower-platform/rapp-mini-server-foundation/issues"
+  },
+  "homepage": "https://github.com/flower-platform/rapp-mini-server-foundation/tree/bower-repo#readme"
+}
