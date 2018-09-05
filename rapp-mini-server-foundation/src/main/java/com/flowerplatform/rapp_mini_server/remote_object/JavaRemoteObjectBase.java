@@ -1,7 +1,8 @@
 package com.flowerplatform.rapp_mini_server.remote_object;
 
-import java.io.DataInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -46,15 +47,20 @@ public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 		@Override
 		public void run() {
 			HttpURLConnection conn;
-			DataInputStream in = null;
+			InputStream in = null;
 			try {
 				conn = (HttpURLConnection) new URL(url).openConnection();
 				conn.setDoOutput(true);
 				conn.getOutputStream().write(payload.getBytes());
-				in = new DataInputStream(conn.getInputStream());
-				byte[] data = new byte[conn.getContentLength()];
-				in.readFully(data);
-				callback.onSuccess(new String(data));
+				conn.connect();
+				in = conn.getInputStream();
+				ByteArrayOutputStream buf = new ByteArrayOutputStream();
+				byte[] data = new byte[16384];
+				while (in.available() >= 0) {
+					int n = in.read(data);
+					buf.write(data, 0, n);
+				}
+				callback.onSuccess(new String(buf.toByteArray()));
 				in.close();
 			} catch (IOException e) {
 				callback.onError(e.toString());
