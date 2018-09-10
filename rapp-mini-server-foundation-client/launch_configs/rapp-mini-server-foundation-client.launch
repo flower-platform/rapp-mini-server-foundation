@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.gwtplugins.gdt.eclipse.suite.webapp">
+<booleanAttribute key="com.gwtplugins.gdt.eclipse.core.AUTO_PORT_SELECTION" value="true"/>
+<stringAttribute key="com.gwtplugins.gdt.eclipse.core.SERVER_PORT" value="20000"/>
 <stringAttribute key="com.gwtplugins.gdt.eclipse.suiteMainTypeProcessor.PREVIOUSLY_SET_MAIN_TYPE_NAME" value="com.google.gwt.dev.DevMode"/>
 <booleanAttribute key="com.gwtplugins.gdt.eclipse.suiteWarArgumentProcessor.IS_WAR_FROM_PROJECT_PROPERTIES" value="true"/>
+<booleanAttribute key="com.gwtplugins.gwt.eclipse.core.CLASSIC_DEVMODE_CODE_SERVER_PORT_AUTO" value="true"/>
 <booleanAttribute key="com.gwtplugins.gwt.eclipse.core.CODE_SERVER_PORT_AUTO" value="true"/>
 <listAttribute key="com.gwtplugins.gwt.eclipse.core.ENTRY_POINT_MODULES">
 <listEntry value="com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
@@ -22,7 +25,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.gwtplugins.gdt.eclipse.maven.mavenClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-logLevel INFO -port 8888 -generateJsInteropExports -war &quot;${workspace_loc}/rapp-mini-server-foundation-client-war-output&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort 9997 com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-logLevel INFO -port auto -generateJsInteropExports -war &quot;${workspace_loc}/rapp-mini-server-foundation-client-war-output&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="rapp-mini-server-foundation-client"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m -Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.StdErrLog -Dorg.eclipse.jetty.LEVEL=WARN"/>
 </launchConfiguration>

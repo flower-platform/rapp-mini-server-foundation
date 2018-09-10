@@ -29,22 +29,26 @@ public abstract class AbstractRappMiniServerMain {
 
 	protected RemoteObjectHub hub = new RemoteObjectHub();
 	
-	protected void run() throws Exception {
-        Server server = new Server(port);
+	protected void run()  {
+        try {
+			Server server = new Server(port);
 
-        ServletContextHandler handler = new ServletContextHandler();
-        handler.setContextPath("/");
-        server.setHandler(handler);
-        populateServletHandler(handler);
-        server.start();
+			ServletContextHandler handler = new ServletContextHandler();
+			handler.setContextPath("/");
+			server.setHandler(handler);
+			populateServletHandler(handler);
+			server.start();
 
-        
-        // The use of server.join() the will make the current thread join and
-        // wait until the server is done executing.
-        // See http://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html#join()
-        if (threadJoin) {
-            server.join();
-        }
+			
+			// The use of server.join() the will make the current thread join and
+			// wait until the server is done executing.
+			// See http://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html#join()
+			if (threadJoin) {
+			    server.join();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	protected void populateServletHandler(ServletContextHandler handler) {
