@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -22,11 +23,15 @@ import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
 public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 
 	/**
-	 * Object whose own or successors' methods are invoked. For nested calls (on successors), this is the starting point for looking up the method to be invoked. 
+	 * Object whose own or successors' methods are invoked. For nested calls (on successors), this is the starting point for looking up the method to be invoked.
+	 * If serviceInstance is a Map, first token of the method call is looked up in the map. 
 	 */
 	private Object serviceInstance;
 
+	private boolean serviceInstanceIsMap = false;
+	
 	private JsonFactory jsonFactory;
+
 	
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -38,12 +43,23 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		this.serviceInstance = serviceInstance;
 		jsonFactory = new JsonFactory();
 		jsonFactory.setCodec(objectMapper);
+		if (serviceInstance instanceof Map) {
+			serviceInstanceIsMap = true;
+		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Object findInstance(String methodPath) {
 		// lookup actual instance whose method must be invoked
 		Object instance = serviceInstance;
 		int k;
+		
+		if (serviceInstanceIsMap) {
+			k = methodPath.indexOf('.');
+			instance = ((Map<String, Object>) serviceInstance).get(methodPath.substring(0,  k));
+			methodPath = methodPath.substring(k + 1);
+		}
+		
 		while ((k = methodPath.indexOf('.')) > 0) {
 			String instanceStr = methodPath.substring(0,  k);
 			try {
