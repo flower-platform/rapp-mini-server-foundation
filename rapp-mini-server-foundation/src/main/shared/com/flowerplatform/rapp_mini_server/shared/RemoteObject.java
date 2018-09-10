@@ -162,7 +162,7 @@ public class RemoteObject {
 		}
 	
 		public void onError(String message) {
-			
+			System.out.println("asdasdasd");
 		}
 		
 	}
