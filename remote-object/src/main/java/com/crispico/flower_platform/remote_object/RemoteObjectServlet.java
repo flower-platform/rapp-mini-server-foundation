@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -48,6 +48,5 @@ public class RemoteObjectServlet extends HttpServlet {
 		out.flush();
 		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res.getRawData()));
 	}
-
 
 }

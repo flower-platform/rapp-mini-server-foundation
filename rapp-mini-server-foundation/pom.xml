@@ -33,6 +33,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>com.crispico.flower-platform</groupId>
+			<artifactId>remote-object</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.jsinterop</groupId>
 			<artifactId>jsinterop-annotations</artifactId>
 			<version>1.0.1</version>

@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;

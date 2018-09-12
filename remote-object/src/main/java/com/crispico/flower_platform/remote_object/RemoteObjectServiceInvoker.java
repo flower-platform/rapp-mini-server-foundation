@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
