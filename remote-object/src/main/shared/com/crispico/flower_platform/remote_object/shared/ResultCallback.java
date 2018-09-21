@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.shared;
+package com.crispico.flower_platform.remote_object.shared;
 
 import jsinterop.annotations.JsFunction;
 

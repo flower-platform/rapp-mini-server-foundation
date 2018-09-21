@@ -1,7 +1,7 @@
-package com.flowerplatform.rapp_mini_server.shared;
+package com.crispico.flower_platform.remote_object.shared;
 
-import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.EOT;
-import static com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket.TERM;
+import static com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket.EOT;
+import static com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket.TERM;
 
 import java.util.HashMap;
 import java.util.Map;

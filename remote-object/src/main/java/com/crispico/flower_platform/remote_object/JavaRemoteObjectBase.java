@@ -10,9 +10,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.flowerplatform.rapp_mini_server.shared.IRequestSender;
-import com.flowerplatform.rapp_mini_server.shared.IScheduler;
-import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
+import com.crispico.flower_platform.remote_object.shared.IRequestSender;
+import com.crispico.flower_platform.remote_object.shared.IScheduler;
+import com.crispico.flower_platform.remote_object.shared.ResponseCallback;
 
 public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 
@@ -51,13 +51,14 @@ public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 			try {
 				conn = (HttpURLConnection) new URL(url).openConnection();
 				conn.setDoOutput(true);
+				conn.setDoInput(true);
 				conn.getOutputStream().write(payload.getBytes());
 				conn.connect();
 				in = conn.getInputStream();
 				ByteArrayOutputStream buf = new ByteArrayOutputStream();
 				byte[] data = new byte[16384];
-				while (in.available() >= 0) {
-					int n = in.read(data);
+				int n = 0;
+				while ((n = in.read(data)) != -1) {
 					buf.write(data, 0, n);
 				}
 				callback.onSuccess(new String(buf.toByteArray()));

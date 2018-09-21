@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
 
+import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
+import com.crispico.flower_platform.remote_object.shared.IRemoteObjectServiceInvoker;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -14,8 +16,6 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
-import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
 
 /**
  * @author Claudiu Matei
@@ -233,7 +233,7 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		invoker.invoke("sayHello", "[\"Mumu1\",2]");
 		invoker.invoke("testService.sayHello", "[\"Mumu2\",2]");
 	}
-	
+
 }
 
 /**

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
+import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 
 /**
  * @author Cristian Spiescu
