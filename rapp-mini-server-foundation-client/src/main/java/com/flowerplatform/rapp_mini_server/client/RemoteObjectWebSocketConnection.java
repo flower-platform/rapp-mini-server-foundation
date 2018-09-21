@@ -1,8 +1,8 @@
 package com.flowerplatform.rapp_mini_server.client;
 
-import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
-import com.flowerplatform.rapp_mini_server.shared.IRemoteObjectServiceInvoker;
-import com.flowerplatform.rapp_mini_server.shared.ResponseCallback;
+import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
+import com.crispico.flower_platform.remote_object.shared.IRemoteObjectServiceInvoker;
+import com.crispico.flower_platform.remote_object.shared.ResponseCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import jsinterop.annotations.JsType;

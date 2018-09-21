@@ -70,7 +70,7 @@
 		<link>
 			<name>src-shared</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/rapp-mini-server-foundation/src/main/shared</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/remote-object/src/main/shared</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

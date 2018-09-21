@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
+import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 
 public class RemoteObjectHub {
 

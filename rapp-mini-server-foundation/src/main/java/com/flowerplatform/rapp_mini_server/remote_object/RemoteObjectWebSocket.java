@@ -8,7 +8,7 @@ import java.util.Date;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
-import com.flowerplatform.rapp_mini_server.shared.FlowerPlatformRemotingProtocolPacket;
+import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 
 public class RemoteObjectWebSocket extends WebSocketAdapter {
 
