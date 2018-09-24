@@ -54,7 +54,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>../rapp-mini-server-foundation/src/main/shared</source>
+								<source>../remote-object/src/main/shared</source>
 							</sources>
 						</configuration>
 					</execution>

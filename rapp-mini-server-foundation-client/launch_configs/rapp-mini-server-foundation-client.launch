@@ -7,7 +7,7 @@
 <booleanAttribute key="com.gwtplugins.gwt.eclipse.core.CLASSIC_DEVMODE_CODE_SERVER_PORT_AUTO" value="true"/>
 <booleanAttribute key="com.gwtplugins.gwt.eclipse.core.CODE_SERVER_PORT_AUTO" value="true"/>
 <listAttribute key="com.gwtplugins.gwt.eclipse.core.ENTRY_POINT_MODULES">
-<listEntry value="com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
+<listEntry value="com.crispico.flower_platform.remote_object.FlowerPlatformUiRuntime"/>
 </listAttribute>
 <booleanAttribute key="com.gwtplugins.gwt.eclipse.core.SUPERDEVMODE_ENABLED" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
@@ -18,14 +18,14 @@
 </listAttribute>
 <listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5&quot; javaProject=&quot;rapp-mini-server-foundation-client&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#13;&#10;"/>
-<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/src/main/java&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/src-shared&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/rapp-mini-server-foundation-client/src/main/java&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#13;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;rapp-mini-server-foundation-client&quot;/&gt;&#13;&#10;&lt;/runtimeClasspathEntry&gt;&#13;&#10;"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.gwtplugins.gdt.eclipse.maven.mavenClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-logLevel INFO -port auto -generateJsInteropExports -war &quot;${workspace_loc}/rapp-mini-server-foundation-client-war-output&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.flowerplatform.rapp_mini_server.FlowerPlatformUiRuntime"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-logLevel INFO -port auto -generateJsInteropExports -war &quot;${workspace_loc}/rapp-mini-server-foundation-client-war-output&quot; -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -strict -codeServerPort auto com.crispico.flower_platform.remote_object.FlowerPlatformUiRuntime"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="rapp-mini-server-foundation-client"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx512m -Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.StdErrLog -Dorg.eclipse.jetty.LEVEL=WARN"/>
 </launchConfiguration>

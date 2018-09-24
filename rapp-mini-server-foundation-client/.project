@@ -70,7 +70,13 @@
 		<link>
 			<name>src-shared</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/remote-object/src/main/shared</locationURI>
+			<locationURI>copy_PARENT/remote-object/src/main/shared</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-3-PROJECT_LOC%7D/git_repos/rapp-mini-server-foundation</value>
+		</variable>
+	</variableList>
 </projectDescription>

@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.client;
+package com.crispico.flower_platform.remote_object.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
@@ -27,4 +27,5 @@ public class RappMiniServerFoundationClient implements EntryPoint {
 			$wnd.onGwtReady();
 		}
 	}-*/;
+
 }

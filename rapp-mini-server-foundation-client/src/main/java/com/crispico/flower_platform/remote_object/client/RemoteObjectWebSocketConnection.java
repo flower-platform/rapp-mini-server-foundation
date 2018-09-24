@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.client;
+package com.crispico.flower_platform.remote_object.client;
 
 import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 import com.crispico.flower_platform.remote_object.shared.IRemoteObjectServiceInvoker;

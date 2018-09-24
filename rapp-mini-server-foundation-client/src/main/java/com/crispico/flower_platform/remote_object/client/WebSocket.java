@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.client;
+package com.crispico.flower_platform.remote_object.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -17,21 +17,22 @@ public class WebSocket extends JavaScriptObject {
 		void onMessage(String data);
 
 		void onError(JavaScriptObject error);
+
 	}
 
 	public static native WebSocket create(String url, Listener callback) /*-{
 		var ws = new $wnd.WebSocket(url);
 		ws.onopen = $entry(function(e) {
-			callback.@com.flowerplatform.rapp_mini_server.client.WebSocket.Listener::onOpen(*)(e)
+			callback.@com.crispico.flower_platform.remote_object.client.WebSocket.Listener::onOpen(*)(e)
 		});
 		ws.onclose = $entry(function(e) {
-			callback.@com.flowerplatform.rapp_mini_server.client.WebSocket.Listener::onClose(*)(e)
+			callback.@com.crispico.flower_platform.remote_object.client.WebSocket.Listener::onClose(*)(e)
 		});
 		ws.onmessage = $entry(function(e) {
-			callback.@com.flowerplatform.rapp_mini_server.client.WebSocket.Listener::onMessage(Ljava/lang/String;)(e.data);
+			callback.@com.crispico.flower_platform.remote_object.client.WebSocket.Listener::onMessage(Ljava/lang/String;)(e.data);
 		});
 		ws.onerror = $entry(function(e) {
-			callback.@com.flowerplatform.rapp_mini_server.client.WebSocket.Listener::onError(*)(e)
+			callback.@com.crispico.flower_platform.remote_object.client.WebSocket.Listener::onError(*)(e)
 		});
 		return ws;
 	}-*/;

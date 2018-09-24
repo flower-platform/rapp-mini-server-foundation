@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.client;
+package com.crispico.flower_platform.remote_object.client;
 
 import java.util.ArrayList;
 import java.util.List;
