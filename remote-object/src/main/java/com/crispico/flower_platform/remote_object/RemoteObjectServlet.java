@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,12 +26,22 @@ public class RemoteObjectServlet extends HttpServlet {
 
 	private RemoteObjectProcessor processor;
 	
-	public RemoteObjectServlet(RemoteObjectServiceInvoker serviceInvoker, String securityToken) {
-		processor = new RemoteObjectProcessor(securityToken, serviceInvoker);
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		String securityToken = config.getInitParameter("securityToken");
+		if (securityToken == null || securityToken.length() != 8) {
+			throw new ServletException("Configuration error: invalid security token");
+		}
+		processor = new RemoteObjectProcessor(securityToken, RemoteObjectServiceInvoker.getInstance());
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (processor == null) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "RemoteObjectProcessor not initialized. Is servlet configured?");
+			return;
+		}
 		byte[] buf = new byte[request.getContentLength()];
 		DataInputStream in = new DataInputStream(request.getInputStream());
 		in.readFully(buf);

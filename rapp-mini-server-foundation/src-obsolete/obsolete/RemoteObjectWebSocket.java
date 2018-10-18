@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.flowerplatform.rapp_mini_server.remote_object.obsolete;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -8,6 +8,8 @@ import java.util.Date;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 
+import com.crispico.flower_platform.remote_object.RemoteObjectHub;
+import com.crispico.flower_platform.remote_object.RemoteObjectHubClient;
 import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 
 public class RemoteObjectWebSocket extends WebSocketAdapter {
@@ -39,7 +41,10 @@ public class RemoteObjectWebSocket extends WebSocketAdapter {
 		}
 		String nodeId = packet.nextField();
 		RemoteObjectHubClient client = new RemoteObjectHubClient(RemoteObjectHubClient.CLIENT_TYPE_WEB_SOCKET, nodeId, packet.getSecurityToken());
-		client.setWebSocket(this);
+		
+		//TODO CM: incompatibility
+//		client.setWebSocket(this);
+		
 		hub.registerClient(client);
 	}
 

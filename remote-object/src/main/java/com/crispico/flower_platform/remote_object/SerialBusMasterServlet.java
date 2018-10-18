@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +42,18 @@ public class SerialBusMasterServlet extends HttpServlet {
 
 	private DigitalOutputDevice writeEnableOutput;
 	
-	public SerialBusMasterServlet(String serialPortName, int baudRate, int writeEnablePin, int timeoutMillis) throws IOException {
-		openPort(serialPortName, baudRate, writeEnablePin, timeoutMillis);
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		String serialPortName = config.getInitParameter("serialPortName");
+		int baudRate = Integer.parseInt(config.getInitParameter("baudRate"));
+		int writeEnablePin = Integer.parseInt(config.getInitParameter("writeEnablePin"));
+		int timeoutMillis = Integer.parseInt(config.getInitParameter("timeoutMillis"));
+		try {
+			openPort(serialPortName, baudRate, writeEnablePin, timeoutMillis);
+		} catch (IOException e) {
+			throw new ServletException(e);
+		}
 	}
 
 	private void openPort(String portName, int baudRate, int writeEnablePin, int timeoutMillis) throws IOException {

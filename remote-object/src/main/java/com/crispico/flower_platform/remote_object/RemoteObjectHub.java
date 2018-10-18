@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -12,12 +12,18 @@ import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingP
 
 public class RemoteObjectHub {
 
+	private static RemoteObjectHub singletonInstance;
+	
 	private Map<String, RemoteObjectHubClient> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
 	private Map<String, RemoteObjectHubClient> registeredClientsByNodeId = new ConcurrentHashMap<>();
 	private Map<Integer, RemoteObjectHubClient> callbackIdCallerMap = new ConcurrentHashMap<>();
 
 	private AtomicInteger lastCallbackId = new AtomicInteger(0);
 
+	private RemoteObjectHub() {
+		
+	}
+	
 	public String registerClient(RemoteObjectHubClient client) {
 		// TODO CM: check nodeId/securityToken pair
 
@@ -160,6 +166,14 @@ public class RemoteObjectHub {
 		}
 		
 		return res.getRawData();
+	}
+	
+	
+	public static RemoteObjectHub getInstance() {
+		if (singletonInstance == null) {
+			singletonInstance = new RemoteObjectHub();
+		}
+		return singletonInstance;
 	}
 	
 }

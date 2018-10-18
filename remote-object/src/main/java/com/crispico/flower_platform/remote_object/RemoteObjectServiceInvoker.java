@@ -22,6 +22,14 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  */
 public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 
+	private static RemoteObjectServiceInvoker singletonInstance;
+
+	private static ObjectMapper objectMapper = new ObjectMapper();
+	
+	public static ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+	
 	/**
 	 * Object whose own or successors' methods are invoked. For nested calls (on successors), this is the starting point for looking up the method to be invoked.
 	 * If serviceInstance is a Map, first token of the method call is looked up in the map. 
@@ -33,19 +41,9 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 	private JsonFactory jsonFactory;
 
 	
-	private static ObjectMapper objectMapper = new ObjectMapper();
-	
-	public static ObjectMapper getObjectMapper() {
-		return objectMapper;
-	}
-
-	public RemoteObjectServiceInvoker(Object serviceInstance) {
-		this.serviceInstance = serviceInstance;
+	private RemoteObjectServiceInvoker() {
 		jsonFactory = new JsonFactory();
 		jsonFactory.setCodec(objectMapper);
-		if (serviceInstance instanceof Map) {
-			serviceInstanceIsMap = true;
-		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -185,6 +183,16 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		return argParser.readValueAs(expectedParameterType);
 	}
 
+	public Object getServiceInstance() {
+		return serviceInstance;
+	}
+
+	public void setServiceInstance(Object serviceInstance) {
+		this.serviceInstance = serviceInstance;
+		if (serviceInstance instanceof Map) {
+			serviceInstanceIsMap = true;
+		}
+	}
 	
 	public Object invoke(String methodPath, String argumentsAsJsonArray) {
 		Object instance = findInstance(methodPath);
@@ -224,12 +232,21 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 		return result;
 	}
 	
+	
+	public static RemoteObjectServiceInvoker getInstance() {
+		if (singletonInstance == null) {
+			singletonInstance = new RemoteObjectServiceInvoker();
+		}
+		return singletonInstance;
+	}
+	
 
 	/**
 	 * Test
 	 */
 	public static void main(String[] args) throws Exception {
-		RemoteObjectServiceInvoker invoker = new RemoteObjectServiceInvoker(new TestService());
+		RemoteObjectServiceInvoker invoker = RemoteObjectServiceInvoker.getInstance();
+		invoker.setServiceInstance(new TestService());
 		invoker.invoke("sayHello", "[\"Mumu1\",2]");
 		invoker.invoke("testService.sayHello", "[\"Mumu2\",2]");
 	}

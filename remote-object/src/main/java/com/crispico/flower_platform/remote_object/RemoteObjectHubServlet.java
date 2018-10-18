@@ -1,7 +1,7 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
-import static com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubClient.CLIENT_TYPE_HTTP_PULL;
-import static com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectHubClient.CLIENT_TYPE_HTTP_PUSH;
+import static com.crispico.flower_platform.remote_object.RemoteObjectHubClient.CLIENT_TYPE_HTTP_PULL;
+import static com.crispico.flower_platform.remote_object.RemoteObjectHubClient.CLIENT_TYPE_HTTP_PUSH;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +22,6 @@ public class RemoteObjectHubServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private DateFormat df = new SimpleDateFormat("HH:mm:ss.S");
-	
-	private RemoteObjectHub hub;
-	
-	public RemoteObjectHubServlet(RemoteObjectHub hub) {
-		this.hub = hub;
-	}
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,9 +46,9 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			if (portStr.length() > 0) {
 				client.setRemoteHttpServerPort(Integer.parseInt(portStr));
 			}
-			res = hub.registerClient(client);
+			res = RemoteObjectHub.getInstance().registerClient(client);
 		} else {
-			res = hub.processPacket(packet);
+			res = RemoteObjectHub.getInstance().processPacket(packet);
 		}
 		System.out.print(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res));
 		response.getWriter().print(res);

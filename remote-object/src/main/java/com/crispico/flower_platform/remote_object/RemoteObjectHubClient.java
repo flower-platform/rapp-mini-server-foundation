@@ -1,4 +1,4 @@
-package com.flowerplatform.rapp_mini_server.remote_object;
+package com.crispico.flower_platform.remote_object;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -29,7 +29,7 @@ public class RemoteObjectHubClient {
 	
 	private int remoteHttpServerPort = 0;
 	
-	private RemoteObjectWebSocket webSocket;
+	private RemoteObjectWebSocketHandler webSocket;
 	
 	public RemoteObjectHubClient(int clientType, String nodeId, String securityToken) {
 		this.clientType = clientType;
@@ -65,11 +65,11 @@ public class RemoteObjectHubClient {
 		this.remoteHttpServerPort = remoteServerPort;
 	}
 
-	public RemoteObjectWebSocket getWebSocket() {
+	public RemoteObjectWebSocketHandler getWebSocket() {
 		return webSocket;
 	}
 
-	public void setWebSocket(RemoteObjectWebSocket webSocket) {
+	public void setWebSocket(RemoteObjectWebSocketHandler webSocket) {
 		this.webSocket = webSocket;
 	}
 
