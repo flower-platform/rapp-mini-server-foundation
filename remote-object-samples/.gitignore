@@ -1,0 +1,10 @@
+*/.factorypath
+*/.settings/org.eclipse.jdt.apt.core.prefs
+*/target/
+*/yarn-error.log
+
+*/pom.xml.versionsBackup
+pom.xml.versionsBackup
+
+*/crispico-snapshot-repo.marker.*
+crispico-snapshot-repo.marker.*
