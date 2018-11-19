@@ -6,7 +6,7 @@ Please refer to **Crispico ExpresSkills** knowledge base system for instructions
 
 <hr/>
 
-Project last aligned with archetype version: <b>1.5.0</b>. <br/>
+Project last aligned with archetype version: <b>1.6.1</b>. <br/>
 Please manually update this version if `archetype-foundation-app` evolves and you modify this project to align it accordingly. See `<foundation-git-repo>/archetype-foundation-app/readme.md`.
 
 <hr/>
