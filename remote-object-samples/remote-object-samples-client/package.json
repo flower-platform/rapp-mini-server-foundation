@@ -1,0 +1,7 @@
+{
+  "name": "remote-object-samples-client",
+  "description": "COMMENT: Dependencies defined here need to be included in *Resources.gwt.xml (for css) and Resources.java + injection (for js). See foundation-client for example.",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {}
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.crispico.foundation</groupId>
+		<artifactId>parent-pom-foundation-app-client</artifactId>
+		<version>1.9.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.crispico.flower-platform.remote-object</groupId>
+	<artifactId>remote-object-samples-client</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	
+	<properties>
+		<foundationRootArtifactId>remote-object-samples</foundationRootArtifactId>
+		<foundationRootPackage>com.crispico.flower_platform.remote_object.samples</foundationRootPackage>
+		<foundationClientGwtModuleName>RemoteObjectSamples</foundationClientGwtModuleName>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!-- Add additional options here. They will be merged with the ones defined by the parent POMs. -->
+					<compilerArgs combine.children="append"></compilerArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>
