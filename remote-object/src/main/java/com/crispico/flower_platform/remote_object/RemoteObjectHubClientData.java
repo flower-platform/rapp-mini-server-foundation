@@ -3,7 +3,7 @@ package com.crispico.flower_platform.remote_object;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class RemoteObjectHubClient {
+public class RemoteObjectHubClientData {
 	
 	public static final int CLIENT_TYPE_HTTP_PUSH = 0;
 
@@ -31,7 +31,7 @@ public class RemoteObjectHubClient {
 	
 	private RemoteObjectWebSocketHandler webSocket;
 	
-	public RemoteObjectHubClient(int clientType, String nodeId, String securityToken) {
+	public RemoteObjectHubClientData(int clientType, String nodeId, String securityToken) {
 		this.clientType = clientType;
 		this.nodeId = nodeId;
 		this.securityToken = securityToken;

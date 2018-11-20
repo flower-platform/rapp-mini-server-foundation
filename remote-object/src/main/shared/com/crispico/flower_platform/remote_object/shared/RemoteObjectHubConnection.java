@@ -29,6 +29,11 @@ public class RemoteObjectHubConnection {
 	private int localServerPort;
 	
 	private boolean registered;
+
+	private boolean started;
+
+	private int pollInterval = 5000;
+
 	
 	public RemoteObjectHubConnection setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
@@ -65,10 +70,29 @@ public class RemoteObjectHubConnection {
 		return this;
 	}
 
+	public RemoteObjectHubConnection setPollInterval(int pollInterval) {
+		this.pollInterval = pollInterval;
+		return this;
+	}
+
 	public void start() {
+		if (pollInterval <= 0) {
+			return;
+		}
+		started = true;
 		requestRegistration();
 	}
 	
+	public void stop() {
+		started = false;
+	}
+
+	private void scheduleConnect() {
+		if (started && pollInterval > 0) {
+			scheduler.schedule(new HubConnectTask(), pollInterval);
+		}
+	}
+
 	private void requestRegistration() {
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'A');
 		packet.addField(localNodeId);
@@ -86,17 +110,21 @@ public class RemoteObjectHubConnection {
 		requestSender.sendRequest("http://" + remoteAddress +"/hub", packet.getRawData(), new HubResponseCallback());
 	}
 	
+	public void pollHub() {
+		if (!registered) {
+			requestRegistration();
+		} else if (serviceInvoker != null) {
+			requestPendingInvocations();
+		} else {
+			requestPendingResponses();
+		}
+	}
+	
 	class HubConnectTask implements Runnable {
 		
 		@Override
 		public void run() {
-			if (!registered) {
-				requestRegistration();
-			} else if (serviceInvoker != null) {
-				requestPendingInvocations();
-			} else {
-				requestPendingResponses();
-			}
+			pollHub();
 		}
 		
 	}
@@ -122,7 +150,7 @@ public class RemoteObjectHubConnection {
 					break;
 				case 'I': {
 					if (serviceInvoker == null) {
-						scheduler.schedule(new HubConnectTask(), 5000);
+						scheduleConnect();
 						break;
 					}
 					responsePacket.nextField(); // nodeId (ignored)
@@ -145,20 +173,21 @@ public class RemoteObjectHubConnection {
 							callback.run(valueStr);
 						}
 					}
-					scheduler.schedule(new HubConnectTask(), 5000);
+					scheduleConnect();
 					break; }
 				default:
-					scheduler.schedule(new HubConnectTask(), 5000);
+					scheduleConnect();
+					break;
 				}
 			} catch (Exception e) {
-				scheduler.schedule(new HubConnectTask(), 5000);
+				scheduleConnect();
 			}
 		}
 
 		@Override
 		public void onError(String message) {
 			registered = false;
-			scheduler.schedule(new HubConnectTask(), 5000);
+			scheduleConnect();
 		}
 		
 	}
