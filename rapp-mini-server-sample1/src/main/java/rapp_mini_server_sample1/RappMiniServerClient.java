@@ -1,10 +1,10 @@
 package rapp_mini_server_sample1;
 
-import com.flowerplatform.rapp_mini_server.remote_object.JavaRemoteObjectBase;
-import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
-import com.flowerplatform.rapp_mini_server.shared.RemoteObject;
-import com.flowerplatform.rapp_mini_server.shared.RemoteObjectHubConnection;
-import com.flowerplatform.rapp_mini_server.shared.ResultCallback;
+import com.crispico.flower_platform.remote_object.JavaRemoteObjectBase;
+import com.crispico.flower_platform.remote_object.RemoteObjectServiceInvoker;
+import com.crispico.flower_platform.remote_object.shared.RemoteObject;
+import com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection;
+import com.crispico.flower_platform.remote_object.shared.ResultCallback;
 
 public class RappMiniServerClient {
 
@@ -17,7 +17,7 @@ public class RappMiniServerClient {
 				.setSecurityToken("55555555")
 				.setRequestSender(remoteObjectBase)
 				.setScheduler(remoteObjectBase)
-				.setServiceInvoker(new RemoteObjectServiceInvoker(new RappMiniServerSample1Main()));
+				.setServiceInvoker(RemoteObjectServiceInvoker.getInstance());
 		client.start();
 	}
 	
@@ -28,12 +28,12 @@ public class RappMiniServerClient {
 				.setInstanceName("lightController1")
 				.setRequestSender(remoteObjectBase);
 
-		ro.invokeMethod("sayHello", new Object[] {"ArduinoDirect", 3 }, new ResultCallback() {
-			@Override
-			public void run(Object result) {
+		ro.invokeMethod("sayHello", new Object[] {"ArduinoDirect", 3 }, (result)-> {
 				System.out.println("Arudino direct: " + result);
+			}, (error) -> {
+				System.out.println("Arudino direct ERROR: " + error);
 			}
-		});
+		);
 
 	}
 	
@@ -50,7 +50,7 @@ public class RappMiniServerClient {
 			public void run(Object result) {
 				System.out.println("Arduino hub: " + result);
 			}
-		});
+		}, null);
 		
 	}
 
@@ -66,7 +66,7 @@ public class RappMiniServerClient {
 			public void run(Object result) {
 				System.out.println("Java direct: " + result);
 			}
-		});
+		}, null);
 
 	}
 
@@ -83,7 +83,7 @@ public class RappMiniServerClient {
 			public void run(Object result) {
 				System.out.println("Java hub: " + result);
 			}
-		});
+		}, null);
 	}
 	
 	public void callWebSocketUI() {
@@ -99,7 +99,7 @@ public class RappMiniServerClient {
 			public void run(Object result) {
 				System.out.println("callWebSocketUI: " + result);
 			}
-		});
+		}, null);
 	}
 	
 	public void test() {

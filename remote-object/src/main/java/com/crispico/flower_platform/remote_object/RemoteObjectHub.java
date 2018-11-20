@@ -14,9 +14,9 @@ public class RemoteObjectHub {
 
 	private static RemoteObjectHub singletonInstance;
 	
-	private Map<String, RemoteObjectHubClient> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
-	private Map<String, RemoteObjectHubClient> registeredClientsByNodeId = new ConcurrentHashMap<>();
-	private Map<Integer, RemoteObjectHubClient> callbackIdCallerMap = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClientData> registeredClientsBySecurityToken = new ConcurrentHashMap<>();
+	private Map<String, RemoteObjectHubClientData> registeredClientsByNodeId = new ConcurrentHashMap<>();
+	private Map<Integer, RemoteObjectHubClientData> callbackIdCallerMap = new ConcurrentHashMap<>();
 
 	private AtomicInteger lastCallbackId = new AtomicInteger(0);
 
@@ -24,7 +24,7 @@ public class RemoteObjectHub {
 		
 	}
 	
-	public String registerClient(RemoteObjectHubClient client) {
+	public String registerClient(RemoteObjectHubClientData client) {
 		// TODO CM: check nodeId/securityToken pair
 
 		registeredClientsBySecurityToken.put(client.getSecurityToken(), client);
@@ -32,7 +32,7 @@ public class RemoteObjectHub {
 		return new FlowerPlatformRemotingProtocolPacket(client.getSecurityToken(), 'A').getRawData();
 	}
 	
-	private FlowerPlatformRemotingProtocolPacket invokeHttpPushClient(RemoteObjectHubClient invokedClient, String invocation, String invokerSecurityToken) {
+	private FlowerPlatformRemotingProtocolPacket invokeHttpPushClient(RemoteObjectHubClientData invokedClient, String invocation, String invokerSecurityToken) {
 		try {
 			HttpURLConnection conn = (HttpURLConnection) new URL("http://" + invokedClient.getRemoteIPAddress()+ ":" + invokedClient.getRemoteHttpServerPort()).openConnection();
 			FlowerPlatformRemotingProtocolPacket pak = new FlowerPlatformRemotingProtocolPacket(invokedClient.getSecurityToken(), 'I');
@@ -66,7 +66,7 @@ public class RemoteObjectHub {
 	
 	public String processPacket(FlowerPlatformRemotingProtocolPacket packet) {
 		// retrieve registered client
-		RemoteObjectHubClient client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
+		RemoteObjectHubClientData client = registeredClientsBySecurityToken.get(packet.getSecurityToken());
 		if (client != null) {
 			client.setLastActivityTimestamp(System.currentTimeMillis());
 		} else {
@@ -80,7 +80,7 @@ public class RemoteObjectHub {
 		case 'I': { // invoke
 			nodeId = packet.nextField(); // nodeId
 			packet.nextField(); // callbackId (ignored)
-			RemoteObjectHubClient invokedClient = registeredClientsByNodeId.get(nodeId);
+			RemoteObjectHubClientData invokedClient = registeredClientsByNodeId.get(nodeId);
 			if (invokedClient == null) {
 				break;
 			}
@@ -104,15 +104,15 @@ public class RemoteObjectHub {
 
 			// invoke or queue invocation, depending on client type
 			switch (invokedClient.getClientType()) {
-			case RemoteObjectHubClient.CLIENT_TYPE_HTTP_PUSH:
+			case RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PUSH:
 				res = invokeHttpPushClient(invokedClient, invocation, packet.getSecurityToken());
 				break;
-			case RemoteObjectHubClient.CLIENT_TYPE_HTTP_PULL:
+			case RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PULL:
 				invokedClient.addPendingInvocation(sbInvocation.toString());
 				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'P');
 				res.addField("" + callbackId);
 				break;
-			case RemoteObjectHubClient.CLIENT_TYPE_WEB_SOCKET:
+			case RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET:
 				FlowerPlatformRemotingProtocolPacket invokePacket = new FlowerPlatformRemotingProtocolPacket(invokedClient.getSecurityToken(), 'I');
 				invokePacket.addField(invokedClient.getNodeId()); // nodeId
 				invokePacket.addField(invocation);
@@ -127,7 +127,7 @@ public class RemoteObjectHub {
 			break; }
 		case 'R':  // result received
 			int callbackId = Integer.parseInt(packet.nextField()); // callbackId
-			RemoteObjectHubClient invokerClient = callbackIdCallerMap.remove(callbackId);
+			RemoteObjectHubClientData invokerClient = callbackIdCallerMap.remove(callbackId);
 			if (invokerClient == null) {
 				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'X');
 				break;

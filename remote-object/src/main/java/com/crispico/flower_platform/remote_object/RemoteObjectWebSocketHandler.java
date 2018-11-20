@@ -32,7 +32,7 @@ public class RemoteObjectWebSocketHandler {
 			return;
 		}
 		String nodeId = packet.nextField();
-		RemoteObjectHubClient client = new RemoteObjectHubClient(RemoteObjectHubClient.CLIENT_TYPE_WEB_SOCKET, nodeId, packet.getSecurityToken());
+		RemoteObjectHubClientData client = new RemoteObjectHubClientData(RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET, nodeId, packet.getSecurityToken());
 		client.setWebSocket(this);
 		hub.registerClient(client);
 	}
