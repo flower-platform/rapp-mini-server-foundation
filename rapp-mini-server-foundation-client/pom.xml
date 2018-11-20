@@ -41,6 +41,28 @@
 	<packaging>war</packaging>
 
 	<build>
+		<!-- This project is a lib. Hence include .java files in the jar. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.xml</include>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>../remote-object/src/main/shared</directory>
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.xml</include>
+					<include>**/*.css</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

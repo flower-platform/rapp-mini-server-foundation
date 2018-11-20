@@ -15,5 +15,6 @@
 <!--     </public> -->
 
 <!-- 	<stylesheet src="bootswatch/paper/bootstrap.min.css"/> -->
-
+	
+	<inherits name="com.crispico.flower_platform.remote_object.FlowerPlatformUiRuntime"/>
 </module>

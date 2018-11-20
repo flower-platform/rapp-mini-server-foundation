@@ -45,16 +45,4 @@
 		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
 		<nature>com.gwtplugins.gwt.eclipse.core.gwtNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src-server-shared</name>
-			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/remote-object-samples-server/src/main/shared</locationURI>
-		</link>
-		<link>
-			<name>src-server-shared-gen</name>
-			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/remote-object-samples-server/target/generated-sources/annotations</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

@@ -14,8 +14,6 @@
 			<attribute name="m2e-apt" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src-server-shared"/>
-	<classpathentry including="**/client/**|**/shared/**" kind="src" path="src-server-shared-gen"/>
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

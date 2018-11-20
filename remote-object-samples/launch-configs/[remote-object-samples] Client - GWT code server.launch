@@ -24,7 +24,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.gwtplugins.gdt.eclipse.maven.mavenClasspathProvider"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.DevMode"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bindAddress 0.0.0.0 -port 8888 -style PRETTY -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl http://localhost:8888/#/main -logLevel INFO -strict -codeServerPort 9876 -war &quot;${project_loc:remote-object-samples-client}/target/gwt-war-output&quot; com.crispico.flower_platform.remote_object.samples.RemoteObjectSamples"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-bindAddress 0.0.0.0 -port 8888 -generateJsInteropExports -style PRETTY -remoteUI &quot;${gwt_remote_ui_server_port}:${unique_id}&quot; -startupUrl http://localhost:8888/#/main -logLevel INFO -strict -codeServerPort 9876 -war &quot;${project_loc:remote-object-samples-client}/target/gwt-war-output&quot; com.crispico.flower_platform.remote_object.samples.RemoteObjectSamples"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="remote-object-samples-client"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx1g -Dorg.eclipse.jetty.util.log.class=org.eclipse.jetty.util.log.StdErrLog -Dorg.eclipse.jetty.LEVEL=WARN"/>
 </launchConfiguration>

@@ -3,13 +3,13 @@
         "https://raw.githubusercontent.com/gwtproject/gwt/2.8.1/distro-source/core/src/gwt-module.dtd">
         
 <module rename-to="RemoteObjectSamples">
-	<inherits name="com.crispico.foundation.client.FoundationClientAppBase" />
-	
 	<!-- 
 		This module stays in the root so that we can access resources directly from the root
 		of the classpath (e.g. from node_modules, which is configured as a resources dir).
 	 -->
 	<inherits name="RemoteObjectSamplesResources"/>
+	<inherits name="com.crispico.foundation.client.FoundationClientAppBase" />
+	<inherits name="com.google.gwt.json.JSON" />
 
 	<source path='client' />
 	<source path='shared' />

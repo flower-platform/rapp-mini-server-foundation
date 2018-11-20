@@ -1,4 +1,4 @@
-package com.crispico.flower_platform.remote_object.samples.client.function;
+package com.crispico.flower_platform.remote_object.samples.client.page.main.function;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +9,11 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.crispico.client.ClientGlobals;
-import com.crispico.client.component.alert.Alert;
 import com.crispico.client.component.properties_form.PropertiesFormPWidget;
 import com.crispico.client.component.properties_form.PropertyDescriptor;
-import com.crispico.flower_platform.remote_object.samples.client.function.FunctionPresenter.MyView;
+import com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionPresenter.MyView;
 import com.crispico.foundation.client.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.FoundationComponentPresenter;
 
@@ -33,6 +31,8 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
     protected PropertiesFormPWidget form;
     
     protected Map<String, String> values = new HashMap<>();
+    
+    protected String functionName;
     
 	@Inject
 	protected FunctionPresenter(EventBus eventBus, Provider<FunctionView> viewProvider) {
@@ -66,11 +66,8 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 	}
 	
 	public void setFunctionName(String value) {
+		this.functionName = value;
 		getView().setFunctionName(value);
 	}
 
-	protected void onCallButtonClick(ClickEvent clickEvent) {
-		// TODO replace with meaningful code
-		Alert.show("Please replace this with some meaningful code!");
-	}
 }

@@ -1,16 +1,14 @@
 package com.crispico.flower_platform.remote_object.samples.client.page.main;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.crispico.client.ClientGlobals;
-import com.crispico.flower_platform.remote_object.samples.client.function.FunctionPresenter;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.MainPagePresenter.MyProxy;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.MainPagePresenter.MyView;
-import com.crispico.flower_platform.remote_object.samples.client.service.ServicePresenter;
+import com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionPresenter;
+import com.crispico.flower_platform.remote_object.samples.client.page.main.service.ServicePresenter;
+import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.foundation.annotation.definition.ComponentType;
 import com.crispico.foundation.annotation.definition.GenComponentRegistration;
 import com.crispico.foundation.annotation.definition.TriggerFoundationAnnotationProcessor;
@@ -49,23 +47,18 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		addNamedSlot(ClientGlobals.getDefaultMultiSlot(), "SLOT_MAIN");
 		
 		{
+			new RemoteObject();
 			ServicePresenter service = provider.get();
-			service.setName("myService");
-			service.initConnectionParams(MapBuilder.createMapFromArrayAsStringKeyObjectValue("param1", "value1", "param2", "value2"));
+			service.initConnectionParams(MapBuilder.createMapFromArrayAsStringKeyObjectValue(
+					"remoteAddress", "localhost:9001", 
+					"securityToken", "44444444", 
+					"nodeId", "", 
+					"instanceName", "e"));
 			FunctionPresenter caller;
 
 			caller = service.addFunction();
-			caller.setFunctionName("myFunction");
-			caller.initParams("name", "def", "count", "");
-//			caller.onClick();
-			new Consumer<Map<String, String>>() {
-
-				@Override
-				public native void accept(Map<String, String> t)/*-{
-					ro.myFunction(t.@java.util.Map::get(*)("name"), t.get("count"));
-				}-*/;
-
-			};
+			caller.setFunctionName("sayHello");
+			caller.initParams("name", "John", "n", "10", "f", "3.14", "b", "true");
 			
 			caller = service.addFunction();
 			caller.setFunctionName("myOtherFunction");

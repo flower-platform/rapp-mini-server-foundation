@@ -12,7 +12,7 @@
 		}
 		
 		.result {
-			width: 150px;
+			width: 300px;
 			background-color: #eff5ff;
 			display: inline-block;
 		}	
