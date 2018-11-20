@@ -7,7 +7,5 @@
 	<packaging>pom</packaging>
   <modules>
     <module>remote-object-samples-client</module>
-    <module>remote-object-samples-server</module>
-    <module>remote-object-samples-test</module>
   </modules>
 </project>

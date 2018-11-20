@@ -8,3 +8,6 @@ pom.xml.versionsBackup
 
 */crispico-snapshot-repo.marker.*
 crispico-snapshot-repo.marker.*
+
+remote-object-samples-server
+remote-object-samples-test

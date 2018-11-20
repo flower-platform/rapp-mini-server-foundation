@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<g:HTMLPanel styleName="panel panel-default">
+		<div class="panel-heading"><g:InlineLabel ui:field="serviceName"/> </div>
+		<div class="panel-body">
+			<g:Button ui:field="refreshButton" styleName="btn btn-default" text="Connect"/>
+			<span class="SLOT_CONNECTION_PARAMS"/>
+			<div class="SLOT_FUNCTIONS"/>
+  		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>
+

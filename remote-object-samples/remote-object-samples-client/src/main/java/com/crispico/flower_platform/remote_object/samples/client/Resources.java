@@ -14,7 +14,7 @@ import com.google.gwt.resources.client.TextResource;
  */
 public interface Resources extends ClientBundle {
 
-	@Source("com/crispico/flower_platform/remote_object/samples/shared/messages.tsv")
+	@Source("com/crispico/flower_platform/remote_object/samples/client/messages.tsv")
 	TextResource messages();
 	
 	@Source("com/crispico/flower_platform/remote_object/samples/client/plain-js-code.js")
