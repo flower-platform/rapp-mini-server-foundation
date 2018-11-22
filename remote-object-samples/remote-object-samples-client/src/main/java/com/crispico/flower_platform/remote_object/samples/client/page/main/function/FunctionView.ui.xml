@@ -4,7 +4,7 @@
 	<ui:style>
 		@external .form-control;
 		.serviceCallerSlot .form-control {
-			width: 50px;		
+			width: 100px;		
 		}
 		
 		.callButton {

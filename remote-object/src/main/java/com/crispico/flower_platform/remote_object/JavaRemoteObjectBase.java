@@ -61,7 +61,12 @@ public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 				while ((n = in.read(data)) != -1) {
 					buf.write(data, 0, n);
 				}
-				callback.onSuccess(new String(buf.toByteArray()));
+				String respData = new String(buf.toByteArray());
+				if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+					callback.onSuccess(respData);
+				} else {
+					callback.onError(respData);
+				}
 				in.close();
 			} catch (IOException e) {
 				callback.onError(e.toString());

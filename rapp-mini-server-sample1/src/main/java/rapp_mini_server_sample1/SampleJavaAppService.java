@@ -21,7 +21,7 @@ public class SampleJavaAppService {
 	private Object tmpResult;
 	
 	public String sayHello(String name, int n, float f, boolean b) {
-		return String.format("Hello, %s! n=%s, f=%s, b=%s", name, n, f, b);
+		return String.format("Hello from Java, %s! n=%s, f=%s, b=%s", name, n, f, b);
 	}
 	
 	public ComplexObject sayHelloComplex(ComplexObject object) {
@@ -31,28 +31,43 @@ public class SampleJavaAppService {
 	
 	public void initRemoteObjectDirect(String ip, int port, String objectName, String securityToken) {
 		directRemoteObject = new RemoteObject().setRemoteAddress(ip + ":" + port).setSecurityToken(securityToken).setInstanceName(objectName);
+		directRemoteObject.setRequestSender(remoteObjectBase);
 	}
 
 	public String callSayHelloRoDirect(String name) {
 		tmpResult = null;
 		directRemoteObject.invokeMethod(
 				"sayHello",
-				new Object[] { name, 2, 3.14f, true }, 
+				new Object[] { name, 2, 5.23f, true }, 
 				(result) -> { 
-					System.out.println("Result: " + result); tmpResult = result; 
+					System.out.println("Result: " + result); 
 					synchronized(SampleJavaAppService.this) {
+						tmpResult = result; 
 						SampleJavaAppService.this.notifyAll(); 
 					}
 				}, 
-				(error) -> { System.out.println("Error: " + error); }
+				(error) -> { 
+					System.out.println("Error: " + error); 
+					synchronized(SampleJavaAppService.this) {
+						tmpResult = "ERROR: " + error; 
+						SampleJavaAppService.this.notifyAll(); 
+					}
+				}
 		);
-		try { this.wait(5000); } catch (Exception e) { } // make it a synchronous call
+		synchronized(this) {
+			if (tmpResult == null) {
+				try { this.wait(5000); } catch (Exception e) { e.printStackTrace(); } // make it a synchronous call
+			}
+		}
 		return "" + tmpResult;
 	}
 	
-	
 	public void initRemoteObjectViaHub(int mode, String hubIp, int port, String destinationNodeId, int pollingInterval) {
-		hubConnection = new RemoteObjectHubConnection().setLocalNodeId("SampleJavaApp").setRemoteAddress(hubIp + ":" + port).setRequestSender(remoteObjectBase).setScheduler(remoteObjectBase);
+		hubConnection = new RemoteObjectHubConnection()
+				.setLocalNodeId("SampleJavaApp")
+				.setRemoteAddress(hubIp + ":" + port)
+				.setRequestSender(remoteObjectBase).setScheduler(remoteObjectBase);
+		
 		if (mode == HUB_MODE_PUSH) {
 			hubConnection.setLocalServerPort(9001); // could be obtained from main file of rapp (i.e. RappMiniServerSample1Main)
 		}
@@ -67,6 +82,5 @@ public class SampleJavaAppService {
 	public void pollNowHub() {
 		hubConnection.pollHub();
 	}
-
 
 }

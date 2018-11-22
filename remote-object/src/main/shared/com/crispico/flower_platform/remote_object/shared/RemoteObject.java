@@ -141,6 +141,7 @@ public class RemoteObject {
 		
 		public RemoteObjectResponseCallback(ResultCallback successCallback, ResultCallback errorCallback) {
 			this.successCallback = successCallback;
+			this.errorCallback = errorCallback;
 		}
 
 		@Override

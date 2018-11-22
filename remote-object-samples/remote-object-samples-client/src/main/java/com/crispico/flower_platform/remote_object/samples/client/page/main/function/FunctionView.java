@@ -37,6 +37,7 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 	public void setPresenter(PresenterWidget<?> page) {
 		super.setPresenter(page);
 		callButton.addClickHandler(e -> {
+			this.result.setText("");
 			JavaScriptObject a = JavaScriptObject.createArray();
 			for (PropertyBasicDescriptor pd : getPresenter().form.getPropertyDescriptors()) {
 				pushToArray(a, getPresenter().values.get(((PropertyDescriptor) pd).getName()));

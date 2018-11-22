@@ -62,7 +62,7 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
 	}
 	
 	protected void updateServiceName() {
-		getView().setServiceName(connectionParams.get("instanceName"));
+		getView().setServiceName(connectionParams.get("remoteAddress"));
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

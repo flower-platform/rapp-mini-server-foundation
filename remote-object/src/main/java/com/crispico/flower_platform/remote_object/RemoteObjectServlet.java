@@ -50,7 +50,13 @@ public class RemoteObjectServlet extends HttpServlet {
 		System.out.println(String.format("[%s] %s -> %s", df.format(new Date()), request.getRemoteAddr(), rawPacket));
 
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(rawPacket);
-		FlowerPlatformRemotingProtocolPacket res = processor.processPacket(packet);
+		FlowerPlatformRemotingProtocolPacket res;
+		try {
+			res = processor.processPacket(packet);
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.toString());
+			return;
+		}
 
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");		

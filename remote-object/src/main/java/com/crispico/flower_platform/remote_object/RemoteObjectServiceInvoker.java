@@ -164,7 +164,7 @@ public class RemoteObjectServiceInvoker implements IRemoteObjectServiceInvoker {
 			} else if (int.class.equals(expectedParameterType) || Integer.class.equals(expectedParameterType)) {
 				return argParser.getIntValue();
 			} else if (boolean.class.equals(expectedParameterType) || Boolean.class.equals(expectedParameterType)) {
-				return argParser.getBooleanValue();
+				return argParser.getValueAsBoolean();
 			} else if (long.class.equals(expectedParameterType) || Long.class.equals(expectedParameterType)) {
 				return argParser.getLongValue();
 			} else if (float.class.equals(expectedParameterType) || Float.class.equals(expectedParameterType)) {
