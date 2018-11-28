@@ -41,7 +41,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		if (packet.getCommand() == 'A') {
 			String nodeId = packet.nextField();
 			String portStr = packet.nextField();
-			RemoteObjectHubClientData client = new RemoteObjectHubClientData(portStr.length() > 0 ? CLIENT_TYPE_HTTP_PUSH : CLIENT_TYPE_HTTP_PULL,  nodeId, packet.getSecurityToken());
+			RemoteObjectHubClientData client = new RemoteObjectHubClientData(portStr.length() > 0 && !portStr.equals("0") ? CLIENT_TYPE_HTTP_PUSH : CLIENT_TYPE_HTTP_PULL,  nodeId, packet.getSecurityToken());
 			client.setRemoteIPAddress(request.getRemoteAddr());
 			if (portStr.length() > 0) {
 				client.setRemoteHttpServerPort(Integer.parseInt(portStr));
@@ -51,6 +51,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 			res = RemoteObjectHub.getInstance().processPacket(packet);
 		}
 		System.out.print(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res));
+		response.setHeader("Content-Type", "text/plain");
 		response.getWriter().print(res);
 		System.out.println("\t[SENT]");
 	}

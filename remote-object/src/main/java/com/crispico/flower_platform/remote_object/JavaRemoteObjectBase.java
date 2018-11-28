@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import com.crispico.flower_platform.remote_object.shared.IRequestSender;
@@ -24,12 +25,21 @@ public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 	public void sendRequest(String url, String payload, ResponseCallback callback) {
 		threadPool.submit(new HttpRequestTask(url, payload, callback));
 	}
-
+	
+	private ScheduledFuture<?> scheduledFuture;
+	
 	@Override
 	public void schedule(Runnable task, int millis) {
-		scheduler.schedule(task, millis, TimeUnit.MILLISECONDS);
+		clear();
+		scheduledFuture = scheduler.schedule(task, millis, TimeUnit.MILLISECONDS);
 	}
 
+	public void clear() {
+		if (scheduledFuture != null) {
+			scheduledFuture.cancel(false);
+		}
+	}
+	
 	class HttpRequestTask implements Runnable {
 
 		private String url;

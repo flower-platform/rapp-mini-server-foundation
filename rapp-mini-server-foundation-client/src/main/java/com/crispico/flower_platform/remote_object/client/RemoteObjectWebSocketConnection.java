@@ -2,7 +2,9 @@ package com.crispico.flower_platform.remote_object.client;
 
 import com.crispico.flower_platform.remote_object.shared.FlowerPlatformRemotingProtocolPacket;
 import com.crispico.flower_platform.remote_object.shared.IRemoteObjectServiceInvoker;
+import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.flower_platform.remote_object.shared.ResponseCallback;
+import com.crispico.flower_platform.remote_object.shared.ResultCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import jsinterop.annotations.JsType;
@@ -30,8 +32,6 @@ public class RemoteObjectWebSocketConnection {
 	 * Local rapp instance id
 	 */
 	private String localNodeId;
-
-	private int localServerPort;
 
 	public String getRemoteAddress() {
 		return remoteAddress;
@@ -64,17 +64,8 @@ public class RemoteObjectWebSocketConnection {
 		return serviceInvoker;
 	}
 
-	public int getLocalServerPort() {
-		return localServerPort;
-	}
-
 	public RemoteObjectWebSocketConnection setServiceInvoker(IRemoteObjectServiceInvoker serviceInvoker) {
 		this.serviceInvoker = serviceInvoker;
-		return this;
-	}
-
-	public RemoteObjectWebSocketConnection setLocalServerPort(int localServerPort) {
-		this.localServerPort = localServerPort;
 		return this;
 	}
 
@@ -132,17 +123,25 @@ public class RemoteObjectWebSocketConnection {
 			resp.addField(value != null ? value.toString() : "");
 			webSocket.sendMessage(resp.getRawData());
 			break; }
+		case 'R': {
+			callbackId = packet.nextField();
+			String valueStr = packet.nextField();
+			ResultCallback callback = RemoteObject.getCallbacks().get(callbackId);
+			if (callback != null) {
+				callback.run(valueStr);
+			}
+			break; }
 		}
 	}
 	
 	private void requestRegistration() {
 		FlowerPlatformRemotingProtocolPacket packet = new FlowerPlatformRemotingProtocolPacket(securityToken, 'A');
 		packet.addField(localNodeId);
-		packet.addField("" + localServerPort);
+		packet.addField(""); // no server port
 		webSocket.sendMessage(packet.getRawData());
 	}
 
-	public void disconnect() {
+	public void stop() {
 		started = false;
 		if (webSocket != null) {
 			webSocket.close();

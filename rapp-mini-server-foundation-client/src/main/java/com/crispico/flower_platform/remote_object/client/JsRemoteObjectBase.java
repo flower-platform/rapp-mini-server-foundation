@@ -122,6 +122,8 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 		}
 		return res;
 	}
+
+	private Timer timer;
 	
 	private final native JavaScriptObject jsInvoke(String functionCall, Object[] args)/*-{
 		var splitCall = functionCall.split('.');
@@ -134,13 +136,21 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 
 	@Override
 	public void schedule(Runnable task, int millis) {
-		final Timer timer = new Timer() {
+		clear();
+		timer = new Timer() {
 			@Override
 			public void run() {
 				task.run();
 			}
 		};
 		timer.schedule(millis);
+	}
+	
+	@Override
+	public void clear() {
+		if (timer != null) {
+			timer.cancel();
+		}
 	}
 	
 }

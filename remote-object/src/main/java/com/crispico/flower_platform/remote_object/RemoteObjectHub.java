@@ -1,5 +1,9 @@
 package com.crispico.flower_platform.remote_object;
 
+import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PULL;
+import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PUSH;
+import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -104,15 +108,15 @@ public class RemoteObjectHub {
 
 			// invoke or queue invocation, depending on client type
 			switch (invokedClient.getClientType()) {
-			case RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PUSH:
+			case CLIENT_TYPE_HTTP_PUSH:
 				res = invokeHttpPushClient(invokedClient, invocation, packet.getSecurityToken());
 				break;
-			case RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PULL:
+			case CLIENT_TYPE_HTTP_PULL:
 				invokedClient.addPendingInvocation(sbInvocation.toString());
 				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'P');
 				res.addField("" + callbackId);
 				break;
-			case RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET:
+			case CLIENT_TYPE_WEB_SOCKET:
 				FlowerPlatformRemotingProtocolPacket invokePacket = new FlowerPlatformRemotingProtocolPacket(invokedClient.getSecurityToken(), 'I');
 				invokePacket.addField(invokedClient.getNodeId()); // nodeId
 				invokePacket.addField(invocation);
@@ -133,7 +137,18 @@ public class RemoteObjectHub {
 				break;
 			}
 			String result = packet.nextField(); // value
-			invokerClient.addPendingResponse(callbackId + "\0" + result); 
+			if (invokerClient.getClientType() == CLIENT_TYPE_WEB_SOCKET) {
+				res = new FlowerPlatformRemotingProtocolPacket(invokerClient.getSecurityToken(), 'R');
+				res.addField("" + callbackId); // callbackId
+				res.addField(result);
+				try {
+					invokerClient.getWebSocket().send(res);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				invokerClient.addPendingResponse(callbackId + "\0" + result); 
+			}
 			// no break here; continue with 'J' command, for HTTP PULL clients
 		case 'J': // "get pending invocations" command received
 			if (client.getPendingInvocations().size() == 0) {

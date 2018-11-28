@@ -4,10 +4,10 @@
 	<g:HTMLPanel styleName="panel panel-default">
 		<div class="panel-heading"><g:InlineLabel ui:field="serviceName"/> </div>
 		<div class="panel-body">
-			<g:Button ui:field="refreshButton" styleName="btn btn-default" text="Connect"/>
 			<span class="SLOT_CONNECTION_PARAMS"/>
+			<g:Button ui:field="createRoDirectButton" styleName="btn btn-default" text="Create RO direct"/>
+			<g:Button ui:field="createRoHubButton" styleName="btn btn-default" text="Create RO hub"/>
 			<div class="SLOT_FUNCTIONS"/>
   		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>
-

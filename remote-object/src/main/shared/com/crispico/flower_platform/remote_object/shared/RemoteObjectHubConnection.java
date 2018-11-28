@@ -76,15 +76,13 @@ public class RemoteObjectHubConnection {
 	}
 
 	public void start() {
-		if (pollInterval <= 0) {
-			return;
-		}
 		started = true;
 		requestRegistration();
 	}
 	
 	public void stop() {
 		started = false;
+		scheduler.clear();
 	}
 
 	private void scheduleConnect() {
@@ -142,6 +140,9 @@ public class RemoteObjectHubConnection {
 				switch (responsePacket.getCommand()) {
 				case 'A':
 					registered = true;
+					if (pollInterval <= 0) {
+						break;
+					}
 					if (serviceInvoker != null) {
 						requestPendingInvocations();
 					} else {

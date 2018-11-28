@@ -1,8 +1,11 @@
 package rapp_mini_server_sample1;
 
 import com.crispico.flower_platform.remote_object.JavaRemoteObjectBase;
+import com.crispico.flower_platform.remote_object.RemoteObjectServiceInvoker;
 import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection;
+
+import jsinterop.annotations.JsType;
 
 public class SampleJavaAppService {
 
@@ -12,11 +15,11 @@ public class SampleJavaAppService {
 	
 	private JavaRemoteObjectBase remoteObjectBase = new JavaRemoteObjectBase();
 
-	private RemoteObject directRemoteObject;
+	private RemoteObject ro1;
+
+	private RemoteObject ro2;
 	
 	private RemoteObjectHubConnection hubConnection;
-	
-	private RemoteObject hubRemoteObject;
 	
 	private Object tmpResult;
 	
@@ -29,14 +32,20 @@ public class SampleJavaAppService {
 		return object;
 	}
 	
-	public void initRemoteObjectDirect(String ip, int port, String objectName, String securityToken) {
-		directRemoteObject = new RemoteObject().setRemoteAddress(ip + ":" + port).setSecurityToken(securityToken).setInstanceName(objectName);
-		directRemoteObject.setRequestSender(remoteObjectBase);
+	
+	public void initRemoteObject1(String ip, int port, String objectName, String securityToken) {
+		ro1 = new RemoteObject().setRemoteAddress(ip + ":" + port).setSecurityToken(securityToken).setInstanceName(objectName);
+		ro1.setRequestSender(remoteObjectBase);
 	}
 
-	public String callSayHelloRoDirect(String name) {
+	public void initRemoteObject2(String ip, int port, String objectName, String securityToken, String nodeId) {
+		ro2 = new RemoteObject().setRemoteAddress(ip + ":" + port).setSecurityToken(securityToken).setInstanceName(objectName).setNodeId(nodeId);
+		ro2.setRequestSender(remoteObjectBase);
+	}
+
+	private String callSayHelloRo(String name, RemoteObject remoteObject) {
 		tmpResult = null;
-		directRemoteObject.invokeMethod(
+		remoteObject.invokeMethod(
 				"sayHello",
 				new Object[] { name, 2, 5.23f, true }, 
 				(result) -> { 
@@ -61,22 +70,36 @@ public class SampleJavaAppService {
 		}
 		return "" + tmpResult;
 	}
+
+	public String callSayHelloRo1(String name) {
+		return callSayHelloRo(name, ro1);
+	}
 	
-	public void initRemoteObjectViaHub(int mode, String hubIp, int port, String destinationNodeId, int pollingInterval) {
+	public String callSayHelloRo2(String name) {
+		return callSayHelloRo(name, ro2);
+	}
+
+	
+	public void connectToHub(String hubIp, int port, String nodeId, String securityToken, int mode, int pollingInterval) {
+		disconnectFromHub();
+		
 		hubConnection = new RemoteObjectHubConnection()
-				.setLocalNodeId("SampleJavaApp")
 				.setRemoteAddress(hubIp + ":" + port)
-				.setRequestSender(remoteObjectBase).setScheduler(remoteObjectBase);
+				.setLocalNodeId(nodeId)
+				.setSecurityToken(securityToken)
+				.setPollInterval(pollingInterval)
+				.setRequestSender(remoteObjectBase).setScheduler(remoteObjectBase).setServiceInvoker(RemoteObjectServiceInvoker.getInstance());
 		
 		if (mode == HUB_MODE_PUSH) {
 			hubConnection.setLocalServerPort(9001); // could be obtained from main file of rapp (i.e. RappMiniServerSample1Main)
 		}
-		hubRemoteObject = new RemoteObject().setRemoteAddress(hubIp + ":" + port).setNodeId(destinationNodeId).setSecurityToken("12345678");
 		hubConnection.start();
 	}
 
-	public void disconnectRemoteObjectViaHub() {
-		hubConnection.stop();
+	public void disconnectFromHub() {
+		if (hubConnection != null) {
+			hubConnection.stop();
+		}
 	}
 
 	public void pollNowHub() {

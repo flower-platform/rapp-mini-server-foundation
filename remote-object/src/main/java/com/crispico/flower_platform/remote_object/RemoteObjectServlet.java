@@ -62,7 +62,6 @@ public class RemoteObjectServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");		
 		OutputStream out = response.getOutputStream();
 		out.write(res.getRawData().getBytes());
-		out.flush();
 		System.out.println(String.format("[%s] %s <- %s", df.format(new Date()), request.getRemoteAddr(), res.getRawData()));
 	}
 

@@ -39,8 +39,10 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 		callButton.addClickHandler(e -> {
 			this.result.setText("");
 			JavaScriptObject a = JavaScriptObject.createArray();
-			for (PropertyBasicDescriptor pd : getPresenter().form.getPropertyDescriptors()) {
-				pushToArray(a, getPresenter().values.get(((PropertyDescriptor) pd).getName()));
+			if (getPresenter().form.getPropertyDescriptors() != null) {
+				for (PropertyBasicDescriptor pd : getPresenter().form.getPropertyDescriptors()) {
+					pushToArray(a, getPresenter().values.get(((PropertyDescriptor) pd).getName()));
+				}
 			}
 			callFunction(getPresenter().<ServicePresenter>getParent().getRemoteObject(), getPresenter().functionName, a);
 		});

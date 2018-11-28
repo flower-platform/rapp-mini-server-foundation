@@ -28,6 +28,9 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
     public static interface MyView extends FoundationView {
 
 		void setServiceName(String name);
+		
+		void hideDirectROButton();
+		
 	}
 
     @Inject
@@ -55,14 +58,14 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
 	protected void postCreate() {
 		addNamedSlot(ClientGlobals.getDefaultMultiSlot(), "SLOT_FUNCTIONS");
 		addVisibleHandlerToSource(PropertyChangedEvent.getType(), connectionParamsForm, e -> { 
-			if ("instanceName".equals(e.getPropertyEditor().getPropertyDescriptor().getName())) {
+			if ("nodeId".equals(e.getPropertyEditor().getPropertyDescriptor().getName())) {
 				updateServiceName();
 			}
 		});
 	}
 	
 	protected void updateServiceName() {
-		getView().setServiceName(connectionParams.get("remoteAddress"));
+		getView().setServiceName(connectionParams.get("nodeId"));
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -81,4 +84,5 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
 		addToSlot(ClientGlobals.getDefaultMultiSlot(), f);
 		return f;
 	}
+
 }
