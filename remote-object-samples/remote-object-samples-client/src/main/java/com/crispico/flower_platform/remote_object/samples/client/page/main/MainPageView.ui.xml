@@ -6,5 +6,6 @@
 		<g:Button ui:field="connectButton" styleName="btn btn-default" text="Connect to HUB"/>
 		<g:Button ui:field="disconnectButton" styleName="btn btn-default" text="Disconnect from HUB"/>
 		<div class="SLOT_MAIN"/>
+		<div class="SLOT_TEST_BUTTONS"/>
 	</g:HTMLPanel>
 </ui:UiBinder>

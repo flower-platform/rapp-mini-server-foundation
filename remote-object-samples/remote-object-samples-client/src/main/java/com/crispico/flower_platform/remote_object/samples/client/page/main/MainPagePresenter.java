@@ -1,5 +1,6 @@
 package com.crispico.flower_platform.remote_object.samples.client.page.main;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -7,12 +8,15 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.crispico.client.ClientGlobals;
+import com.crispico.client.component.alert.Alert;
 import com.crispico.client.component.properties_form.PropertiesFormPWidget;
 import com.crispico.client.component.properties_form.PropertyDescriptor;
+import com.crispico.client.component.repeater.RepeaterPWidget;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.MainPagePresenter.MyProxy;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.MainPagePresenter.MyView;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionPresenter;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.service.ServicePresenter;
+import com.crispico.flower_platform.remote_object.samples.client.page.main.test_button_renderer.TestButtonRendererPresenter;
 import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.foundation.annotation.definition.ComponentType;
 import com.crispico.foundation.annotation.definition.GenComponentRegistration;
@@ -20,6 +24,7 @@ import com.crispico.foundation.annotation.definition.TriggerFoundationAnnotation
 import com.crispico.foundation.client.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
 import com.crispico.shared.MapBuilder;
+import com.crispico.shared.util.Pair;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.FoundationPagePresenter;
@@ -45,23 +50,34 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	}
 
 	public static final String NAME_TOKEN = "/main";
+	
+    protected final SingleSlot<PresenterWidget<?>> SLOT_HUB_PARAMS = addNamedSlot(new SingleSlot<>(), "SLOT_HUB_PARAMS");
+    protected final SingleSlot<PresenterWidget<?>> SLOT_TEST_BUTTONS = addNamedSlot(new SingleSlot<>(), "SLOT_TEST_BUTTONS");
 
     @Inject
     protected PropertiesFormPWidget hubParamsForm;
     
     public Map<String, String> hubParams;
-	
+
+    public JavaScriptObject hubConnection;
+
+    @Inject
+    protected RepeaterPWidget buttonsRepeater;
+    
 	@Inject
 	protected MainPagePresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, ClientGlobals.getMainSlot());
 	}
-	
-    protected final SingleSlot<PresenterWidget<?>> SLOT_HUB_PARAMS = addNamedSlot(new SingleSlot<>(), "SLOT_HUB_PARAMS");
-
-    public JavaScriptObject hubConnection;
     
 	@Inject
-	protected void postCreate(Provider<ServicePresenter> provider) {
+	protected void postCreate(Provider<ServicePresenter> provider, Provider<TestButtonRendererPresenter> rendererProvider) {
+		buttonsRepeater.getProperties().setChildProvider(rendererProvider);
+		setInSlot(SLOT_TEST_BUTTONS, buttonsRepeater);
+		buttonsRepeater.setModel(Arrays.asList(
+				new Pair<String, Runnable>("salut", this::test1_cevaSemnificativ),
+				new Pair<String, Runnable>("salut", null)
+				));
+		
 		String javaIpAddress = "192.168.100.151";
 //		String javaIpAddress = "localhost";
 		String hubIpAddress = javaIpAddress;
@@ -241,4 +257,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	   	hubConnection.stop();
 	}-*/;
 
+	protected void test1_cevaSemnificativ() {
+		Alert.show("test 1");
+	}
 }
