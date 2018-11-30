@@ -12,7 +12,7 @@ import com.crispico.client.ClientGlobals;
 import com.crispico.client.component.properties_form.PropertiesFormPWidget;
 import com.crispico.client.component.properties_form.PropertyDescriptor;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionPresenter.MyView;
-import com.crispico.foundation.client.form.MapPropertyAccessorCommitter;
+import com.crispico.foundation.client.component.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.FoundationComponentPresenter;
