@@ -18,7 +18,7 @@ public class TestButtonRendererView extends EventRedispatchingViewImpl<TestButto
 	}
 
 	@UiField
-	protected Button refreshButton;
+	protected Button button;
 
 	@Inject
 	protected TestButtonRendererView(Binder uiBinder) {
@@ -28,11 +28,12 @@ public class TestButtonRendererView extends EventRedispatchingViewImpl<TestButto
 	@Override
 	public void setPresenter(PresenterWidget<?> page) {
 		super.setPresenter(page);
-		refreshButton.addClickHandler(getPresenter()::onRefreshButtonClick);
+		button.addClickHandler(getPresenter()::onButtonClick);
 	}
 	
 	@Override
 	public void setLabel(String value) {
-		refreshButton.setText(value);
+		button.setText(value);
 	}
+	
 }

@@ -91,13 +91,13 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
 	}
 
 	
-	protected void createRoDirectButtonClick(ClickEvent e) {
+	public void createRoDirectButtonClick(ClickEvent e) {
 		JSONObject o = new JSONObject();
 		connectionParams.forEach((k, v) -> o.put(k, new JSONString((String) v)));
 		remoteObject = createRemoteObjectDirect(o.getJavaScriptObject());
 	}
 	
-	protected void createRoHubButtonClick(ClickEvent e) {
+	public void createRoHubButtonClick(ClickEvent e) {
 		JSONObject connectionParams = new JSONObject();
 		this.connectionParams.forEach((k, v) -> connectionParams.put(k, new JSONString((String) v)));
 		JSONObject hubParams = new JSONObject();

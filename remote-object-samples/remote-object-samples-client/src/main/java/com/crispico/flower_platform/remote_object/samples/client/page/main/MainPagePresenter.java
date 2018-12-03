@@ -26,6 +26,7 @@ import com.crispico.foundation.client.view.FoundationView;
 import com.crispico.shared.MapBuilder;
 import com.crispico.shared.util.Pair;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.FoundationPagePresenter;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -91,7 +92,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 				"nodeId", "JS_Node1", 
 				"mode", "2"));
 		addNamedSlot(ClientGlobals.getDefaultMultiSlot(), "SLOT_MAIN");
-		
+
 		{  // Java
 			ServicePresenter service = provider.get();
 			service.initConnectionParams(MapBuilder.createMapFromArrayAsStringKeyObjectValue(
@@ -257,7 +258,46 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	   	hubConnection.stop();
 	}-*/;
 
-	protected void test1_JS_to_Java_direct() {
-		Alert.show("test 1");
+	
+	private ServicePresenter getServicePresenter(int serviceIndex) {
+		ServicePresenter servicePresenter = (ServicePresenter) getChildren(ClientGlobals.getDefaultMultiSlot()).toArray()[serviceIndex];
+		return servicePresenter;
 	}
+	
+	private FunctionPresenter getFunctionPresenter(ServicePresenter servicePresenter, String functionName) {
+		FunctionPresenter functionPresenter = null;
+		for (PresenterWidget<?> pw : servicePresenter.getChildren(ClientGlobals.getDefaultMultiSlot())) {
+			FunctionPresenter fp = (FunctionPresenter) pw;
+			if (fp.getFunctionName().equals(functionName)) {
+				functionPresenter = fp;
+				break;
+			}
+		}
+		return functionPresenter;
+	}
+
+	private void waitForResult(FunctionPresenter functionPresenter) {
+		final long t = System.currentTimeMillis();
+		final Timer timer = new Timer() {
+			
+			@Override
+			public void run() {
+				if (functionPresenter.getResult().length() > 0) {
+					Alert.show(functionPresenter.getResult());
+					this.cancel();
+				} else if (System.currentTimeMillis() - t > 3000) {
+					this.cancel();
+				}
+			}
+		};
+		timer.scheduleRepeating(500);
+	}
+	
+	protected void test1_JS_to_Java_direct() {
+		ServicePresenter javaServicePresenter = getServicePresenter(0);
+		javaServicePresenter.createRoDirectButtonClick(null);
+		getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(null);
+		waitForResult(getFunctionPresenter(javaServicePresenter, "sayHello"));
+	}
+	
 }

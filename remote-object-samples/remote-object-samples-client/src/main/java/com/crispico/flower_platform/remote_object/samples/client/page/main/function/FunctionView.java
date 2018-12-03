@@ -3,6 +3,7 @@ package com.crispico.flower_platform.remote_object.samples.client.page.main.func
 import javax.inject.Inject;
 
 import com.crispico.client.EventRedispatchingViewImpl;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -32,8 +33,7 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 	@Override
 	public void setPresenter(PresenterWidget<?> page) {
 		super.setPresenter(page);
-		callButton.addClickHandler(e -> {
-		});
+		callButton.addClickHandler(getPresenter()::callButtonClick);
 	}
 	
 	@Override
@@ -49,5 +49,21 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 	protected void onResult(String result) {
 		this.result.setText(result);
 	}
+
+	protected void onError(Object error) {
+		this.result.setText("ERROR");
+	}
+
+	@Override
+	public String getResult() {
+		return result.getValue();
+	}
+
+	public native void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params) /*-{
+		that = this;
+		params.push(function (result) { that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onResult(Ljava/lang/String;)(result); }); 
+		params.push(function (error) { that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onError(Ljava/lang/Object;)(error); }); 
+		remoteObject[functionName].apply(remoteObject, params);
+	}-*/;
 
 }

@@ -29,8 +29,12 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
     public static interface MyView extends FoundationView {
 
 		void setFunctionName(String value);
-		
+
 		void clearResult();
+		
+		String getResult();
+		
+		void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params);
 		
 	}
 
@@ -41,6 +45,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
     
     protected String functionName;
     
+
 	@Inject
 	protected FunctionPresenter(EventBus eventBus, Provider<FunctionView> viewProvider) {
 		super(eventBus, viewProvider);
@@ -77,8 +82,15 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 		getView().setFunctionName(value);
 	}
 
+	public String getFunctionName() {
+		return functionName;
+	}
+
+	public String getResult() {
+		return getView().getResult();
+	}
 	
-	protected void click(ClickEvent e) {
+	public void callButtonClick(ClickEvent e) {
 		getView().clearResult();
 		JavaScriptObject a = JavaScriptObject.createArray();
 		if (form.getPropertyDescriptors() != null) {
@@ -86,19 +98,11 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 				pushToArray(a, values.get(((PropertyDescriptor) pd).getName()));
 			}
 		}
-		callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a);
+		getView().callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a);
 	}
 
 	private native void pushToArray(JavaScriptObject a, Object value) /*-{
 		a.push(value);
 	}-*/;
-	
-	
-	protected native void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params) /*-{
-		that = this;
-		params.push(function (result) { that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onResult(Ljava/lang/String;)(result); }); 
-		remoteObject[functionName].apply(remoteObject, params);
-	}-*/;
-
 	
 }
