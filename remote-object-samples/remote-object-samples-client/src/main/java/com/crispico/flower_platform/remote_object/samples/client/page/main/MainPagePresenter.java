@@ -21,7 +21,7 @@ import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.foundation.annotation.definition.ComponentType;
 import com.crispico.foundation.annotation.definition.GenComponentRegistration;
 import com.crispico.foundation.annotation.definition.TriggerFoundationAnnotationProcessor;
-import com.crispico.foundation.client.form.MapPropertyAccessorCommitter;
+import com.crispico.foundation.client.component.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
 import com.crispico.shared.MapBuilder;
 import com.crispico.shared.util.Pair;

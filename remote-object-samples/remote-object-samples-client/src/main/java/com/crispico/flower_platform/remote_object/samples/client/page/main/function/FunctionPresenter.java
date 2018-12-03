@@ -14,7 +14,7 @@ import com.crispico.client.component.properties_form.PropertyBasicDescriptor;
 import com.crispico.client.component.properties_form.PropertyDescriptor;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionPresenter.MyView;
 import com.crispico.flower_platform.remote_object.samples.client.page.main.service.ServicePresenter;
-import com.crispico.foundation.client.form.MapPropertyAccessorCommitter;
+import com.crispico.foundation.client.component.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
