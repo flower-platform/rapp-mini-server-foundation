@@ -74,7 +74,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		buttonsRepeater.getProperties().setChildProvider(rendererProvider);
 		setInSlot(SLOT_TEST_BUTTONS, buttonsRepeater);
 		buttonsRepeater.setModel(Arrays.asList(
-				new Pair<String, Runnable>("salut", this::test1_cevaSemnificativ),
+				new Pair<String, Runnable>("salut", this::test1_JS_to_Java_direct),
 				new Pair<String, Runnable>("salut", null)
 				));
 		
@@ -257,7 +257,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	   	hubConnection.stop();
 	}-*/;
 
-	protected void test1_cevaSemnificativ() {
+	protected void test1_JS_to_Java_direct() {
 		Alert.show("test 1");
 	}
 }
