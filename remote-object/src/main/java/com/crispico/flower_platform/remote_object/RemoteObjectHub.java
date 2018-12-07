@@ -1,8 +1,8 @@
 package com.crispico.flower_platform.remote_object;
 
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PULL;
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PUSH;
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_HTTP_PULL;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_HTTP_PUSH;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class RemoteObjectHub {
 	
 	private FlowerPlatformRemotingProtocolPacket invokeHttpPushClient(RemoteObjectHubClientData invokedClient, String invocation, String invokerSecurityToken) {
 		try {
-			HttpURLConnection conn = (HttpURLConnection) new URL("http://" + invokedClient.getRemoteIPAddress()+ ":" + invokedClient.getRemoteHttpServerPort()).openConnection();
+			HttpURLConnection conn = (HttpURLConnection) new URL("http://" + invokedClient.getRemoteIPAddress()+ ":" + invokedClient.getRemoteHttpServerPort() + "/remoteObject").openConnection();
 			FlowerPlatformRemotingProtocolPacket pak = new FlowerPlatformRemotingProtocolPacket(invokedClient.getSecurityToken(), 'I');
 			pak.addField(""); // nodeId
 			pak.addField(invocation);
@@ -108,15 +108,15 @@ public class RemoteObjectHub {
 
 			// invoke or queue invocation, depending on client type
 			switch (invokedClient.getClientType()) {
-			case CLIENT_TYPE_HTTP_PUSH:
+			case HUB_MODE_HTTP_PUSH:
 				res = invokeHttpPushClient(invokedClient, invocation, packet.getSecurityToken());
 				break;
-			case CLIENT_TYPE_HTTP_PULL:
+			case HUB_MODE_HTTP_PULL:
 				invokedClient.addPendingInvocation(sbInvocation.toString());
 				res = new FlowerPlatformRemotingProtocolPacket(packet.getSecurityToken(), 'P');
 				res.addField("" + callbackId);
 				break;
-			case CLIENT_TYPE_WEB_SOCKET:
+			case HUB_MODE_WEB_SOCKET:
 				FlowerPlatformRemotingProtocolPacket invokePacket = new FlowerPlatformRemotingProtocolPacket(invokedClient.getSecurityToken(), 'I');
 				invokePacket.addField(invokedClient.getNodeId()); // nodeId
 				invokePacket.addField(invocation);
@@ -137,7 +137,7 @@ public class RemoteObjectHub {
 				break;
 			}
 			String result = packet.nextField(); // value
-			if (invokerClient.getClientType() == CLIENT_TYPE_WEB_SOCKET) {
+			if (invokerClient.getClientType() == HUB_MODE_WEB_SOCKET) {
 				res = new FlowerPlatformRemotingProtocolPacket(invokerClient.getSecurityToken(), 'R');
 				res.addField("" + callbackId); // callbackId
 				res.addField(result);

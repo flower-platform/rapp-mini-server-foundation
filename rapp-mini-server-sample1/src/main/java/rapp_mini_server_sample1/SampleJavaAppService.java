@@ -1,17 +1,18 @@
 package rapp_mini_server_sample1;
 
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_HTTP_PUSH;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.crispico.flower_platform.remote_object.JavaRemoteObjectBase;
 import com.crispico.flower_platform.remote_object.RemoteObjectServiceInvoker;
 import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection;
 
-import jsinterop.annotations.JsType;
-
 public class SampleJavaAppService {
 
-	private static final int HUB_MODE_PULL = 0;
-
-	private static final int HUB_MODE_PUSH = 1;
+	private Map<String, String> testResults = new LinkedHashMap<>();
 	
 	private JavaRemoteObjectBase remoteObjectBase = new JavaRemoteObjectBase();
 
@@ -90,10 +91,10 @@ public class SampleJavaAppService {
 				.setPollInterval(pollingInterval)
 				.setRequestSender(remoteObjectBase).setScheduler(remoteObjectBase).setServiceInvoker(RemoteObjectServiceInvoker.getInstance());
 		
-		if (mode == HUB_MODE_PUSH) {
+		if (mode == HUB_MODE_HTTP_PUSH) {
 			hubConnection.setLocalServerPort(9001); // could be obtained from main file of rapp (i.e. RappMiniServerSample1Main)
 		}
-		hubConnection.start();
+		hubConnection.start(null);
 	}
 
 	public void disconnectFromHub() {
@@ -104,6 +105,15 @@ public class SampleJavaAppService {
 
 	public void pollNowHub() {
 		hubConnection.pollHub();
+	}
+
+	public Map<String, String> getTestResults() {
+		return testResults;
+	}
+
+	public void saveTestResult(String testName, String result) {
+		System.out.println(String.format("TEST RESULT RECEIVED: %s %s", testName, result));
+		testResults.put(testName, result);
 	}
 
 }

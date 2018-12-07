@@ -1,6 +1,6 @@
 package com.crispico.flower_platform.remote_object;
 
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_WEB_SOCKET;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,9 +32,14 @@ public class RemoteObjectWebSocketHandler {
 			return;
 		}
 		String nodeId = packet.nextField();
-		RemoteObjectHubClientData client = new RemoteObjectHubClientData(CLIENT_TYPE_WEB_SOCKET, nodeId, packet.getSecurityToken());
+		RemoteObjectHubClientData client = new RemoteObjectHubClientData(HUB_MODE_WEB_SOCKET, nodeId, packet.getSecurityToken());
 		client.setWebSocket(this);
-		RemoteObjectHub.getInstance().registerClient(client);
+		String res = RemoteObjectHub.getInstance().registerClient(client);
+		try {
+			session.getBasicRemote().sendText(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public synchronized FlowerPlatformRemotingProtocolPacket sendReceiveSynchronously(FlowerPlatformRemotingProtocolPacket packet) throws IOException {

@@ -5,14 +5,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RemoteObjectHubClientData {
 	
-	public static final int CLIENT_TYPE_HTTP_PUSH = 0;
-
-	public static final int CLIENT_TYPE_HTTP_PULL = 1;
-
-	public static final int CLIENT_TYPE_WEB_SOCKET = 2;
-
-	public static final int CLIENT_TYPE_SERIAL = 3;
-	
 	private int clientType;
 	
 	private String nodeId;

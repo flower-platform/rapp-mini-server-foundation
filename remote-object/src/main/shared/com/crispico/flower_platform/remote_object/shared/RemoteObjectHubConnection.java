@@ -5,6 +5,15 @@ import jsinterop.annotations.JsType;
 @JsType(namespace="rapp_mini_server")
 public class RemoteObjectHubConnection {
 
+	public static final int HUB_MODE_HTTP_PULL = 0;
+
+	public static final int HUB_MODE_HTTP_PUSH = 1;
+
+	public static final int HUB_MODE_WEB_SOCKET = 2;
+
+	public static final int HUB_MODE_SERIAL = 3;
+	
+
 	private IRequestSender requestSender;
 
 	/**
@@ -34,6 +43,8 @@ public class RemoteObjectHubConnection {
 
 	private int pollInterval = 5000;
 
+	ResponseCallback registrationCallback;
+	
 	
 	public RemoteObjectHubConnection setRemoteAddress(String remoteAddress) {
 		this.remoteAddress = remoteAddress;
@@ -75,8 +86,9 @@ public class RemoteObjectHubConnection {
 		return this;
 	}
 
-	public void start() {
+	public void start(ResponseCallback registrationCallback) {
 		started = true;
+		this.registrationCallback = registrationCallback;
 		requestRegistration();
 	}
 	
@@ -140,6 +152,9 @@ public class RemoteObjectHubConnection {
 				switch (responsePacket.getCommand()) {
 				case 'A':
 					registered = true;
+					if (registrationCallback != null) {
+						registrationCallback.onSuccess(RemoteObjectHubConnection.this);
+					}
 					if (pollInterval <= 0) {
 						break;
 					}

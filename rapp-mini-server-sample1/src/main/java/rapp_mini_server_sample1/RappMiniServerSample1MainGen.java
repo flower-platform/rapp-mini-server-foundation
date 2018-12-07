@@ -26,11 +26,15 @@ public class RappMiniServerSample1MainGen extends AbstractRappMiniServerMain {
 				.addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, new WebSocketDeploymentInfo().addEndpoint(WebSocketServerEndpoint.class));
 	}
 
+	public void start() {
+		RemoteObjectServiceInvoker.getInstance().setServiceInstance(javaAppService);
+		port = 9001;
+		run();
+	}
+	
 	public static void main(String... args) throws Exception {
 		RappMiniServerSample1Main main = new RappMiniServerSample1Main();
-		RemoteObjectServiceInvoker.getInstance().setServiceInstance(main.javaAppService);
-		main.port = 9001;
-		main.run();
+		main.start();
 	}
 	
 }

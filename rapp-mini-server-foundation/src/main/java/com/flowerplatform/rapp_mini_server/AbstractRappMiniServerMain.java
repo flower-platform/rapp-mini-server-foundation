@@ -22,9 +22,10 @@ public abstract class AbstractRappMiniServerMain {
 
 	protected boolean threadJoin = false;
 
+	protected Undertow server;
+	
 	protected void run() {
 		try {
-			@SuppressWarnings("unchecked")
 			DeploymentInfo deploymentInfo = Servlets.deployment()
 			        .setClassLoader(getClass().getClassLoader())
 			        .setContextPath("/")
@@ -39,7 +40,7 @@ public abstract class AbstractRappMiniServerMain {
 			corsHandler.setUrlPattern("(.*)");
 			corsHandler.setPolicyClass("com.stijndewitt.undertow.cors.AllowAll");
 			
-			Undertow server = Undertow.builder()
+			server = Undertow.builder()
 			        .addHttpListener(port, "0.0.0.0")
 			        .setHandler(corsHandler)
 			        .build();
@@ -49,6 +50,11 @@ public abstract class AbstractRappMiniServerMain {
 		}
 	}
 
+	public void stop() {
+		server.stop();
+	}
+
+	
 	protected void configureDeploymentInfo(DeploymentInfo deploymentInfo) {
 		deploymentInfo
 			.addServlets(Servlets.servlet(RemoteObjectServlet.class.getName(), RemoteObjectServlet.class).addMapping("/remoteObject/*").addInitParam("securityToken", "12345678"))

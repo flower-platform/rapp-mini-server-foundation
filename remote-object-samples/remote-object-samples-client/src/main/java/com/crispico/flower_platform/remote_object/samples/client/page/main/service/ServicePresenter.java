@@ -65,6 +65,11 @@ public class ServicePresenter extends FoundationComponentPresenter<MyView> {
 		});
 	}
 	
+	public void setConnectionParam(String key, String value) {
+		connectionParams.put(key, value);
+		connectionParamsForm.setModel(connectionParams);
+	}
+	
 	protected void updateServiceName() {
 		getView().setServiceName(connectionParams.get("nodeId"));
 	}

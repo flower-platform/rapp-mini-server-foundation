@@ -33,6 +33,8 @@ public class RemoteObjectWebSocketConnection {
 	 */
 	private String localNodeId;
 
+	private ResponseCallback callback;
+	
 	public String getRemoteAddress() {
 		return remoteAddress;
 	}
@@ -70,16 +72,17 @@ public class RemoteObjectWebSocketConnection {
 	}
 
 	public void start(ResponseCallback callback) {
-		log("Opening new web socket");
+		log("Opening new web socket ");
+		this.callback = callback;
 		webSocket = WebSocket.create("ws://" + remoteAddress + "/remoteObjectWs", new WebSocket.Listener() {
 			
 			@Override
 			public void onOpen(JavaScriptObject event) {
-				if (callback != null && !started) {
-					callback.onSuccess(null);
-				}
 				started = true;
 				requestRegistration();
+				if (callback != null) {
+					callback.onSuccess(null);
+				}
 			}
 			
 			@Override

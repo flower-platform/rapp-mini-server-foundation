@@ -18,7 +18,7 @@ public class RappMiniServerClient {
 				.setRequestSender(remoteObjectBase)
 				.setScheduler(remoteObjectBase)
 				.setServiceInvoker(RemoteObjectServiceInvoker.getInstance());
-		client.start();
+		client.start(null);
 	}
 	
 	public void callArduinoDirect() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -17,7 +18,6 @@ import com.crispico.flower_platform.remote_object.samples.client.page.main.servi
 import com.crispico.foundation.client.component.form.MapPropertyAccessorCommitter;
 import com.crispico.foundation.client.view.FoundationView;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.FoundationComponentPresenter;
 
@@ -34,7 +34,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 		
 		String getResult();
 		
-		void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params);
+		void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params, Consumer<Object> callback);
 		
 	}
 
@@ -86,11 +86,16 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 		return functionName;
 	}
 
+	public void setValue(String key, String value) {
+		values.put(key, value);
+		form.setModel(values);
+	}
+	
 	public String getResult() {
 		return getView().getResult();
 	}
 	
-	public void callButtonClick(ClickEvent e) {
+	public void callButtonClick(Consumer<Object> callback) {
 		getView().clearResult();
 		JavaScriptObject a = JavaScriptObject.createArray();
 		if (form.getPropertyDescriptors() != null) {
@@ -98,7 +103,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 				pushToArray(a, values.get(((PropertyDescriptor) pd).getName()));
 			}
 		}
-		getView().callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a);
+		getView().callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a, callback);
 	}
 
 	private native void pushToArray(JavaScriptObject a, Object value) /*-{

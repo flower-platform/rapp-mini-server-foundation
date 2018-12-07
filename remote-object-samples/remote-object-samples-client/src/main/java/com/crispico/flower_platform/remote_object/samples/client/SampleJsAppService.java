@@ -1,5 +1,7 @@
 package com.crispico.flower_platform.remote_object.samples.client;
 
+import com.crispico.flower_platform.remote_object.samples.client.page.main.MainPagePresenter;
+
 import jsinterop.annotations.JsType;
 
 @JsType(namespace="js", name="sampleService")
@@ -17,5 +19,9 @@ public class SampleJsAppService {
 		o.b = "A=" + o.a;
 		return JSON.stringify(o);
 	}-*/;
+
+	public static void wsNotify() {
+		MainPagePresenter.getInstance().sendResult("test13_CPPToJSWebSocketSayHello", true);
+	}
 	
 }
