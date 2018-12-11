@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class RemoteObjectTest {
 
-	private static final int N_TESTS = 13;
+	private static final int N_TESTS = 14;
 	
 	private static final long TIMEOUT_MILLIS = 60 * 1000;
 	
@@ -31,12 +31,13 @@ public class RemoteObjectTest {
 	public void remoteObjectTest() {
 		RappMiniServerSample1Main main = new RappMiniServerSample1Main();
 		main.start();
-		startBrowser("http://localhost:8888/#/main");
+		startBrowser("http://localhost:8888/?runTests#/main");
 		long tRef = System.currentTimeMillis();
 		while (main.javaAppService.getTestResults().size() < N_TESTS && System.currentTimeMillis() - tRef < TIMEOUT_MILLIS) {
 			try { Thread.sleep(1000); } catch (Exception e) { e.printStackTrace(); }
 		}
 		main.stop();
+		try { Thread.sleep(1000); } catch (Exception e) { e.printStackTrace(); } // wait for console garbage to be printed
 		System.out.println("\n\n******************** TEST RESULTS ****************************");
 		System.out.println("Results received: " + main.javaAppService.getTestResults().size() + " of " + N_TESTS);
 		for (Entry<String, String> result : main.javaAppService.getTestResults().entrySet()) {

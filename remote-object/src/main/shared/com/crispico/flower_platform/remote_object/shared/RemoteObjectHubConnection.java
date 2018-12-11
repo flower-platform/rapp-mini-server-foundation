@@ -41,7 +41,7 @@ public class RemoteObjectHubConnection {
 
 	private boolean started;
 
-	private int pollInterval = 5000;
+	private int pollInterval = 1000;
 
 	ResponseCallback registrationCallback;
 	

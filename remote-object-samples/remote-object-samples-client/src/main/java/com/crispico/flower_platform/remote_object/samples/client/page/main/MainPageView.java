@@ -31,7 +31,7 @@ public class MainPageView extends EventRedispatchingViewImpl<MainPagePresenter> 
 	@Override
 	public void setPresenter(PresenterWidget<?> page) {
 		super.setPresenter(page);
-		connectButton.addClickHandler(e -> getPresenter().hubConnectButtonClick(null));
+		connectButton.addClickHandler(e -> getPresenter().hubConnectButtonClick(null, null));
 		disconnectButton.addClickHandler(e -> getPresenter().hubDisconnectButtonClick());
 	}
 

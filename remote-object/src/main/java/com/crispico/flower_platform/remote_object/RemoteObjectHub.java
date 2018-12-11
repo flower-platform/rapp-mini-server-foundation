@@ -92,7 +92,7 @@ public class RemoteObjectHub {
 			int callbackId = 0;
 			if (client != null) {
 				// get new callbackId
-				if (lastCallbackId.get() >= 0xFFFF) {
+				if (lastCallbackId.get() >= 0xFFF0) {
 					lastCallbackId.set(0);
 				}
 				callbackId = lastCallbackId.incrementAndGet();

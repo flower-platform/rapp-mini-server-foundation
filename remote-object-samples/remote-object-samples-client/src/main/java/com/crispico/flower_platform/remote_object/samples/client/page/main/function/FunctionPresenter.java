@@ -34,7 +34,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 		
 		String getResult();
 		
-		void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params, Consumer<Object> callback);
+		void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params, Consumer<Object> successCallback, Consumer<Object> errorCallback);
 		
 	}
 
@@ -95,7 +95,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 		return getView().getResult();
 	}
 	
-	public void callButtonClick(Consumer<Object> callback) {
+	public void callButtonClick(Consumer<Object> successCallback, Consumer<Object> errorCallback) {
 		getView().clearResult();
 		JavaScriptObject a = JavaScriptObject.createArray();
 		if (form.getPropertyDescriptors() != null) {
@@ -103,7 +103,7 @@ public class FunctionPresenter extends FoundationComponentPresenter<MyView> {
 				pushToArray(a, values.get(((PropertyDescriptor) pd).getName()));
 			}
 		}
-		getView().callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a, callback);
+		getView().callFunction(this.<ServicePresenter>getParent().getRemoteObject(), functionName, a, successCallback, errorCallback);
 	}
 
 	private native void pushToArray(JavaScriptObject a, Object value) /*-{

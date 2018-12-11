@@ -6,6 +6,7 @@ import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubC
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -24,7 +25,6 @@ import com.crispico.flower_platform.remote_object.samples.client.page.main.servi
 import com.crispico.flower_platform.remote_object.samples.client.page.main.test_button_renderer.TestButtonRendererPresenter;
 import com.crispico.flower_platform.remote_object.shared.RemoteObject;
 import com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection;
-import com.crispico.flower_platform.remote_object.shared.ResultCallback;
 import com.crispico.foundation.annotation.definition.ComponentType;
 import com.crispico.foundation.annotation.definition.GenComponentRegistration;
 import com.crispico.foundation.annotation.definition.TriggerFoundationAnnotationProcessor;
@@ -71,7 +71,8 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	private static final String javaIpAddress = "192.168.100.151";
 //	private static final String javaIpAddress = "localhost";
 	private static final String hubIpAddress = javaIpAddress;
-	private static final String arduinoIpAddress = "192.168.100.175";
+//	private static final String arduinoIpAddress = "192.168.100.175";
+	private static final String arduinoIpAddress = "192.168.100.182";
 	
 	private static MainPagePresenter INSTANCE;
 	
@@ -92,8 +93,8 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	
 	private RemoteObject javaService;
 	
-	private ResultCallback defaultErrorCallback = r -> {
-		nextTest();
+	private Consumer<Object> defaultErrorCallback = r -> {
+//		nextTest();
 	};
 	
 	private int lastTest = 0;
@@ -283,17 +284,20 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		setInSlot(SLOT_HUB_PARAMS, hubParamsForm);
 	}
 
-	public void hubConnectButtonClick(Runnable callback) {
-			JSONObject o = new JSONObject();
-			hubParams.forEach((k, v) -> o.put(k, new JSONString((String) v)));
-			hubConnection = createHubConnection(o.getJavaScriptObject(), callback);
+	public void hubConnectButtonClick(Consumer<Object> successCallback, Consumer<Object> errorCallback) {
+		stopHubConnection(hubConnection);
+		JSONObject o = new JSONObject();
+		hubParams.forEach((k, v) -> o.put(k, new JSONString((String) v)));
+		hubConnection = createHubConnection(o.getJavaScriptObject(), successCallback, null);
 	}
 
 	public void hubDisconnectButtonClick() {
 		stopHubConnection(hubConnection);
+		hubConnection = null;
 	}
 	
-	public native JavaScriptObject createHubConnection(JavaScriptObject hubParams, Runnable callback) /*-{
+	public native JavaScriptObject createHubConnection(JavaScriptObject hubParams, Consumer<Object> successCallback, Consumer<Object> errorCallback) /*-{
+		
 		var roi = new $wnd.rapp_mini_server.JsRemoteObjectBase();
     	var hubConnection;
     	
@@ -315,8 +319,13 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 
 	   	hubConnection.start({
 	   		onSuccess: function(o) {
-	   			if (callback) {
-	   				callback.@java.lang.Runnable::run()();
+	   			if (successCallback) {
+					successCallback.@java.util.function.Consumer::accept(*)(o);
+	   			}	
+	   		},
+	   		onError: function(o) {
+	   			if (errorCallback) {
+					errorCallback.@java.util.function.Consumer::accept(*)(o);
 	   			}	
 	   		}
 	   	});
@@ -325,7 +334,9 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	}-*/;
 
 	public native void stopHubConnection(JavaScriptObject hubConnection) /*-{
-	   	hubConnection.stop();
+	   	if (hubConnection) {
+	   		hubConnection.stop();
+	   	}
 	}-*/;
 
 	
@@ -368,18 +379,18 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		switch(n) {
 		case 1: test1_JSToJavaDirectSayHello(); break;
 		case 2: test2_JSToJavaDirectSayHelloComplex(); break;
-		case 3: test3_JSToCPPDirectSayHello();
-		case 4: test4_JSToJavaPushSayHello();
-		case 5: test5_JSToJavaPollSayHello();
-		case 6: test6_JSToCPPPushSayHello();
-		case 7: test7_JSToCPPPollSayHello();
-		case 8: test8_JSToJSPullSayHello();
-		case 9: test9_JSToJSWebSocketSayHelloComplex();
-		case 10: test10_JavaToCPPDirectSayHello();
-		case 11: test11_JavaToCPPPollSayHello();
-		case 12: test12_CPPToJavaDirectSayHello();
-		case 13: test14_CPPToJavaPollSayHello();
-		case 14: test13_CPPToJSWebSocketSayHello();
+		case 3: test3_JSToCPPDirectSayHello(); break;
+		case 4: test4_JSToJavaPushSayHello(); break;
+		case 5: test5_JSToJavaPollSayHello(); break;
+		case 6: test6_JSToCPPPushSayHello(); break;
+		case 7: test7_JSToCPPPollSayHello(); break;
+		case 8: test8_JSToJSPullSayHello(); break;
+		case 9: test9_JSToJSWebSocketSayHelloComplex(); break;
+		case 10: test10_JavaToCPPDirectSayHello(); break;
+		case 11: test11_JavaToCPPPollSayHello(); break;
+		case 12: test12_CPPToJavaDirectSayHello(); break;
+		case 13: test13_CPPToJSWebSocketSayHello(); break;
+		case 14: test14_CPPToJavaPollSayHello(); break;
 		}
 	}
 	
@@ -388,7 +399,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 	}
 	
 	private void nextTest() {
-		if (lastTest == nTests) {
+		if (lastTest >= nTests) {
 			return;
 		}
 		lastTest++;
@@ -400,7 +411,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		javaServicePresenter.createRoDirectButtonClick(null);
 		getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(r -> {
 			sendResult("test1_JSToJavaDirectSayHello", r.equals("Hello from Java, John! n=10, f=3.14, b=true"));
-		});
+		}, defaultErrorCallback);
 	}
 
 	protected void test2_JSToJavaDirectSayHelloComplex() {
@@ -408,7 +419,7 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		javaServicePresenter.createRoDirectButtonClick(null);
 		getFunctionPresenter(javaServicePresenter, "sayHelloComplex").callButtonClick(r -> {
 			sendResult("test2_JSToJavaDirectSayHelloComplex", r.equals("{\"a\":5,\"b\":\"A=5\"}"));
-		});
+		}, defaultErrorCallback);
 	}
 
 	protected void test3_JSToCPPDirectSayHello() {
@@ -416,46 +427,62 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		cppServicePresenter.createRoDirectButtonClick(null);
 		getFunctionPresenter(cppServicePresenter, "sayHello").callButtonClick(r -> {
 			sendResult("test3_JSToCPPDirectSayHello", r.equals("Hello from Arduino, John! n=10 f=3.14 b=1"));
-		});
+		}, defaultErrorCallback);
 	}
 
 	protected void test4_JSToJavaPushSayHello() {
 		// connect JS node (this UI) to hub
+		setHubParam("remoteAddress", javaIpAddress + ":9001");
 		setHubParam("mode", "" + RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter javaServicePresenter = getServicePresenter(JAVA_SERVICE_PRESENTER);
 			javaServicePresenter.createRoDirectButtonClick(null);
 			getFunctionPresenter(javaServicePresenter, "connectToHub").setValue("mode", "" + HUB_MODE_HTTP_PUSH);
 			getFunctionPresenter(javaServicePresenter, "connectToHub").callButtonClick(r -> {
-				javaServicePresenter.createRoHubButtonClick(null);
-				getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(s -> {
-					sendResult("test4_JSToJavaPushSayHello", s.equals("Hello from Java, John! n=10, f=3.14, b=true"));
-				});
-			});
-		});
+				new Timer() {
+					public void run() {
+						javaServicePresenter.createRoHubButtonClick(null);
+						getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(s -> {
+							getFunctionPresenter(javaServicePresenter, "disconnectFromHub").callButtonClick(r -> {
+								javaServicePresenter.createRoDirectButtonClick(null);
+								sendResult("test4_JSToJavaPushSayHello", s.equals("Hello from Java, John! n=10, f=3.14, b=true"));
+							}, defaultErrorCallback);
+						}, defaultErrorCallback);
+					}
+				}.schedule(1000);
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test5_JSToJavaPollSayHello() {
 		// connect JS node (this UI) to hub
 		setHubParam("mode", "" + RemoteObjectHubConnection.HUB_MODE_HTTP_PULL);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter javaServicePresenter = getServicePresenter(JAVA_SERVICE_PRESENTER);
 			javaServicePresenter.createRoDirectButtonClick(null);
 			getFunctionPresenter(javaServicePresenter, "connectToHub").setValue("mode", "" + HUB_MODE_HTTP_PULL);
 			getFunctionPresenter(javaServicePresenter, "connectToHub").setValue("pollingInterval", "1000");
 			getFunctionPresenter(javaServicePresenter, "connectToHub").callButtonClick(r -> {
-				javaServicePresenter.createRoHubButtonClick(null);
-				getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(s -> {
-					sendResult("test5_JSToJavaPollSayHello", s.equals("Hello from Java, John! n=10, f=3.14, b=true"));
-				});
-			});
-		});
+				new Timer() {
+					public void run() {
+						javaServicePresenter.createRoHubButtonClick(null);
+						getFunctionPresenter(javaServicePresenter, "sayHello").callButtonClick(s -> {
+							hubDisconnectButtonClick();
+							javaServicePresenter.createRoDirectButtonClick(null);
+							getFunctionPresenter(javaServicePresenter, "disconnectFromHub").callButtonClick(r -> {
+								sendResult("test5_JSToJavaPollSayHello", s.equals("Hello from Java, John! n=10, f=3.14, b=true"));
+							}, defaultErrorCallback);
+						}, defaultErrorCallback);
+					}
+				}.schedule(1000);
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test6_JSToCPPPushSayHello() {
 		// connect JS node (this UI) to hub
 		setHubParam("mode", "" + RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter cppServicePresenter = getServicePresenter(CPP_SERVICE_PRESENTER);
 			cppServicePresenter.createRoDirectButtonClick(null);
 			getFunctionPresenter(cppServicePresenter, "connectToHub").setValue("mode", "" + HUB_MODE_HTTP_PUSH);
@@ -467,18 +494,18 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 						cppServicePresenter.createRoHubButtonClick(null);
 						getFunctionPresenter(cppServicePresenter, "sayHello").callButtonClick(s -> {
 							sendResult("test6_JSToCPPPushSayHello", s.equals("Hello from Arduino, John! n=10 f=3.14 b=1"));
-						});
+						}, defaultErrorCallback);
 					}
 				}.schedule(1000); // wait for Arduino to connect to hub
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 		
 	}
 
 	protected void test7_JSToCPPPollSayHello() {
 		// connect JS node (this UI) to hub
 		setHubParam("mode", "" + HUB_MODE_WEB_SOCKET);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter cppServicePresenter = getServicePresenter(CPP_SERVICE_PRESENTER);
 			cppServicePresenter.createRoDirectButtonClick(null);
 			getFunctionPresenter(cppServicePresenter, "connectToHub").setValue("mode", "" + HUB_MODE_HTTP_PULL);
@@ -490,37 +517,37 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 						cppServicePresenter.createRoHubButtonClick(null);
 						getFunctionPresenter(cppServicePresenter, "sayHello").callButtonClick(s -> {
 							sendResult("test7_JSToCPPPollSayHello", s.equals("Hello from Arduino, John! n=10 f=3.14 b=1"));
-						});
+						}, defaultErrorCallback);
 					}
 				}.schedule(1000); // wait for Arduino to connect to hub
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test8_JSToJSPullSayHello() {
 		// connect JS node (this UI) to hub
 		setHubParam("mode", "" + HUB_MODE_HTTP_PULL);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter jsServicePresenter = getServicePresenter(JS_SERVICE_PRESENTER);
 //			jsServicePresenter.setConnectionParam("nodeId", "JS_Node2");
 			jsServicePresenter.createRoHubButtonClick(null);
 			getFunctionPresenter(jsServicePresenter, "sayHello").callButtonClick(r -> {
 				sendResult("test8_JSToJSPullSayHello", r.equals("Hello from JS, John! n=10, f=3.14, b=true"));
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test9_JSToJSWebSocketSayHelloComplex() {
 		// connect JS node (this UI) to hub
 		setHubParam("mode", "" + HUB_MODE_WEB_SOCKET);
-		hubConnectButtonClick(() -> {
+		hubConnectButtonClick(o -> {
 			ServicePresenter jsServicePresenter = getServicePresenter(JS_SERVICE_PRESENTER);
 //			jsServicePresenter.setConnectionParam("nodeId", "JS_Node2");
 			jsServicePresenter.createRoHubButtonClick(null);
 			getFunctionPresenter(jsServicePresenter, "sayHelloComplex").callButtonClick(r -> {
 				sendResult("test9_JSToJSWebSocketSayHelloComplex", r.equals("{\"a\":5,\"b\":\"A=5\"}"));
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test10_JavaToCPPDirectSayHello() {
@@ -529,8 +556,8 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		getFunctionPresenter(javaServicePresenter, "initRemoteObject1").callButtonClick(r -> {
 			getFunctionPresenter(javaServicePresenter, "callSayHelloRo1").callButtonClick(s -> {
 				sendResult("test10_JavaToCPPDirectSayHello", s.equals("Hello from Arduino, Joe! n=2 f=5.23 b=1"));
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 	
 	protected void test11_JavaToCPPPollSayHello() {
@@ -549,12 +576,12 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 						getFunctionPresenter(javaServicePresenter, "initRemoteObject2").callButtonClick(c -> {
 							getFunctionPresenter(javaServicePresenter, "callSayHelloRo2").callButtonClick(r -> {
 								sendResult("test11_JavaToCPPPollSayHello", r.equals("Hello from Arduino, Joe! n=2 f=5.23 b=1"));
-							});
-						});
-					});
+							}, defaultErrorCallback);
+						}, defaultErrorCallback);
+					}, defaultErrorCallback);
 				}
 			}.schedule(1000); // wait for Arduino to connect to hub
-		});
+		}, defaultErrorCallback);
 	}
 
 	protected void test12_CPPToJavaDirectSayHello() {
@@ -563,22 +590,31 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 		getFunctionPresenter(cppServicePresenter, "initRemoteObject1").callButtonClick(r -> {
 			getFunctionPresenter(cppServicePresenter, "callSayHelloRo1").callButtonClick(s -> {
 				sendResult("test12_CPPToJavaDirectSayHello", s.equals("Hello from Java, Joe! n=5, f=8.5, b=true"));
-			});
-		});
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 	}
 
 	protected void test13_CPPToJSWebSocketSayHello() {
 		ServicePresenter cppServicePresenter = getServicePresenter(CPP_SERVICE_PRESENTER);
 		cppServicePresenter.createRoDirectButtonClick(null);
-		getFunctionPresenter(cppServicePresenter, "initRemoteObject3").callButtonClick(a -> {
-			setHubParam("mode", "" + RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET);
-			setHubParam("remoteAddress", arduinoIpAddress + ":9005");
-			hubConnectButtonClick(() -> {
-				getFunctionPresenter(cppServicePresenter, "wsNotify").callButtonClick(r -> {
-					// result is sent from JS service
-				});
-			});
-		});
+		getFunctionPresenter(cppServicePresenter, "disconnectFromHub").callButtonClick(a -> {
+			getFunctionPresenter(cppServicePresenter, "initRemoteObject3").callButtonClick(b -> {
+				new Timer() {
+					public void run() {
+						setHubParam("mode", "" + RemoteObjectHubConnection.HUB_MODE_WEB_SOCKET);
+						setHubParam("remoteAddress", arduinoIpAddress + ":9005");
+						hubConnectButtonClick(o -> {
+							getFunctionPresenter(cppServicePresenter, "wsNotify").callButtonClick(r -> {
+								if (lastTest != 0) {
+									nextTest();
+								}
+								// result is sent from JS service
+							}, defaultErrorCallback);
+						}, defaultErrorCallback);
+					}
+				}.schedule(1000);
+			}, defaultErrorCallback);
+		}, defaultErrorCallback);
 		
 	}
 	
@@ -597,13 +633,15 @@ public class MainPagePresenter extends FoundationPagePresenter<MyView, MyProxy> 
 					getFunctionPresenter(javaServicePresenter, "connectToHub").callButtonClick(b -> {
 						getFunctionPresenter(cppServicePresenter, "initRemoteObject2").callButtonClick(c -> {
 							getFunctionPresenter(cppServicePresenter, "callSayHelloRo2").callButtonClick(r -> {
+//								getFunctionPresenter(javaServicePresenter, "disconnectFromHub").callButtonClick(null, null);
+//								getFunctionPresenter(cppServicePresenter, "disconnectFromHub").callButtonClick(null, null);
 								// result will be sent by the CPP (e.g. Arduino) device
-							});
-						});
-					});
+							}, defaultErrorCallback);
+						}, defaultErrorCallback);
+					}, defaultErrorCallback);
 				}
 			}.schedule(1000); // wait for Arduino to connect to hub
-		});
+		}, defaultErrorCallback);
 	}
 
 }

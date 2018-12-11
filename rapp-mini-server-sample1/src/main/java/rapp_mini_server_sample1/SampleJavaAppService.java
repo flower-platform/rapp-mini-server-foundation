@@ -82,7 +82,9 @@ public class SampleJavaAppService {
 
 	
 	public void connectToHub(String hubIp, int port, String nodeId, String securityToken, int mode, int pollingInterval) {
-		disconnectFromHub();
+		if (hubConnection != null) {
+			disconnectFromHub();
+		}
 		
 		hubConnection = new RemoteObjectHubConnection()
 				.setRemoteAddress(hubIp + ":" + port)

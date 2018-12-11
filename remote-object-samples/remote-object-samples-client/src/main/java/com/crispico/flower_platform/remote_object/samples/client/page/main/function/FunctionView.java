@@ -35,7 +35,7 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 	@Override
 	public void setPresenter(PresenterWidget<?> page) {
 		super.setPresenter(page);
-		callButton.addClickHandler(e -> getPresenter().callButtonClick(null));
+		callButton.addClickHandler(e -> getPresenter().callButtonClick(null, null));
 	}
 	
 	@Override
@@ -61,15 +61,20 @@ public class FunctionView extends EventRedispatchingViewImpl<FunctionPresenter> 
 		return result.getValue();
 	}
 
-	public native void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params, Consumer<Object> callback) /*-{
+	public native void callFunction(JavaScriptObject remoteObject, String functionName, JavaScriptObject params, Consumer<Object> successCallback, Consumer<Object> errorCallback) /*-{
 		that = this;
 		params.push(function (result) { 
 			that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onResult(Ljava/lang/String;)(result);
-			if (callback != null) {
-				callback.@java.util.function.Consumer::accept(*)(result);
+			if (successCallback != null) {
+				successCallback.@java.util.function.Consumer::accept(*)(result);
 			} 
 		}); 
-		params.push(function (error) { that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onError(Ljava/lang/Object;)(error); }); 
+		params.push(function (error) { 
+			that.@com.crispico.flower_platform.remote_object.samples.client.page.main.function.FunctionView::onError(Ljava/lang/Object;)(error); 
+			if (errorCallback != null) {
+				errorCallback.@java.util.function.Consumer::accept(*)(error);
+			} 
+		}); 
 		remoteObject[functionName].apply(remoteObject, params);
 	}-*/;
 
