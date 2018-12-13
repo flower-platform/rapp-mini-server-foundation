@@ -10,7 +10,7 @@ import com.crispico.foundation.client.AbstractMainGinModule;
  * @author Cristian Spiescu
  */
 @TriggerFoundationAnnotationProcessor
-@GenAggregatedGinModule
+@GenAggregatedGinModule(includeAggregatedServerModule = false)
 public class MainGinModule extends AbstractMainGinModule {
     
 	@Override
