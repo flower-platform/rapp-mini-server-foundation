@@ -5,7 +5,6 @@ import javax.inject.Provider;
 
 import com.crispico.client.ClientGlobals;
 import com.crispico.client.component.BasicModelPWidget;
-import com.crispico.client.component.alert.Alert;
 import com.crispico.foundation.client.view.FoundationView;
 import com.crispico.shared.util.Pair;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,9 +36,7 @@ public class TestButtonRendererPresenter extends BasicModelPWidget {
 		addNamedSlot(ClientGlobals.getDefaultSingleSlot(), "SLOT_MAIN");
 	}
 		
-	protected void onRefreshButtonClick(ClickEvent clickEvent) {
-		// TODO replace with meaningful code
-		Alert.show("Please replace this with some meaningful code!");
+	protected void onButtonClick(ClickEvent clickEvent) {
 		getModel().b.run();
 	}
 

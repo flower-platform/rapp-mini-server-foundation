@@ -56,19 +56,27 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 					// NOTE: in GWT using ...args didn't work, thus we use "arguments"
 					// convert to array (from an object of type Arguments)
 					var argsArray = Array.from(arguments);
-					var callback = null;
+					var successCallback = null, errorCallback = null, tmp = null;
 					if (argsArray.length > 0) {
 						// do we have a callback?
-						callback = argsArray[argsArray.length - 1];
-						if (typeof callback === "function") {
+						tmp = argsArray[argsArray.length - 1];
+						if (typeof tmp === "function") {
 							// ... yes, so remove it from the array of args
 							argsArray.splice(argsArray.length - 1, 1);
-						} else {
-							// ... nope
-							callback = null;
+							successCallback = tmp;
 						}
 					} 
-					target.delegate.invokeMethod(name, argsArray, callback);
+					if (argsArray.length > 0) {
+						// do we have a callback?
+						tmp = argsArray[argsArray.length - 1];
+						if (typeof tmp === "function") {
+							errorCallback = successCallback;
+							successCallback = tmp;
+							// ... yes, so remove it from the array of args
+							argsArray.splice(argsArray.length - 1, 1);
+						}
+					} 
+					target.delegate.invokeMethod(name, argsArray, successCallback, errorCallback);
 				}
 			}
 		};

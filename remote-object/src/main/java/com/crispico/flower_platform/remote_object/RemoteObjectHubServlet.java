@@ -1,7 +1,7 @@
 package com.crispico.flower_platform.remote_object;
 
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PULL;
-import static com.crispico.flower_platform.remote_object.RemoteObjectHubClientData.CLIENT_TYPE_HTTP_PUSH;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_HTTP_PULL;
+import static com.crispico.flower_platform.remote_object.shared.RemoteObjectHubConnection.HUB_MODE_HTTP_PUSH;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,7 +9,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,7 @@ public class RemoteObjectHubServlet extends HttpServlet {
 		if (packet.getCommand() == 'A') {
 			String nodeId = packet.nextField();
 			String portStr = packet.nextField();
-			RemoteObjectHubClientData client = new RemoteObjectHubClientData(portStr.length() > 0 && !portStr.equals("0") ? CLIENT_TYPE_HTTP_PUSH : CLIENT_TYPE_HTTP_PULL,  nodeId, packet.getSecurityToken());
+			RemoteObjectHubClientData client = new RemoteObjectHubClientData(portStr.length() > 0 && !portStr.equals("0") ? HUB_MODE_HTTP_PUSH : HUB_MODE_HTTP_PULL,  nodeId, packet.getSecurityToken());
 			client.setRemoteIPAddress(request.getRemoteAddr());
 			if (portStr.length() > 0) {
 				client.setRemoteHttpServerPort(Integer.parseInt(portStr));

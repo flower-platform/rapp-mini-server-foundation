@@ -64,6 +64,7 @@ public class JavaRemoteObjectBase implements IRequestSender, IScheduler {
 				conn.setDoInput(true);
 				conn.getOutputStream().write(payload.getBytes());
 				conn.connect();
+				conn.setReadTimeout(5000);
 				in = conn.getInputStream();
 				ByteArrayOutputStream buf = new ByteArrayOutputStream();
 				byte[] data = new byte[16384];
