@@ -117,9 +117,11 @@ public class RemoteObject {
 		}
 		sb.append(method).append(TERM); // method
 		
-		for (Object o : arguments) {
-			sb.append(o);
-			sb.append(TERM);
+		if (arguments != null) {
+			for (Object o : arguments) {
+				sb.append(o);
+				sb.append(TERM);
+			}
 		}
 		sb.append(EOT); // ASCII EOT
 		String url;

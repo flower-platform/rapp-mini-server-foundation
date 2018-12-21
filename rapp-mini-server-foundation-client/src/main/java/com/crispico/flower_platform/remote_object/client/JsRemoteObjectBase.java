@@ -100,6 +100,9 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 			rb.sendRequest(payload, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
+					if (callback == null) {
+						return;
+					}
 					if (response.getStatusCode() == Response.SC_OK) {
 						callback.onSuccess(response.getText());
 					} else {
@@ -109,6 +112,9 @@ public class JsRemoteObjectBase implements IRemoteObjectInitializer, IRequestSen
 				
 				@Override
 				public void onError(Request request, Throwable exception) {
+					if (callback == null) {
+						return;
+					}
 					callback.onError(exception.toString());
 				}
 			});
