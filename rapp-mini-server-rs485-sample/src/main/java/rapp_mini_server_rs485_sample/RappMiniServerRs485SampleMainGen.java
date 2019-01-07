@@ -1,10 +1,10 @@
 package rapp_mini_server_rs485_sample;
-import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-
+import com.crispico.flower_platform.remote_object.RemoteObjectServiceInvoker;
+import com.crispico.flower_platform.remote_object.SerialBusMasterServlet;
 import com.flowerplatform.rapp_mini_server.AbstractRappMiniServerMain;
-import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
-import com.flowerplatform.rapp_mini_server.remote_object.SerialBusMasterServlet;
+
+import io.undertow.servlet.Servlets;
+import io.undertow.servlet.api.DeploymentInfo;
 
 /**
  * @author Cristian Spiescu
@@ -17,20 +17,22 @@ public class RappMiniServerRs485SampleMainGen extends AbstractRappMiniServerMain
 		RappMiniServerRs485SampleMain main = new RappMiniServerRs485SampleMain();
 		main.port = 9001;
 		
-		main.serviceInvoker = new RemoteObjectServiceInvoker(main);
-		
+		RemoteObjectServiceInvoker.getInstance().setServiceInstance(main);
+
 		main.run();
 	}
 
 	@Override
-	protected void addRemoteObjectsServlet(ServletHandler handler) {
-		super.addRemoteObjectsServlet(handler);
-		try {
-			SerialBusMasterServlet sbm = new SerialBusMasterServlet("/dev/ttyS0", 115200, 18, 2000);
-			handler.addServletWithMapping(new ServletHolder(sbm), "/serialBus");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	protected void configureDeploymentInfo(DeploymentInfo deploymentInfo) {
+		super.configureDeploymentInfo(deploymentInfo);
+		deploymentInfo.addServlets(Servlets.servlet(
+				SerialBusMasterServlet.class.getName(), SerialBusMasterServlet.class)
+						.addMapping("/serialBus")
+						.addInitParam("serialPortName", "/dev/ttyS0")
+						.addInitParam("baudRate", "115200")
+						.addInitParam("writeEnablePin", "18")
+						.addInitParam("timeoutMillis", "2000")
+		);
 	}
 	
 }

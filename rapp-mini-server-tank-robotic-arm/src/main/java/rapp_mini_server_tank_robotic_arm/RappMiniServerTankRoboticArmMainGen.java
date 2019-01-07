@@ -1,9 +1,9 @@
 package rapp_mini_server_tank_robotic_arm;
 
+import com.crispico.flower_platform.remote_object.RemoteObjectServiceInvoker;
 import com.flowerplatform.rapp_mini_server.AbstractRappMiniServerMain;
 import com.flowerplatform.rapp_mini_server.logback.LogbackConfigurator;
 import com.flowerplatform.rapp_mini_server.persistent_properties.PersistentPropertiesCapable;
-import com.flowerplatform.rapp_mini_server.remote_object.RemoteObjectServiceInvoker;
 
 public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerMain {
 
@@ -47,7 +47,7 @@ public class RappMiniServerTankRoboticArmMainGen extends AbstractRappMiniServerM
 //		
 		RappMiniServerTankRoboticArmMainGen main = new RappMiniServerTankRoboticArmMainGen();
 		main.port = 9001;
-		main.serviceInvoker = new RemoteObjectServiceInvoker(main);
+		RemoteObjectServiceInvoker.getInstance().setServiceInstance(main);
 
 //		PythonRemoteControl prc = new PythonRemoteControl();
 //		prc.startPythonProcess();
